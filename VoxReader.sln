@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoxReader", "VoxReader.csproj", "{AE21C0D0-F3EC-4C25-B794-5A650A79117F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE21C0D0-F3EC-4C25-B794-5A650A79117F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE21C0D0-F3EC-4C25-B794-5A650A79117F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE21C0D0-F3EC-4C25-B794-5A650A79117F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE21C0D0-F3EC-4C25-B794-5A650A79117F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
