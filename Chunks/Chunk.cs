@@ -7,7 +7,7 @@ namespace VoxReader
         /// <summary>
         /// The ID of the chunk
         /// </summary>
-        public string Id { get => new string(id); }
+        public string Id => new string(id);
 
         private readonly char[] id;
 
