@@ -41,9 +41,9 @@
         <Compile Include="ByteArrayExtension.cs" />
         <Compile Include="Chunks\Chunk.cs" />
         <Compile Include="Chunks\PaletteChunk.cs" />
-        <Compile Include="Chunks\RGBA.cs" />
         <Compile Include="Chunks\SizeChunk.cs" />
         <Compile Include="Chunks\VoxelChunk.cs" />
+        <Compile Include="Color.cs" />
         <Compile Include="Exceptions\InvalidDataException.cs" />
         <Compile Include="Exceptions\UnsupportedDataException.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
