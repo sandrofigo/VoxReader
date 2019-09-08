@@ -25,25 +25,4 @@ namespace VoxReader
             return $"{base.ToString()} [VoxelCount: {Voxels.Length}]";
         }
     }
-
-    public class Voxel
-    {
-        public int X { get; }
-        public int Y { get; }
-        public int Z { get; }
-        public int ColorIndex { get; }
-
-        public Voxel(int x, int y, int z, int colorIndex)
-        {
-            X = x;
-            Y = y;
-            Z = z;
-            ColorIndex = colorIndex;
-        }
-
-        public override string ToString()
-        {
-            return $"[X: {X}, Y: {Y}, Z: {Z}, ColorIndex: {ColorIndex}]";
-        }
-    }
 }
