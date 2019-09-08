@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace VoxReader
 {
@@ -17,8 +18,8 @@ namespace VoxReader
         {
         }
 
-        protected InvalidDataException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        protected InvalidDataException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
     }
 }

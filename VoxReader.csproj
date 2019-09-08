@@ -38,13 +38,17 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="ByteArrayExtension.cs" />
         <Compile Include="Chunks\Chunk.cs" />
         <Compile Include="Chunks\PaletteChunk.cs" />
         <Compile Include="Chunks\SizeChunk.cs" />
         <Compile Include="Chunks\VoxelChunk.cs" />
-        <Compile Include="InvalidDataException.cs" />
+        <Compile Include="Color.cs" />
+        <Compile Include="Exceptions\InvalidDataException.cs" />
+        <Compile Include="Exceptions\UnsupportedDataException.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="VoxReader.cs" />
+        <Compile Include="Reader.cs" />
+        <Compile Include="Voxel.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

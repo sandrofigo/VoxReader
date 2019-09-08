@@ -17,7 +17,7 @@ namespace VoxReader
 
         public override string ToString()
         {
-            return $"{base.ToString()} [X: {X}, Y: {Y}, Z: {Z}]";
+            return $"{base.ToString()} X: {X} Y: {Y} Z: {Z}";
         }
     }
 }

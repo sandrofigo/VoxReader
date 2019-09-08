@@ -5,7 +5,7 @@ namespace VoxReader
 {
     //Reference: https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt
 
-    public static class VoxReader
+    public static class Reader
     {
         /// <summary>
         /// Returns an array of all chunks that are children of the MAIN chunk
@@ -37,7 +37,8 @@ namespace VoxReader
                 switch (id)
                 {
                     case nameof(ChunkType.PACK):
-                        throw new InvalidDataException("A file with more than one model is not supported! (MAIN chunk contains a PACK chunk)");
+                        throw new UnsupportedDataException("A file with more than one model is not supported! (MAIN chunk contains a PACK chunk)");
+                    
                     case nameof(ChunkType.SIZE):
                         chunk = new SizeChunk(chunkData);
                         break;
@@ -50,6 +51,7 @@ namespace VoxReader
                         chunk = new PaletteChunk(chunkData);
                         break;
                 }
+                
                 if (chunk != null)
                 {
                     chunks.Add(chunk);
@@ -90,15 +92,5 @@ namespace VoxReader
         SIZE,
         XYZI,
         RGBA
-    }
-
-    public static class ByteArrayExtension
-    {
-        public static byte[] GetRange(this byte[] data, int startIndex, int length)
-        {
-            byte[] output = new byte[length];
-            Buffer.BlockCopy(data, startIndex, output, 0, length);
-            return output;
-        }
     }
 }
