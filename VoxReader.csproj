@@ -38,6 +38,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="ByteArrayExtension.cs" />
         <Compile Include="Chunks\Chunk.cs" />
         <Compile Include="Chunks\PaletteChunk.cs" />
         <Compile Include="Chunks\SizeChunk.cs" />
