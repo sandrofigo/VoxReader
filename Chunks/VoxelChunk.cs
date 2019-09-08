@@ -13,10 +13,10 @@ namespace VoxReader
             for (int i = 0; i < Voxels.Length; i++)
             {
                 Voxels[i] = new Voxel(
-                    data[16 + (i * 4)],
-                    data[17 + (i * 4)],
-                    data[18 + (i * 4)],
-                    data[19 + (i * 4)]);
+                    data[16 + i * 4],
+                    data[17 + i * 4],
+                    data[18 + i * 4],
+                    data[19 + i * 4]);
             }
         }
 

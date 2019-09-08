@@ -11,10 +11,10 @@
             for (int i = 0; i < Colors.Length; i++)
             {
                 Colors[i] = new Color(
-                    data[12 + (i * 4)],
-                    data[13 + (i * 4)],
-                    data[14 + (i * 4)],
-                    data[15 + (i * 4)]);
+                    data[12 + i * 4],
+                    data[13 + i * 4],
+                    data[14 + i * 4],
+                    data[15 + i * 4]);
             }
         }
     }
