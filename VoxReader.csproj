@@ -45,6 +45,7 @@
         <Compile Include="InvalidDataException.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Reader.cs" />
+        <Compile Include="UnsupportedDataException.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

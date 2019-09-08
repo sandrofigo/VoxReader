@@ -37,7 +37,8 @@ namespace VoxReader
                 switch (id)
                 {
                     case nameof(ChunkType.PACK):
-                        throw new InvalidDataException("A file with more than one model is not supported! (MAIN chunk contains a PACK chunk)");
+                        throw new UnsupportedDataException("A file with more than one model is not supported! (MAIN chunk contains a PACK chunk)");
+                    
                     case nameof(ChunkType.SIZE):
                         chunk = new SizeChunk(chunkData);
                         break;
@@ -50,6 +51,7 @@ namespace VoxReader
                         chunk = new PaletteChunk(chunkData);
                         break;
                 }
+                
                 if (chunk != null)
                 {
                     chunks.Add(chunk);
