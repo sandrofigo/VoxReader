@@ -30,7 +30,14 @@
         <DefineConstants>TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
+        <PackageIcon>icon.png</PackageIcon>
     </PropertyGroup>
+    <ItemGroup>
+        <None Include="images\icon.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
     <ItemGroup>
         <Reference Include="System" />
         <Reference Include="System.Core" />
