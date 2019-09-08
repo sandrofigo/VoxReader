@@ -30,8 +30,10 @@ namespace VoxReader
         /// <param name="data">Data starting at the first byte of the chunk</param>
         public Chunk(byte[] data)
         {
-            if (data == null || data.Length == 0)
-                throw new InvalidDataException("Data is not valid!");
+            if (data == null)
+                throw new ArgumentNullException(nameof(data), "Data is null!");
+            if (data.Length == 0)
+                throw new InvalidDataException("Data is empty!");
 
             Data = data;
 
