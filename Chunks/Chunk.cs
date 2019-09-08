@@ -7,9 +7,7 @@ namespace VoxReader
         /// <summary>
         /// The ID of the chunk
         /// </summary>
-        public string Id => new string(id);
-
-        private readonly char[] id;
+        public string Id { get; }
 
         /// <summary>
         /// Complete chunk data
@@ -37,7 +35,7 @@ namespace VoxReader
 
             Data = data;
 
-            id = VoxReader.GetCharArray(data, 0, 4);
+            Id = new string(VoxReader.GetCharArray(data, 0, 4));
             Content = data.GetRange(12, BitConverter.ToInt32(data, 4));
             Children = data.GetRange(12 + Content.Length, BitConverter.ToInt32(data, 8));
         }
