@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("VoxReader")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Provides classes to read .vox files created with MagicaVoxel")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Sandro Figo")]
 [assembly: AssemblyProduct("VoxReader")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright ©  2019 Sandro Figo")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
