@@ -12,7 +12,8 @@
     <description>$description$</description>
     <copyright>Copyright 2019</copyright>
     <tags>vox voxel parse file MagicaVoxel</tags>
-    <icon>icon.png</icon>
+    <iconUrl>https://github.com/sandrofigo/VoxReader/blob/master/images/icon.png?raw=true</iconUrl>
+    <!-- <icon>icon.png</icon> -->
   </metadata>
   <files>
     <file src="images\icon.png" target="" />
