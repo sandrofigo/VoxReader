@@ -22,7 +22,7 @@ namespace VoxReader
 
         public override string ToString()
         {
-            return $"{base.ToString()} [VoxelCount: {Voxels.Length}]";
+            return $"{base.ToString()} VoxelCount: {Voxels.Length}";
         }
     }
 }
