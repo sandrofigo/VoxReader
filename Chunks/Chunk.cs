@@ -35,7 +35,7 @@ namespace VoxReader
 
             Data = data;
 
-            Id = new string(VoxReader.GetCharArray(data, 0, 4));
+            Id = new string(Reader.GetCharArray(data, 0, 4));
             Content = data.GetRange(12, BitConverter.ToInt32(data, 4));
             Children = data.GetRange(12 + Content.Length, BitConverter.ToInt32(data, 8));
         }

@@ -5,7 +5,7 @@ namespace VoxReader
 {
     //Reference: https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt
 
-    public static class VoxReader
+    public static class Reader
     {
         /// <summary>
         /// Returns an array of all chunks that are children of the MAIN chunk
