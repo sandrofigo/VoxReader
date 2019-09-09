@@ -20,4 +20,4 @@ Only .vox files that contain a single model are supported for now.
 
 The file format specification made by [ephtracy](https://github.com/ephtracy) is available at [.vox file format](https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt)
 
-Support this project with a ⭐️, report an issue or if you feel adventurous and would like to extend the functionality feel free to open a pull request.
+Support this project with a ⭐️, report an issue or if you feel adventurous and would like to extend the functionality open a pull request.
