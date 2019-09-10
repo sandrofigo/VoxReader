@@ -14,6 +14,36 @@ At the moment it is possible to read:
 - all individual voxels including their color and position
 - the palette that was used for the model
 
+## Usage
+
+Here is an example of how to use the ```Reader.cs``` class in a typical C# console application:
+
+```csharp
+using System;
+using System.IO;
+using System.Linq;
+using VoxReader;
+
+class Program
+{
+    public static void Main(string[] args)
+    {
+        var data = File.ReadAllBytes("my_awesome_model.vox");
+
+        var chunks = Reader.GetChunks(data);
+
+        var sizeChunk = chunks.FirstOrDefault(c => c.Id == nameof(ChunkType.SIZE)) as SizeChunk;
+        Console.WriteLine(sizeChunk?.ToString());
+
+        var voxelChunk = chunks.FirstOrDefault(c => c.Id == nameof(ChunkType.XYZI)) as VoxelChunk;
+        Console.WriteLine(voxelChunk?.ToString());
+
+        var paletteChunk = chunks.FirstOrDefault(c => c.Id == nameof(ChunkType.RGBA)) as PaletteChunk;
+        Console.WriteLine(paletteChunk?.ToString());
+    }
+}
+```
+
 ## Extending the library
 
 Only .vox files that contain a single model are supported for now.
