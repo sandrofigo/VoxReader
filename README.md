@@ -16,8 +16,6 @@ At the moment it is possible to read:
 
 ## Usage
 
-Here is an example of how to use the ```Reader.cs``` class in a typical C# console application:
-
 ```csharp
 using System;
 using System.IO;
