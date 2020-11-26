@@ -9,7 +9,7 @@ namespace VoxReader
     {
         internal static char[] GetCharArray(byte[] data, int startIndex, int length)
         {
-            char[] array = new char[length];
+            var array = new char[length];
 
             for (int i = 0; i < array.Length; i++)
             {

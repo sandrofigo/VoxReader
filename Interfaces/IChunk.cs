@@ -1,6 +1,6 @@
 namespace VoxReader.Interfaces
 {
-    internal interface IChunk
+    public interface IChunk
     {
         /// <summary>
         /// The Id of the chunk.

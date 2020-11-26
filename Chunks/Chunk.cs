@@ -11,11 +11,11 @@ namespace VoxReader.Chunks
         public string Id { get; }
         public byte[] Content { get; }
         public IChunk[] Children { get; }
-        
+
         public int TotalBytes { get; }
 
         /// <summary>
-        /// Creates a new chunk using the given data
+        /// Creates a new chunk using the given data.
         /// </summary>
         /// <param name="data">Data starting at the first byte of the chunk</param>
         public Chunk(byte[] data)
@@ -34,7 +34,7 @@ namespace VoxReader.Chunks
             int childrenLength = BitConverter.ToInt32(data, 8);
 
             TotalBytes = 12 + contentLength + childrenLength;
-            
+
             Children = GetChildrenChunks(data.GetRange(12 + contentLength, childrenLength));
         }
 
@@ -43,7 +43,7 @@ namespace VoxReader.Chunks
             return new string(Helper.GetCharArray(chunkData, 0, 4));
         }
 
-        private IChunk[] GetChildrenChunks(byte[] childrenData)
+        private static IChunk[] GetChildrenChunks(byte[] childrenData)
         {
             var children = new List<IChunk>();
 
@@ -68,7 +68,7 @@ namespace VoxReader.Chunks
         {
             return Children.Where(c => c is T).Cast<T>().ToArray();
         }
-        
+
         public override string ToString()
         {
             return $"Id: {Id}, Content Length: {Content.Length}, Children Length: {Children.Length}";

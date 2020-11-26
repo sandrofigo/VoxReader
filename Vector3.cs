@@ -2,8 +2,19 @@ namespace VoxReader
 {
     public struct Vector3
     {
+        /// <summary>
+        /// The x-component of the vector.
+        /// </summary>
         public readonly int X;
+        
+        /// <summary>
+        /// The y-component of the vector.
+        /// </summary>
         public readonly int Y;
+        
+        /// <summary>
+        /// The z-component of the vector.
+        /// </summary>
         public readonly int Z;
 
         public Vector3(int x, int y, int z)

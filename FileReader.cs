@@ -1,6 +1,7 @@
 /* Reference:
 https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt
-https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox-extension.txt */
+https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox-extension.txt
+*/
 
 using System;
 using System.IO;
@@ -24,7 +25,7 @@ namespace VoxReader
 
             var models = Helper.ExtractModels(mainChunk, palette).ToArray();
 
-            return new VoxFile(versionNumber, models, palette);
+            return new VoxFile(versionNumber, models, palette, mainChunk.Children);
         }
     }
 }

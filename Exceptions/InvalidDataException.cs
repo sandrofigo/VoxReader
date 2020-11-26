@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace VoxReader.Exceptions
 {
     [Serializable]
-    public class InvalidDataException : Exception
+    internal class InvalidDataException : Exception
     {
         public InvalidDataException()
         {
