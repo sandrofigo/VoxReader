@@ -1,6 +1,8 @@
-﻿namespace VoxReader.Chunks
+﻿using VoxReader.Interfaces;
+
+namespace VoxReader.Chunks
 {
-    public class PaletteChunk : Chunk
+    internal class PaletteChunk : Chunk, IPaletteChunk
     {
         public Color[] Colors { get; }
 

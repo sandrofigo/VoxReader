@@ -1,9 +1,7 @@
 namespace VoxReader.Interfaces
 {
-    public interface IModel
+    internal interface ISizeChunk : IChunk
     {
         Vector3 Size { get; }
-        
-        Voxel[] Voxels { get; }
     }
 }

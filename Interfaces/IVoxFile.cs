@@ -4,6 +4,8 @@ namespace VoxReader.Interfaces
     {
         int VersionNumber { get; }
 
-        IChunk MainChunk { get; }
+        IModel[] Models { get; }
+        
+        IPalette Palette { get; }
     }
 }

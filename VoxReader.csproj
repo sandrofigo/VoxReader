@@ -38,7 +38,9 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="ChunkFactory.cs" />
         <Compile Include="Chunks\Chunk.cs" />
+        <Compile Include="Chunks\PackChunk.cs" />
         <Compile Include="Chunks\PaletteChunk.cs" />
         <Compile Include="Chunks\SizeChunk.cs" />
         <Compile Include="Chunks\VoxelChunk.cs" />
@@ -49,11 +51,19 @@
         <Compile Include="Helper.cs" />
         <Compile Include="Interfaces\IChunk.cs" />
         <Compile Include="Interfaces\IModel.cs" />
+        <Compile Include="Interfaces\IPackChunk.cs" />
+        <Compile Include="Interfaces\IPalette.cs" />
+        <Compile Include="Interfaces\IPaletteChunk.cs" />
+        <Compile Include="Interfaces\ISizeChunk.cs" />
+        <Compile Include="Interfaces\IVoxelChunk.cs" />
         <Compile Include="Interfaces\IVoxFile.cs" />
+        <Compile Include="Model.cs" />
+        <Compile Include="Palette.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="Reader.cs" />
-        <Compile Include="Voxel.cs" />
+        <Compile Include="Vector3.cs" />
+        <Compile Include="RawVoxel.cs" />
         <Compile Include="FileReader.cs" />
+        <Compile Include="Voxel.cs" />
         <Compile Include="VoxFile.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

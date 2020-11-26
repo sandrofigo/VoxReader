@@ -1,28 +1,29 @@
 ﻿using System;
+using VoxReader.Interfaces;
 
 namespace VoxReader.Chunks
 {
-    public class VoxelChunk : Chunk
+    internal class VoxelChunk : Chunk, IVoxelChunk
     {
-        public Voxel[] Voxels { get; }
+        public RawVoxel[] Voxels { get; }
 
         public VoxelChunk(byte[] data) : base(data)
         {
-            Voxels = new Voxel[BitConverter.ToInt32(data, 12)];
+            int voxelCount = BitConverter.ToInt32(data, 12);
+            
+            Voxels = new RawVoxel[voxelCount];
 
-            for (int i = 0; i < Voxels.Length; i++)
+            for (int i = 0; i < voxelCount; i++)
             {
-                Voxels[i] = new Voxel(
-                    data[16 + i * 4],
-                    data[17 + i * 4],
-                    data[18 + i * 4],
-                    data[19 + i * 4]);
+                var position = new Vector3(data[16 + i * 4], data[17 + i * 4], data[18 + i * 4]);
+                int colorIndex = data[19 + i * 4];
+                Voxels[i] = new RawVoxel(position, colorIndex);
             }
         }
 
         public override string ToString()
         {
-            return $"{base.ToString()} VoxelCount: {Voxels.Length}";
+            return $"{base.ToString()}, Voxel Count: {Voxels.Length}";
         }
     }
 }

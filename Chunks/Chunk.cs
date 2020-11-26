@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using VoxReader.Extensions;
 using VoxReader.Interfaces;
 
 namespace VoxReader.Chunks
 {
-    public class Chunk : IChunk
+    internal class Chunk : IChunk
     {
         public string Id { get; }
         public byte[] Content { get; }
@@ -24,7 +25,7 @@ namespace VoxReader.Chunks
             if (data.Length == 0)
                 throw new ArgumentException($"{nameof(data)} is empty!");
 
-            Id = new string(Helper.GetCharArray(data, 0, 4));
+            Id = GetChunkId(data);
 
             int contentLength = BitConverter.ToInt32(data, 4);
 
@@ -37,6 +38,11 @@ namespace VoxReader.Chunks
             Children = GetChildrenChunks(data.GetRange(12 + contentLength, childrenLength));
         }
 
+        public static string GetChunkId(byte[] chunkData)
+        {
+            return new string(Helper.GetCharArray(chunkData, 0, 4));
+        }
+
         private IChunk[] GetChildrenChunks(byte[] childrenData)
         {
             var children = new List<IChunk>();
@@ -45,7 +51,7 @@ namespace VoxReader.Chunks
 
             while (currentChunkOffset < childrenData.Length)
             {
-                IChunk childChunk = new Chunk(childrenData.GetRange(currentChunkOffset));
+                IChunk childChunk = ChunkFactory.Parse(childrenData.GetRange(currentChunkOffset));
                 children.Add(childChunk);
                 currentChunkOffset += childChunk.TotalBytes;
             }
@@ -53,9 +59,19 @@ namespace VoxReader.Chunks
             return children.ToArray();
         }
 
+        public T GetChild<T>() where T : class, IChunk
+        {
+            return Children.FirstOrDefault(c => c is T) as T;
+        }
+
+        public T[] GetChildren<T>() where T : class, IChunk
+        {
+            return Children.Where(c => c is T).Cast<T>().ToArray();
+        }
+        
         public override string ToString()
         {
-            return $"{Id} N: {Content.Length} M: {Children.Length}";
+            return $"Id: {Id}, Content Length: {Content.Length}, Children Length: {Children.Length}";
         }
     }
 }

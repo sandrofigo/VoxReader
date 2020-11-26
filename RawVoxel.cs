@@ -1,6 +1,6 @@
 namespace VoxReader
 {
-    public readonly struct Voxel
+    internal readonly struct RawVoxel
     {
         /// <summary>
         /// The position of the voxel.
@@ -8,19 +8,19 @@ namespace VoxReader
         public Vector3 Position { get; }
 
         /// <summary>
-        /// The color of the voxel.
+        /// The color index of the voxel.
         /// </summary>
-        public Color Color { get; }
+        public int ColorIndex { get; }
 
-        internal Voxel(Vector3 position, Color color)
+        public RawVoxel(Vector3 position, int colorIndex)
         {
             Position = position;
-            Color = color;
+            ColorIndex = colorIndex;
         }
 
         public override string ToString()
         {
-            return $"Position: [{Position}], Color: [{Color}]";
+            return $"Position: [{Position}], Color Index: [{ColorIndex}]";
         }
     }
 }

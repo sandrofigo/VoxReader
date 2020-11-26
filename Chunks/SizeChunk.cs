@@ -1,23 +1,24 @@
 ﻿using System;
+using VoxReader.Interfaces;
 
 namespace VoxReader.Chunks
 {
-    public class SizeChunk : Chunk
+    internal class SizeChunk : Chunk, ISizeChunk
     {
-        public int X { get; }
-        public int Y { get; }
-        public int Z { get; }
+        public Vector3 Size { get; }
 
         public SizeChunk(byte[] data) : base(data)
         {
-            X = BitConverter.ToInt32(data, 12);
-            Y = BitConverter.ToInt32(data, 16);
-            Z = BitConverter.ToInt32(data, 20);
+            int x = BitConverter.ToInt32(Content, 0);
+            int y = BitConverter.ToInt32(Content, 4);
+            int z = BitConverter.ToInt32(Content, 8);
+
+            Size = new Vector3(x, y, z);
         }
 
         public override string ToString()
         {
-            return $"{base.ToString()} X: {X} Y: {Y} Z: {Z}";
+            return $"{base.ToString()}, {Size}";
         }
     }
 }
