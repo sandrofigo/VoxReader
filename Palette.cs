@@ -15,10 +15,14 @@ namespace VoxReader
         public override string ToString()
         {
             var output = new StringBuilder();
-            for (int i = 0; i < Colors.Length; i++)
+            
+            for (int i = 0; i < Colors.Length - 1; i++)
             {
-                output.AppendLine($"{i}: [{Colors[i]}]");
+                output.AppendLine(GetText(i));
             }
+            output.Append(GetText(Colors.Length - 1));
+
+            string GetText(int index) => $"{index}: [{Colors[index]}]";
 
             return output.ToString();
         }
