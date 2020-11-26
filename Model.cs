@@ -13,5 +13,10 @@ namespace VoxReader
             Size = size;
             Voxels = voxels;
         }
+
+        public override string ToString()
+        {
+            return $"Size: {Size}, Voxel Count: {Voxels.Length}";
+        }
     }
 }
