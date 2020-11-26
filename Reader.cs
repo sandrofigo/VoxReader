@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using VoxReader.Chunks;
+using VoxReader.Exceptions;
+using VoxReader.Extensions;
 
 namespace VoxReader
 {
@@ -30,7 +33,7 @@ namespace VoxReader
                 int chunkSize = 12 + chunkContentSize + chunkChildrenSize;
                 byte[] chunkData = mainChunkChildren.GetRange(i, chunkSize);
 
-                string id = new string(GetCharArray(chunkData, 0, 4));
+                string id = new string(Helper.GetCharArray(chunkData, 0, 4));
 
                 Chunk chunk = null;
 
@@ -38,7 +41,7 @@ namespace VoxReader
                 {
                     case nameof(ChunkType.PACK):
                         throw new UnsupportedDataException("A file with more than one model is not supported! (MAIN chunk contains a PACK chunk)");
-                    
+
                     case nameof(ChunkType.SIZE):
                         chunk = new SizeChunk(chunkData);
                         break;
@@ -51,7 +54,7 @@ namespace VoxReader
                         chunk = new PaletteChunk(chunkData);
                         break;
                 }
-                
+
                 if (chunk != null)
                 {
                     chunks.Add(chunk);
@@ -61,28 +64,6 @@ namespace VoxReader
             }
 
             return chunks.ToArray();
-        }
-
-        internal static char[] GetCharArray(byte[] data, int startIndex, int length)
-        {
-            char[] array = new char[length];
-
-            for (int i = 0; i < array.Length; i++)
-            {
-                array[i] = (char)data[i + startIndex];
-            }
-
-            return array;
-        }
-
-        /// <summary>
-        /// Returns the size of the chunk
-        /// </summary>
-        /// <param name="data">Data starting at the first byte of the chunk</param>
-        /// <returns></returns>
-        internal static int GetChunkSize(byte[] data)
-        {
-            return 12 + BitConverter.ToInt32(data, 4) + BitConverter.ToInt32(data, 8);
         }
     }
 

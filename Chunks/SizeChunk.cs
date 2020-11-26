@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VoxReader
+namespace VoxReader.Chunks
 {
     public class SizeChunk : Chunk
     {

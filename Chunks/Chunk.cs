@@ -1,28 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using VoxReader.Extensions;
+using VoxReader.Interfaces;
 
-namespace VoxReader
+namespace VoxReader.Chunks
 {
-    public class Chunk
+    public class Chunk : IChunk
     {
-        /// <summary>
-        /// The ID of the chunk
-        /// </summary>
         public string Id { get; }
-
-        /// <summary>
-        /// Complete chunk data
-        /// </summary>
-        public byte[] Data { get; }
-
-        /// <summary>
-        /// Contains chunk specific information
-        /// </summary>
         public byte[] Content { get; }
-
-        /// <summary>
-        /// Contains children chunks
-        /// </summary>
-        public byte[] Children { get; }
+        public IChunk[] Children { get; }
+        
+        public int TotalBytes { get; }
 
         /// <summary>
         /// Creates a new chunk using the given data
@@ -31,15 +20,37 @@ namespace VoxReader
         public Chunk(byte[] data)
         {
             if (data == null)
-                throw new ArgumentNullException(nameof(data), "Data is null!");
+                throw new ArgumentNullException(nameof(data), $"{nameof(data)} is null!");
             if (data.Length == 0)
-                throw new InvalidDataException("Data is empty!");
+                throw new ArgumentException($"{nameof(data)} is empty!");
 
-            Data = data;
+            Id = new string(Helper.GetCharArray(data, 0, 4));
 
-            Id = new string(Reader.GetCharArray(data, 0, 4));
-            Content = data.GetRange(12, BitConverter.ToInt32(data, 4));
-            Children = data.GetRange(12 + Content.Length, BitConverter.ToInt32(data, 8));
+            int contentLength = BitConverter.ToInt32(data, 4);
+
+            Content = data.GetRange(12, contentLength);
+
+            int childrenLength = BitConverter.ToInt32(data, 8);
+
+            TotalBytes = 12 + contentLength + childrenLength;
+            
+            Children = GetChildrenChunks(data.GetRange(12 + contentLength, childrenLength));
+        }
+
+        private IChunk[] GetChildrenChunks(byte[] childrenData)
+        {
+            var children = new List<IChunk>();
+
+            int currentChunkOffset = 0;
+
+            while (currentChunkOffset < childrenData.Length)
+            {
+                IChunk childChunk = new Chunk(childrenData.GetRange(currentChunkOffset));
+                children.Add(childChunk);
+                currentChunkOffset += childChunk.TotalBytes;
+            }
+
+            return children.ToArray();
         }
 
         public override string ToString()

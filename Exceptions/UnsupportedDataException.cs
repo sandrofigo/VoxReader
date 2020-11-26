@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace VoxReader
+namespace VoxReader.Exceptions
 {
     [Serializable]
     public class UnsupportedDataException : Exception

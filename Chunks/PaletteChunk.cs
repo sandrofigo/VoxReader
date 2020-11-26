@@ -1,4 +1,4 @@
-﻿namespace VoxReader
+﻿namespace VoxReader.Chunks
 {
     public class PaletteChunk : Chunk
     {
