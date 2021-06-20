@@ -6,4 +6,4 @@ stages:
 build:
   stage: build
   script:
-    - './build.cmd Compile'
+    - powershell -file build.ps1 Compile
