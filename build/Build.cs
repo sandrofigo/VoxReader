@@ -44,6 +44,10 @@ class Build : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
+            DotNetBuildSettings settings = new();
+            settings = settings.SetProjectFile(Path.Combine(RootDirectory, "VoxReader"));
+
+            DotNetTasks.DotNetBuild(settings);
         });
 
 }
