@@ -13,7 +13,7 @@ namespace VoxReader.UnitTests
         [InlineData(TestFile, 1)]
         public void VoxReader_Read_ModelCountIsCorrect(string file, int expectedCount)
         {
-            IVoxFile voxFile = FileReader.ReadVoxFile(file);
+            IVoxFile voxFile = VoxReader.ReadVoxFile(file);
 
             voxFile.Models.Should().HaveCount(expectedCount);
         }
@@ -22,7 +22,7 @@ namespace VoxReader.UnitTests
         [InlineData(TestFile, 4)]
         public void VoxReader_Read_VoxelsCountIsCorrect(string file, int expectedCount)
         {
-            IVoxFile voxFile = FileReader.ReadVoxFile(file);
+            IVoxFile voxFile = VoxReader.ReadVoxFile(file);
 
             voxFile.Models.First().Voxels.Should().HaveCount(expectedCount);
         }

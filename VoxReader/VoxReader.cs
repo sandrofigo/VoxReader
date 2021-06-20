@@ -11,7 +11,7 @@ using VoxReader.Interfaces;
 
 namespace VoxReader
 {
-    public static class FileReader
+    public static class VoxReader
     {
         public static IVoxFile ReadVoxFile(string filePath)
         {
