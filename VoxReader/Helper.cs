@@ -30,7 +30,7 @@ namespace VoxReader
             for (int i = 0; i < sizeChunks.Length; i++)
             {
                 Vector3 size = sizeChunks[i].Size;
-                var voxels = voxelChunks[i].Voxels.Select(voxel => new Voxel(voxel.Position, palette.Colors[voxel.ColorIndex])).ToArray();
+                var voxels = voxelChunks[i].Voxels.Select(voxel => new Voxel(voxel.Position, palette.Colors[voxel.ColorIndex - 1])).ToArray();
                 
                 yield return new Model(size, voxels);
             }

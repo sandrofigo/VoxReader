@@ -1,3 +1,7 @@
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("VoxReader.UnitTests")]
+
 namespace VoxReader
 {
     public readonly struct Color

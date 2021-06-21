@@ -1,5 +1,4 @@
-﻿using System;
-using VoxReader.Interfaces;
+﻿using VoxReader.Interfaces;
 
 namespace VoxReader.Chunks
 {
@@ -9,16 +8,11 @@ namespace VoxReader.Chunks
 
         public VoxelChunk(byte[] data) : base(data)
         {
-            int voxelCount = BitConverter.ToInt32(data, 12);
-            
-            Voxels = new RawVoxel[voxelCount];
+            var formatParser = new FormatParser(Content);
 
-            for (int i = 0; i < voxelCount; i++)
-            {
-                var position = new Vector3(data[16 + i * 4], data[17 + i * 4], data[18 + i * 4]);
-                int colorIndex = data[19 + i * 4];
-                Voxels[i] = new RawVoxel(position, colorIndex);
-            }
+            int voxelCount = formatParser.ParseInt32();
+
+            Voxels = formatParser.ParseRawVoxels(voxelCount);
         }
 
         public override string ToString()

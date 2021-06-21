@@ -1,5 +1,4 @@
-﻿using System;
-using VoxReader.Interfaces;
+﻿using VoxReader.Interfaces;
 
 namespace VoxReader.Chunks
 {
@@ -9,11 +8,9 @@ namespace VoxReader.Chunks
 
         public SizeChunk(byte[] data) : base(data)
         {
-            int x = BitConverter.ToInt32(Content, 0);
-            int y = BitConverter.ToInt32(Content, 4);
-            int z = BitConverter.ToInt32(Content, 8);
+            var formatParser = new FormatParser(Content);
 
-            Size = new Vector3(x, y, z);
+            Size = formatParser.ParseVector3();
         }
 
         public override string ToString()

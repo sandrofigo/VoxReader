@@ -24,39 +24,23 @@ namespace VoxReader.Chunks
                 throw new ArgumentNullException(nameof(data), $"{nameof(data)} is null!");
             if (data.Length == 0)
                 throw new ArgumentException($"{nameof(data)} is empty!");
-
-            Id = GetChunkId(data);
-
-            int contentLength = BitConverter.ToInt32(data, 4);
-
-            Content = data.GetRange(12, contentLength);
-
-            int childrenLength = BitConverter.ToInt32(data, 8);
-
-            TotalBytes = 12 + contentLength + childrenLength;
-
-            Children = GetChildrenChunks(data.GetRange(12 + contentLength, childrenLength));
+            
+            var formatParser = new FormatParser(data);
+            
+            Id = formatParser.ParseString(4);
+            
+            int contentLength = formatParser.ParseInt32();
+            int childrenLength = formatParser.ParseInt32();
+            
+            Content = formatParser.ParseBytes(contentLength);
+            Children = formatParser.ParseChunks(childrenLength);
+            
+            TotalBytes = formatParser.CurrentOffset;
         }
 
         public static string GetChunkId(byte[] chunkData)
         {
             return new string(Helper.GetCharArray(chunkData, 0, 4));
-        }
-
-        private static IChunk[] GetChildrenChunks(byte[] childrenData)
-        {
-            var children = new List<IChunk>();
-
-            int currentChunkOffset = 0;
-
-            while (currentChunkOffset < childrenData.Length)
-            {
-                IChunk childChunk = ChunkFactory.Parse(childrenData.GetRange(currentChunkOffset));
-                children.Add(childChunk);
-                currentChunkOffset += childChunk.TotalBytes;
-            }
-
-            return children.ToArray();
         }
 
         public T GetChild<T>() where T : class, IChunk
