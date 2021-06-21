@@ -1,3 +1,4 @@
+using System;
 using VoxReader.Chunks;
 using VoxReader.Interfaces;
 
@@ -5,24 +6,34 @@ namespace VoxReader
 {
     internal static class ChunkFactory
     {
-        public static IChunk Parse(byte[] chunkData)
+        public static IChunk Parse(byte[] data)
         {
-            string id = Chunk.GetChunkId(chunkData);
+            ChunkType id = Chunk.GetChunkId(data);
 
             switch (id)
             {
-                case "MAIN":
-                    return new Chunk(chunkData);
-                case "SIZE":
-                    return new SizeChunk(chunkData);
-                case "XYZI":
-                    return new VoxelChunk(chunkData);
-                case "RGBA":
-                    return new PaletteChunk(chunkData);
-                case "PACK":
-                    return new PackChunk(chunkData);
+                case ChunkType.Main:
+                    return new Chunk(data);
+                case ChunkType.Pack:
+                    return new PackChunk(data);
+                case ChunkType.Size:
+                    return new SizeChunk(data);
+                case ChunkType.Voxel:
+                    return new VoxelChunk(data);
+                case ChunkType.Palette:
+                    return new PaletteChunk(data);
+                case ChunkType.MaterialOld:
+                case ChunkType.MaterialNew:
+                case ChunkType.TransformNode:
+                case ChunkType.GroupNode:
+                case ChunkType.ShapeNode:
+                case ChunkType.Layer:
+                case ChunkType.Object:
+                case ChunkType.Camera:
+                case ChunkType.Note:
+                    return new Chunk(data);
                 default:
-                    return new Chunk(chunkData);
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using VoxReader.Extensions;
 using VoxReader.Interfaces;
 
 namespace VoxReader.Chunks
@@ -29,8 +27,8 @@ namespace VoxReader.Chunks
             
             Id = formatParser.ParseString(4);
             
-            int contentLength = formatParser.ParseInt32();
-            int childrenLength = formatParser.ParseInt32();
+            int contentLength = formatParser.ParseInt();
+            int childrenLength = formatParser.ParseInt();
             
             Content = formatParser.ParseBytes(contentLength);
             Children = formatParser.ParseChunks(childrenLength);
@@ -38,9 +36,9 @@ namespace VoxReader.Chunks
             TotalBytes = formatParser.CurrentOffset;
         }
 
-        public static string GetChunkId(byte[] chunkData)
+        public static ChunkType GetChunkId(byte[] chunkData)
         {
-            return new string(Helper.GetCharArray(chunkData, 0, 4));
+            return ChunkTypeMapping.GetChunkId(new string(Helper.GetCharArray(chunkData, 0, 4)));
         }
 
         public T GetChild<T>() where T : class, IChunk

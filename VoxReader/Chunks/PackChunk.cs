@@ -1,4 +1,3 @@
-using System;
 using VoxReader.Interfaces;
 
 namespace VoxReader.Chunks
@@ -9,7 +8,9 @@ namespace VoxReader.Chunks
 
         public PackChunk(byte[] data) : base(data)
         {
-            ModelCount = BitConverter.ToInt32(Content, 0);
+            var formatParser = new FormatParser(Content);
+
+            ModelCount = formatParser.ParseInt();
         }
     }
 }

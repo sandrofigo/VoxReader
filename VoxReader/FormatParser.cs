@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using VoxReader.Chunks;
 using VoxReader.Extensions;
 using VoxReader.Interfaces;
 
@@ -49,7 +48,7 @@ namespace VoxReader
             return parsed;
         }
         
-        public int ParseInt32()
+        public int ParseInt()
         {
             int parsed = BitConverter.ToInt32(data, currentOffset);
 
@@ -94,9 +93,9 @@ namespace VoxReader
 
         public Vector3 ParseVector3()
         {
-            int x = ParseInt32();
-            int y = ParseInt32();
-            int z = ParseInt32();
+            int x = ParseInt();
+            int y = ParseInt();
+            int z = ParseInt();
 
             return new Vector3(x, y, z);
         }
