@@ -6,7 +6,7 @@ namespace VoxReader.Chunks
 {
     internal class Chunk : IChunk
     {
-        public string Id { get; }
+        public ChunkType Id { get; }
         public byte[] Content { get; }
         public IChunk[] Children { get; }
 
@@ -24,8 +24,8 @@ namespace VoxReader.Chunks
                 throw new ArgumentException($"{nameof(data)} is empty!");
             
             var formatParser = new FormatParser(data);
-            
-            Id = formatParser.ParseString(4);
+
+            Id = ChunkTypeMapping.GetChunkId(formatParser.ParseString(4));
             
             int contentLength = formatParser.ParseInt();
             int childrenLength = formatParser.ParseInt();

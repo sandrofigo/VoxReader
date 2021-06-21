@@ -1,6 +1,6 @@
 ﻿namespace VoxReader
 {
-    internal enum ChunkType
+    public enum ChunkType
     {
         Main,
         Pack,

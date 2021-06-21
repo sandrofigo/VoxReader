@@ -5,7 +5,7 @@ namespace VoxReader.Interfaces
         /// <summary>
         /// The Id of the chunk.
         /// </summary>
-        string Id { get; }
+        ChunkType Id { get; }
 
         /// <summary>
         /// The byte content of the chunk.
