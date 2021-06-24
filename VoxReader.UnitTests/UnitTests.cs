@@ -14,7 +14,7 @@ namespace VoxReader.UnitTests
         [Theory]
         [InlineData(TestFile1, 1)]
         [InlineData(TestFile2, 1)]
-        // [InlineData(TestFile3, 4)]
+        [InlineData(TestFile3, 4)]
         public void VoxReader_Read_ModelCountIsCorrect(string file, int expectedCount)
         {
             IVoxFile voxFile = VoxReader.ReadVoxFile(file);
@@ -25,7 +25,7 @@ namespace VoxReader.UnitTests
         [Theory]
         [InlineData(TestFile1, 4)]
         [InlineData(TestFile2, 3)]
-        // [InlineData(TestFile3, 1, 1, 1, 1)]
+        [InlineData(TestFile3, 1, 1, 1, 1)]
         public void VoxReader_Read_VoxelCountIsCorrect(string file, params int[] expectedCount)
         {
             IVoxFile voxFile = VoxReader.ReadVoxFile(file);

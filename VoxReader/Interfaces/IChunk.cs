@@ -3,9 +3,9 @@ namespace VoxReader.Interfaces
     public interface IChunk
     {
         /// <summary>
-        /// The Id of the chunk.
+        /// The type of the chunk.
         /// </summary>
-        ChunkType Id { get; }
+        ChunkType Type { get; }
 
         /// <summary>
         /// The byte content of the chunk.
@@ -28,8 +28,13 @@ namespace VoxReader.Interfaces
         T GetChild<T>() where T : class, IChunk;
 
         /// <summary>
-        /// Returns all children that match the specified chunk type.
+        /// Returns all children that match the specified type.
         /// </summary>
         T[] GetChildren<T>() where T : class, IChunk;
+        
+        /// <summary>
+        /// Returns all children that match the specified chunk type.
+        /// </summary>
+        IChunk[] GetChildren(ChunkType chunkType);
     }
 }

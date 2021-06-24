@@ -6,7 +6,7 @@ namespace VoxReader.Chunks
 {
     internal class Chunk : IChunk
     {
-        public ChunkType Id { get; }
+        public ChunkType Type { get; }
         public byte[] Content { get; }
         public IChunk[] Children { get; }
 
@@ -25,7 +25,7 @@ namespace VoxReader.Chunks
             
             var formatParser = new FormatParser(data);
 
-            Id = ChunkTypeMapping.GetChunkId(formatParser.ParseString(4));
+            Type = ChunkTypeMapping.GetChunkId(formatParser.ParseString(4));
             
             int contentLength = formatParser.ParseInt32();
             int childrenLength = formatParser.ParseInt32();
@@ -46,6 +46,11 @@ namespace VoxReader.Chunks
             return Children.FirstOrDefault(c => c is T) as T;
         }
 
+        public IChunk[] GetChildren(ChunkType chunkType)
+        {
+            return Children.Where(chunk => chunk.Type == chunkType).ToArray();
+        }
+        
         public T[] GetChildren<T>() where T : class, IChunk
         {
             return Children.Where(c => c is T).Cast<T>().ToArray();
@@ -53,7 +58,7 @@ namespace VoxReader.Chunks
 
         public override string ToString()
         {
-            return $"Id: {Id}, Content Length: {Content.Length}, Children Length: {Children.Length}";
+            return $"Id: {Type}, Content Length: {Content.Length}, Children Length: {Children.Length}";
         }
     }
 }
