@@ -1,12 +1,7 @@
 ﻿namespace VoxReader.Interfaces
 {
-    internal interface ITransformNodeChunk : IChunk
+    internal interface ITransformNodeChunk : INodeChunk
     {
-        /// <summary>
-        /// The id of the node.
-        /// </summary>
-        int NodeId { get; }
-
         /// <summary>
         /// The name of the node.
         /// </summary>
