@@ -26,9 +26,10 @@ namespace VoxReader
                     return new TransformNodeChunk(data);
                 case ChunkType.GroupNode:
                     return new GroupNodeChunk(data);
+                case ChunkType.ShapeNode:
+                    return new ShapeNodeChunk(data);
                 case ChunkType.MaterialOld:
                 case ChunkType.MaterialNew:
-                case ChunkType.ShapeNode:
                 case ChunkType.Layer:
                 case ChunkType.Object:
                 case ChunkType.Camera:
