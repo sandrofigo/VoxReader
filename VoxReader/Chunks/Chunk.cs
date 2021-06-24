@@ -27,8 +27,8 @@ namespace VoxReader.Chunks
 
             Id = ChunkTypeMapping.GetChunkId(formatParser.ParseString(4));
             
-            int contentLength = formatParser.ParseInt();
-            int childrenLength = formatParser.ParseInt();
+            int contentLength = formatParser.ParseInt32();
+            int childrenLength = formatParser.ParseInt32();
             
             Content = formatParser.ParseBytes(contentLength);
             Children = formatParser.ParseChunks(childrenLength);

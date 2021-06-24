@@ -10,7 +10,7 @@ namespace VoxReader.Chunks
         {
             var formatParser = new FormatParser(Content);
 
-            ModelCount = formatParser.ParseInt();
+            ModelCount = formatParser.ParseInt32();
         }
     }
 }

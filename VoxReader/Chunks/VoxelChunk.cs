@@ -10,7 +10,7 @@ namespace VoxReader.Chunks
         {
             var formatParser = new FormatParser(Content);
 
-            int voxelCount = formatParser.ParseInt();
+            int voxelCount = formatParser.ParseInt32();
 
             Voxels = formatParser.ParseRawVoxels(voxelCount);
         }

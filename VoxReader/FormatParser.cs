@@ -41,14 +41,14 @@ namespace VoxReader
             return parsed;
         }
 
-        public int ParseIntFromByte()
+        public int ParseInt8()
         {
             int parsed = Convert.ToInt32(ParseByte());
 
             return parsed;
         }
-        
-        public int ParseInt()
+
+        public int ParseInt32()
         {
             int parsed = BitConverter.ToInt32(data, currentOffset);
 
@@ -59,11 +59,17 @@ namespace VoxReader
 
         public string ParseString(int length)
         {
-            string parsed = new string(Helper.GetCharArray(data, currentOffset, length));
+            string parsed = new(Helper.GetCharArray(data, currentOffset, length));
 
             currentOffset += length;
 
             return parsed;
+        }
+
+        public string ParseStringAuto()
+        {
+            int length = ParseInt32();
+            return ParseString(length);
         }
 
         public IChunk[] ParseChunks(int count)
@@ -93,22 +99,22 @@ namespace VoxReader
 
         public Vector3 ParseVector3()
         {
-            int x = ParseInt();
-            int y = ParseInt();
-            int z = ParseInt();
+            int x = ParseInt32();
+            int y = ParseInt32();
+            int z = ParseInt32();
 
             return new Vector3(x, y, z);
         }
 
         public RawVoxel ParseRawVoxel()
         {
-            int x = ParseIntFromByte();
-            int y = ParseIntFromByte();
-            int z = ParseIntFromByte();
+            int x = ParseInt8();
+            int y = ParseInt8();
+            int z = ParseInt8();
 
             var position = new Vector3(x, y, z);
 
-            int colorIndex = ParseIntFromByte();
+            int colorIndex = ParseInt8();
 
             return new RawVoxel(position, colorIndex);
         }
@@ -145,6 +151,23 @@ namespace VoxReader
             }
 
             return colors;
+        }
+
+        public IDictionary<string, string> ParseDictionary()
+        {
+            var dictionary = new Dictionary<string, string>();
+
+            int keyValuePairCount = ParseInt32();
+
+            for (int i = 0; i < keyValuePairCount; i++)
+            {
+                string key = ParseStringAuto();
+                string value = ParseStringAuto();
+
+                dictionary.Add(key, value);
+            }
+
+            return dictionary;
         }
     }
 }

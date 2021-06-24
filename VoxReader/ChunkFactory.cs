@@ -22,9 +22,10 @@ namespace VoxReader
                     return new VoxelChunk(data);
                 case ChunkType.Palette:
                     return new PaletteChunk(data);
+                case ChunkType.TransformNode:
+                    return new TransformNodeChunk(data);
                 case ChunkType.MaterialOld:
                 case ChunkType.MaterialNew:
-                case ChunkType.TransformNode:
                 case ChunkType.GroupNode:
                 case ChunkType.ShapeNode:
                 case ChunkType.Layer:
