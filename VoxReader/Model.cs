@@ -17,6 +17,11 @@ namespace VoxReader
             IsCopy = isCopy;
         }
 
+        internal Model GetCopy()
+        {
+            return new(Id, Size, Voxels, true);
+        }
+        
         public override string ToString()
         {
             return $"Id: {Id}, Size: {Size}, Voxel Count: {Voxels.Length}";

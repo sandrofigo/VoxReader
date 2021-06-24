@@ -44,9 +44,8 @@ namespace VoxReader
                 if (processedModels.ContainsKey(id))
                 {
                     // Create copy of already existing model
-                    var model = new Model(id, processedModels[id].Size, processedModels[id].Voxels, true);
                     duplicateModelCount++;
-                    yield return model;
+                    yield return processedModels[id].GetCopy();
                 }
                 else
                 {
