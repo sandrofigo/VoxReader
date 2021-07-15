@@ -5,17 +5,17 @@ namespace VoxReader
     public struct Vector3 : IEquatable<Vector3>
     {
         /// <summary>
-        /// The x-component of the vector.
+        /// The x-component of the vector (right).
         /// </summary>
         public readonly int X;
         
         /// <summary>
-        /// The y-component of the vector.
+        /// The y-component of the vector (forward).
         /// </summary>
         public readonly int Y;
         
         /// <summary>
-        /// The z-component of the vector.
+        /// The z-component of the vector (up).
         /// </summary>
         public readonly int Z;
 
