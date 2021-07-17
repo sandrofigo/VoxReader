@@ -7,7 +7,10 @@ stages:
 build:
   stage: build
   script:
-    - './build.cmd Test -configuration Release'
+    - './build.cmd GitHubRelease -configuration Release'
+  artifacts:
+    paths:
+      - publish/
 
 #publish:
 #  stage: publish
