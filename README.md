@@ -9,36 +9,33 @@ A C# library to read .vox files created with MagicaVoxel
 ## Currently supported features
 
 At the moment it is possible to read:
-- the size of the model
+- the size of all models
 - all individual voxels including their color and position
 - the palette that was used for the model
+- all raw data related to the scene
+- miscellaneous raw data
 
 ## Usage
 
 ```csharp
-using System;
-using System.IO;
-using System.Linq;
-using VoxReader;
+// Read .vox file
+IVoxFile voxFile = VoxReader.ReadVoxFile(data);
 
-class Program
-{
-    public static void Main(string[] args)
-    {
-        var data = File.ReadAllBytes("my_awesome_model.vox");
+// Access models of .vox file
+IModel[] models = voxFile.Models;
 
-        var chunks = Reader.GetChunks(data);
+// Access voxels of first model in the file
+Voxel[] voxels = models[0].Voxels;
 
-        var sizeChunk = chunks.FirstOrDefault(c => c.Id == nameof(ChunkType.SIZE)) as SizeChunk;
-        Console.WriteLine(sizeChunk?.ToString());
+// Access properties of a voxel
+Vector3 position = voxels[0].Position;
+Color color = voxels[0].Color;
 
-        var voxelChunk = chunks.FirstOrDefault(c => c.Id == nameof(ChunkType.XYZI)) as VoxelChunk;
-        Console.WriteLine(voxelChunk?.ToString());
+// Access palette of .vox file
+IPalette palette = voxFile.Palette;
 
-        var paletteChunk = chunks.FirstOrDefault(c => c.Id == nameof(ChunkType.RGBA)) as PaletteChunk;
-        Console.WriteLine(paletteChunk?.ToString());
-    }
-}
+// Access raw data of a chunk
+byte[] rawData = voxFile.Chunks[0].Content;
 ```
 
 ## Extending the library
