@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace VoxReader
+﻿namespace VoxReader
 {
     public enum ChunkType
     {
@@ -9,7 +7,6 @@ namespace VoxReader
         Size,
         Voxel,
         Palette,
-        [Obsolete("This type of chunk will be removed in the future.")]
         MaterialOld,
         MaterialNew,
         TransformNode,
