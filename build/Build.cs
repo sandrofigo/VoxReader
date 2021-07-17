@@ -32,6 +32,8 @@ class Build : NukeBuild
     
     bool IsOnMasterBranch => CI_COMMIT_REF_NAME == "master";
     bool IsOnDevelopBranch => CI_COMMIT_REF_NAME == "develop";
+
+    bool IsOnVersionTag => Helper.IsValidVersionTag(CI_COMMIT_REF_NAME);
     
     Target Clean => _ => _
         .Executes(() =>
@@ -76,7 +78,7 @@ class Build : NukeBuild
     Target GitHubRelease => _ => _
         .Requires(() => GitHubAccessToken)
         .DependsOn(Pack)
-        .OnlyWhenDynamic(() => IsOnMasterBranch)
+        .OnlyWhenDynamic(() => IsOnVersionTag)
         .Executes(() =>
         {
             GitHubTasks.GitHubClient = new GitHubClient(new ProductHeaderValue("VoxReader"))
