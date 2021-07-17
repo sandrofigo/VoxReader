@@ -1,4 +1,3 @@
-using System.Drawing;
 using System.Linq;
 using FluentAssertions;
 using VoxReader.Interfaces;
@@ -11,7 +10,6 @@ namespace VoxReader.UnitTests
         private const string TestFile1 = "data/3x3.vox";
         private const string TestFile2 = "data/3x3_2.vox";
         private const string TestFile3 = "data/3x3_3.vox";
-        private const string TestFile4 = "data/3x3_image.vox";
         private const string TestFile5 = "data/1x1.vox";
         private const string TestFile6 = "data/256x256.vox";
 
@@ -98,29 +96,6 @@ namespace VoxReader.UnitTests
             IModel model = voxFile.Models.First();
 
             model.Voxels.Should().HaveCount(256 * 256 * 256);
-        }
-
-        [Fact]
-        public void VoxReader_Read_AllVoxelsAreCorrect()
-        {
-            IVoxFile voxFile = VoxReader.ReadVoxFile(TestFile4);
-
-            IModel model = voxFile.Models.First();
-
-            Bitmap generatedImage = Helper.GetImageFromModel(model);
-
-            var referenceImage = (Bitmap)Image.FromFile("data/3x3_image_reference.png");
-
-            generatedImage.Width.Should().Be(referenceImage.Width);
-            generatedImage.Height.Should().Be(referenceImage.Height);
-
-            for (int y = 0; y < generatedImage.Height; y++)
-            {
-                for (int x = 0; x < generatedImage.Width; x++)
-                {
-                    generatedImage.GetPixel(x, y).Should().Be(referenceImage.GetPixel(x, y));
-                }
-            }
         }
     }
 }
