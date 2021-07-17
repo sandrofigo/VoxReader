@@ -66,7 +66,7 @@ class Build : NukeBuild
             DotNetPackSettings settings = new DotNetPackSettings()
                 .SetConfiguration(Configuration.Release)
                 .SetProject(ProjectPath)
-                .SetVersion("3.0.0")
+                .SetVersion(PackageVersion.ToString())
                 .SetCopyright($"Copyright {DateTime.UtcNow.Year} (c) Sandro Figo")
                 .SetOutputDirectory(PackOutputPath);
 
