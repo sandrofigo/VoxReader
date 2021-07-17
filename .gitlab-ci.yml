@@ -1,9 +1,17 @@
-image : mcr.microsoft.com/dotnet/sdk:5.0
+image: mcr.microsoft.com/dotnet/sdk:5.0
 
 stages:
   - build
+#  - publish
 
 build:
   stage: build
   script:
-    - './build.cmd Test'
+    - './build.cmd Test -configuration Release'
+
+#publish:
+#  stage: publish
+#  only:
+#    - tags
+#  script:
+#    - './build.cmd PublishNuGetPackage -configuration Release'

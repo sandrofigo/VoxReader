@@ -6,6 +6,10 @@
     "build": {
       "type": "object",
       "properties": {
+        "CI_COMMIT_REF_NAME": {
+          "type": "string",
+          "description": "The branch or tag name on which the build is executed (GitLab)"
+        },
         "Configuration": {
           "type": "string",
           "description": "Configuration to build - Default is 'Debug' (local) or 'Release' (server)",
@@ -17,6 +21,9 @@
         "Continue": {
           "type": "boolean",
           "description": "Indicates to continue a previously failed build attempt"
+        },
+        "GitHubAccessToken": {
+          "type": "string"
         },
         "Help": {
           "type": "boolean",
@@ -71,7 +78,11 @@
           "items": {
             "type": "string",
             "enum": [
+              "Clean",
               "Compile",
+              "GitHubRelease",
+              "Pack",
+              "PublishNuGetPackage",
               "Test"
             ]
           }
@@ -86,7 +97,11 @@
           "items": {
             "type": "string",
             "enum": [
+              "Clean",
               "Compile",
+              "GitHubRelease",
+              "Pack",
+              "PublishNuGetPackage",
               "Test"
             ]
           }

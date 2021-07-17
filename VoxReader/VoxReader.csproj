@@ -4,10 +4,8 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>9</LangVersion>
         <PackageId>VoxReader</PackageId>
-        <PackageVersion>2.0.0</PackageVersion>
         <Authors>Sandro Figo</Authors>
         <Description>A C# library to read .vox files created with MagicaVoxel</Description>
-        <Copyright>Copyright 2021 (c) Sandro Figo</Copyright>
         <PackageTags>vox voxel parse file MagicaVoxel reader</PackageTags>
         <PackageIconUrl>https://github.com/sandrofigo/VoxReader/blob/master/images/icon.png?raw=true</PackageIconUrl>
         <PackageProjectUrl>https://github.com/sandrofigo/VoxReader</PackageProjectUrl>
