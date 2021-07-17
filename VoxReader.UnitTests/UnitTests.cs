@@ -19,7 +19,7 @@ namespace VoxReader.UnitTests
         [InlineData(TestFile3, 4)]
         public void VoxReader_Read_ModelCountIsCorrect(string file, int expectedCount)
         {
-            IVoxFile voxFile = VoxReader.ReadVoxFile(file);
+            IVoxFile voxFile = VoxReader.Read(file);
 
             voxFile.Models.Should().HaveCount(expectedCount);
         }
@@ -30,7 +30,7 @@ namespace VoxReader.UnitTests
         [InlineData(TestFile3, 1, 1, 1, 1)]
         public void VoxReader_Read_VoxelCountIsCorrect(string file, params int[] expectedCount)
         {
-            IVoxFile voxFile = VoxReader.ReadVoxFile(file);
+            IVoxFile voxFile = VoxReader.Read(file);
 
             var models = voxFile.Models;
 
@@ -45,7 +45,7 @@ namespace VoxReader.UnitTests
         [Fact]
         public void VoxReader_Read_VoxelColorIsCorrect()
         {
-            IVoxFile voxFile = VoxReader.ReadVoxFile(TestFile1);
+            IVoxFile voxFile = VoxReader.Read(TestFile1);
 
             IModel model = voxFile.Models.First();
 
@@ -58,7 +58,7 @@ namespace VoxReader.UnitTests
         [Fact]
         public void VoxReader_Read_VoxelColorIsCorrectForSmallestModel()
         {
-            IVoxFile voxFile = VoxReader.ReadVoxFile(TestFile5);
+            IVoxFile voxFile = VoxReader.Read(TestFile5);
 
             IModel model = voxFile.Models.First();
 
@@ -68,7 +68,7 @@ namespace VoxReader.UnitTests
         [Fact]
         public void VoxReader_Read_VoxelCountIsCorrectForSmallestModel()
         {
-            IVoxFile voxFile = VoxReader.ReadVoxFile(TestFile5);
+            IVoxFile voxFile = VoxReader.Read(TestFile5);
 
             IModel model = voxFile.Models.First();
 
@@ -78,7 +78,7 @@ namespace VoxReader.UnitTests
         [Fact]
         public void VoxReader_Read_VoxelColorIsCorrectForLargestModel()
         {
-            IVoxFile voxFile = VoxReader.ReadVoxFile(TestFile6);
+            IVoxFile voxFile = VoxReader.Read(TestFile6);
 
             IModel model = voxFile.Models.First();
 
@@ -91,7 +91,7 @@ namespace VoxReader.UnitTests
         [Fact]
         public void VoxReader_Read_VoxelCountIsCorrectForLargestModel()
         {
-            IVoxFile voxFile = VoxReader.ReadVoxFile(TestFile6);
+            IVoxFile voxFile = VoxReader.Read(TestFile6);
 
             IModel model = voxFile.Models.First();
 

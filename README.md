@@ -20,7 +20,7 @@ At the moment it is possible to read:
 
 ```csharp
 // Read .vox file
-IVoxFile voxFile = VoxReader.ReadVoxFile(data);
+IVoxFile voxFile = VoxReader.Read("my_awesome_model.vox");
 
 // Access models of .vox file
 IModel[] models = voxFile.Models;

@@ -11,12 +11,26 @@ using VoxReader.Interfaces;
 
 namespace VoxReader
 {
+    /// <summary>
+    /// Used to read data from .vox files.
+    /// </summary>
     public static class VoxReader
     {
-        public static IVoxFile ReadVoxFile(string filePath)
+        /// <summary>
+        /// Reads the file at the provided path.
+        /// </summary>
+        public static IVoxFile Read(string filePath)
         {
-            var data = File.ReadAllBytes(filePath);
+            byte[] data = File.ReadAllBytes(filePath);
 
+            return Read(data);
+        }
+        
+        /// <summary>
+        /// Reads the data from the provided byte array.
+        /// </summary>
+        public static IVoxFile Read(byte[] data)
+        {
             int versionNumber = BitConverter.ToInt32(data, 4);
 
             IChunk mainChunk = ChunkFactory.Parse(data.GetRange(8));
