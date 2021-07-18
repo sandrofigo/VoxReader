@@ -1,50 +1,46 @@
 # VoxReader
 
-![latest](https://img.shields.io/nuget/v/VoxReader)
-![build](https://img.shields.io/appveyor/ci/sandrofigo/voxreader)
+[![latest](https://img.shields.io/nuget/v/VoxReader)](https://www.nuget.org/packages/VoxReader/)
+[![downloads](https://img.shields.io/nuget/dt/VoxReader?color=blue)](https://www.nuget.org/packages/VoxReader/)
+[![pipeline status](https://gitlab.com/sandrofigo/VoxReader/badges/develop/pipeline.svg)](https://gitlab.com/sandrofigo/VoxReader/-/commits/develop)
 
-A C# library to read .vox files created with MagicaVoxel
+A C# library to read .vox files created with [MagicaVoxel](https://ephtracy.github.io/index.html?page=mv_main)
 
 ---
 
 ## Currently supported features
 
 At the moment it is possible to read:
-- the size of the model
+- the size of all models
 - all individual voxels including their color and position
 - the palette that was used for the model
+- all raw data related to the scene
+- miscellaneous raw data
 
 ## Usage
 
 ```csharp
-using System;
-using System.IO;
-using System.Linq;
-using VoxReader;
+// Read .vox file
+IVoxFile voxFile = VoxReader.Read("my_awesome_model.vox");
 
-class Program
-{
-    public static void Main(string[] args)
-    {
-        var data = File.ReadAllBytes("my_awesome_model.vox");
+// Access models of .vox file
+IModel[] models = voxFile.Models;
 
-        var chunks = Reader.GetChunks(data);
+// Access voxels of first model in the file
+Voxel[] voxels = models[0].Voxels;
 
-        var sizeChunk = chunks.FirstOrDefault(c => c.Id == nameof(ChunkType.SIZE)) as SizeChunk;
-        Console.WriteLine(sizeChunk?.ToString());
+// Access properties of a voxel
+Vector3 position = voxels[0].Position;
+Color color = voxels[0].Color;
 
-        var voxelChunk = chunks.FirstOrDefault(c => c.Id == nameof(ChunkType.XYZI)) as VoxelChunk;
-        Console.WriteLine(voxelChunk?.ToString());
+// Access palette of .vox file
+IPalette palette = voxFile.Palette;
 
-        var paletteChunk = chunks.FirstOrDefault(c => c.Id == nameof(ChunkType.RGBA)) as PaletteChunk;
-        Console.WriteLine(paletteChunk?.ToString());
-    }
-}
+// Access raw data of a chunk
+byte[] rawData = voxFile.Chunks[0].Content;
 ```
 
 ## Extending the library
-
-Only .vox files that contain a single model are supported for now.
 
 The file format specification made by [ephtracy](https://github.com/ephtracy) is available at [.vox file format](https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt)
 

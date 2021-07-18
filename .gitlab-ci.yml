@@ -1,0 +1,20 @@
+image: mcr.microsoft.com/dotnet/sdk:5.0
+
+stages:
+  - build
+#  - publish
+
+build:
+  stage: build
+  script:
+    - './build.cmd GitHubRelease -configuration Release'
+  artifacts:
+    paths:
+      - publish/
+
+#publish:
+#  stage: publish
+#  only:
+#    - tags
+#  script:
+#    - './build.cmd PublishNuGetPackage -configuration Release'
