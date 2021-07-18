@@ -1,9 +1,10 @@
 # VoxReader
 
 [![latest](https://img.shields.io/nuget/v/VoxReader)](https://www.nuget.org/packages/VoxReader/)
-[![build](https://gitlab.com/sandrofigo/VoxReader/badges/master/pipeline.svg?key_text=build)](https://gitlab.com/sandrofigo/VoxReader/-/pipelines?page=1&scope=all&ref=master)
+[![downloads](https://img.shields.io/nuget/dt/VoxReader?color=blue)](https://www.nuget.org/packages/VoxReader/)
+[![pipeline status](https://gitlab.com/sandrofigo/VoxReader/badges/develop/pipeline.svg)](https://gitlab.com/sandrofigo/VoxReader/-/commits/develop)
 
-A C# library to read .vox files created with MagicaVoxel
+A C# library to read .vox files created with [MagicaVoxel](https://ephtracy.github.io/index.html?page=mv_main)
 
 ---
 
