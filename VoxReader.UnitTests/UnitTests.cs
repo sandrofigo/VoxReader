@@ -7,29 +7,33 @@ namespace VoxReader.UnitTests
 {
     public class UnitTests
     {
-        private const string TestFile1 = "data/3x3.vox";
-        private const string TestFile2 = "data/3x3_2.vox";
-        private const string TestFile3 = "data/3x3_3.vox";
-        private const string TestFile5 = "data/1x1.vox";
-        private const string TestFile6 = "data/256x256.vox";
+        private const string TestFile_3x3 = "data/3x3.7z";
+        private const string TestFile_3x3_2 = "data/3x3_2.7z";
+        private const string TestFile_3x3_3 = "data/3x3_3.7z";
+        private const string TestFile_1x1 = "data/1x1.7z";
+        private const string TestFile_256x256 = "data/256x256.7z";
 
         [Theory]
-        [InlineData(TestFile1, 1)]
-        [InlineData(TestFile2, 1)]
-        [InlineData(TestFile3, 4)]
+        [InlineData(TestFile_3x3, 1)]
+        [InlineData(TestFile_3x3_2, 1)]
+        [InlineData(TestFile_3x3_3, 4)]
         public void VoxReader_Read_ModelCountIsCorrect(string file, int expectedCount)
         {
+            file = Zip.UnzipFilesFromSevenZipArchive(file).First();
+
             IVoxFile voxFile = VoxReader.Read(file);
 
             voxFile.Models.Should().HaveCount(expectedCount);
         }
 
         [Theory]
-        [InlineData(TestFile1, 4)]
-        [InlineData(TestFile2, 3)]
-        [InlineData(TestFile3, 1, 1, 1, 1)]
+        [InlineData(TestFile_3x3, 4)]
+        [InlineData(TestFile_3x3_2, 3)]
+        [InlineData(TestFile_3x3_3, 1, 1, 1, 1)]
         public void VoxReader_Read_VoxelCountIsCorrect(string file, params int[] expectedCount)
         {
+            file = Zip.UnzipFilesFromSevenZipArchive(file).First();
+
             IVoxFile voxFile = VoxReader.Read(file);
 
             var models = voxFile.Models;
@@ -45,7 +49,9 @@ namespace VoxReader.UnitTests
         [Fact]
         public void VoxReader_Read_VoxelColorIsCorrect()
         {
-            IVoxFile voxFile = VoxReader.Read(TestFile1);
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_3x3).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
 
             IModel model = voxFile.Models.First();
 
@@ -58,7 +64,9 @@ namespace VoxReader.UnitTests
         [Fact]
         public void VoxReader_Read_VoxelColorIsCorrectForSmallestModel()
         {
-            IVoxFile voxFile = VoxReader.Read(TestFile5);
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_1x1).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
 
             IModel model = voxFile.Models.First();
 
@@ -68,7 +76,9 @@ namespace VoxReader.UnitTests
         [Fact]
         public void VoxReader_Read_VoxelCountIsCorrectForSmallestModel()
         {
-            IVoxFile voxFile = VoxReader.Read(TestFile5);
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_1x1).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
 
             IModel model = voxFile.Models.First();
 
@@ -78,7 +88,9 @@ namespace VoxReader.UnitTests
         [Fact]
         public void VoxReader_Read_VoxelColorIsCorrectForLargestModel()
         {
-            IVoxFile voxFile = VoxReader.Read(TestFile6);
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_256x256).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
 
             IModel model = voxFile.Models.First();
 
@@ -91,7 +103,9 @@ namespace VoxReader.UnitTests
         [Fact]
         public void VoxReader_Read_VoxelCountIsCorrectForLargestModel()
         {
-            IVoxFile voxFile = VoxReader.Read(TestFile6);
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_256x256).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
 
             IModel model = voxFile.Models.First();
 
