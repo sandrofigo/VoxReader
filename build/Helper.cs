@@ -1,9 +1,23 @@
 ﻿using System.Text.RegularExpressions;
+using NuGet.Versioning;
 
 public static class Helper
 {
-    public static bool IsValidVersionTag(string version)
+    public static bool IsValidVersionTag(string version, out SemanticVersion semanticVersion)
     {
-        return Regex.IsMatch(version, "^v[0-9]*.[0-9]*.[0-9]*");
+        Match match = Regex.Match(version, @"v(?<major>\d+).(?<minor>\d+).(?<patch>\d+)");
+
+        semanticVersion = new SemanticVersion(0, 0, 0);
+
+        if (!match.Success)
+            return false;
+        
+        semanticVersion = new SemanticVersion(
+            int.Parse(match.Groups["major"].Value),
+            int.Parse(match.Groups["minor"].Value),
+            int.Parse(match.Groups["patch"].Value)
+        );
+
+        return true;
     }
 }

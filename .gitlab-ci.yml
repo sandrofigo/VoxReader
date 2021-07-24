@@ -1,5 +1,8 @@
 image: mcr.microsoft.com/dotnet/sdk:5.0
 
+variables:
+  GIT_DEPTH: 1
+
 stages:
   - build
 #  - publish

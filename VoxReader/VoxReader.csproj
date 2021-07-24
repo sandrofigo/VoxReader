@@ -11,6 +11,8 @@
         <PackageProjectUrl>https://github.com/sandrofigo/VoxReader</PackageProjectUrl>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1591</NoWarn>
     </PropertyGroup>
     
 </Project>
