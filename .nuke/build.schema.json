@@ -80,6 +80,7 @@
             "enum": [
               "Clean",
               "Compile",
+              "ExtractVersionFromTag",
               "GitHubRelease",
               "Pack",
               "PublishNuGetPackage",
@@ -99,6 +100,7 @@
             "enum": [
               "Clean",
               "Compile",
+              "ExtractVersionFromTag",
               "GitHubRelease",
               "Pack",
               "PublishNuGetPackage",

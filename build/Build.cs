@@ -26,21 +26,21 @@ class Build : NukeBuild
 
     readonly AbsolutePath PackOutputPath = (AbsolutePath)Path.Combine(RootDirectory, "publish");
 
-    readonly SemanticVersion PackageVersion = new(2, 0, 0);
+    SemanticVersion PackageVersion;
 
     [Parameter("The branch or tag name on which the build is executed (GitLab)")] readonly string CI_COMMIT_REF_NAME = string.Empty;
-    
+
     bool IsOnMasterBranch => CI_COMMIT_REF_NAME == "master";
     bool IsOnDevelopBranch => CI_COMMIT_REF_NAME == "develop";
 
-    bool IsOnVersionTag => Helper.IsValidVersionTag(CI_COMMIT_REF_NAME);
-    
+    bool IsOnVersionTag => Helper.IsValidVersionTag(CI_COMMIT_REF_NAME, out SemanticVersion _);
+
     Target Clean => _ => _
         .Executes(() =>
         {
             FileSystemTasks.DeleteDirectory(PackOutputPath);
         });
-    
+
     Target Compile => _ => _
         .DependsOn(Clean)
         .Executes(() =>
@@ -61,8 +61,20 @@ class Build : NukeBuild
             DotNetTasks.DotNetTest(settings);
         });
 
+    Target ExtractVersionFromTag => _ => _
+        .Executes(() =>
+        {
+            bool success = Helper.IsValidVersionTag(CI_COMMIT_REF_NAME, out PackageVersion);
+
+            if (!success)
+                Logger.Normal($"Could not extract version from '{CI_COMMIT_REF_NAME}'");
+
+            Logger.Info($"Package Version: {PackageVersion.ToString()}");
+        });
+
     Target Pack => _ => _
         .DependsOn(Test)
+        .DependsOn(ExtractVersionFromTag)
         .Executes(() =>
         {
             DotNetPackSettings settings = new DotNetPackSettings()
@@ -85,7 +97,7 @@ class Build : NukeBuild
             {
                 Credentials = new Credentials(GitHubAccessToken)
             };
-            
+
             var release = new NewRelease($"v{PackageVersion}")
             {
                 Body = "Changes:\n - TODO",
@@ -93,29 +105,29 @@ class Build : NukeBuild
                 Name = PackageVersion.ToString(),
                 TargetCommitish = "master"
             };
-            
+
             Release createdRelease = GitHubTasks.GitHubClient.Repository.Release.Create("sandrofigo", "VoxReader", release).Result;
-            
+
             // Add artifacts to release
             foreach (AbsolutePath artifact in PackOutputPath.GlobFiles("*"))
             {
                 if (!FileSystemTasks.FileExists(artifact))
                     continue;
-                
+
                 if (!new FileExtensionContentTypeProvider().TryGetContentType(artifact, out string assetContentType))
                 {
                     assetContentType = "application/x-binary";
                 }
-            
+
                 var releaseAssetUpload = new ReleaseAssetUpload
                 {
                     ContentType = assetContentType,
                     FileName = Path.GetFileName(artifact),
                     RawData = File.OpenRead(artifact)
                 };
-            
+
                 ReleaseAsset createdReleaseAsset = GitHubTasks.GitHubClient.Repository.Release.UploadAsset(createdRelease, releaseAssetUpload).Result;
-                
+
                 Logger.Info($"Added '{releaseAssetUpload.FileName}' to '{release.Name}'.");
             }
         });
