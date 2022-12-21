@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.AspNetCore.StaticFiles;
 using NuGet.Versioning;
 using Nuke.Common;
+using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -12,6 +13,15 @@ using Nuke.Common.Tools.GitHub;
 using Octokit;
 using static Nuke.Common.IO.FileSystemTasks;
 
+[GitHubActions(
+    "build",
+    GitHubActionsImage.UbuntuLatest,
+    AutoGenerate = true,
+    FetchDepth = 0,
+    OnPushBranches = new[]{"main", "develop"},
+    InvokedTargets = new[]{nameof(Test)},
+    EnableGitHubToken = true,
+    ImportSecrets = new[]{nameof(NuGetApiKey)})]
 class Build : NukeBuild
 {
     public static int Main() => Execute<Build>(x => x.Test);
@@ -19,6 +29,8 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")] readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
     // [Parameter] readonly string GitHubAccessToken;
+    
+    [Parameter("NuGet API Key"), Secret] readonly string NuGetApiKey;
 
     [Solution(GenerateProjects = true)] readonly Solution Solution;
 
@@ -38,7 +50,7 @@ class Build : NukeBuild
     Target Clean => _ => _
         .Executes(() =>
         {
-            DeleteDirectory(PackOutputPath);
+            EnsureCleanDirectory(PackOutputPath);
             // DotNetTasks.DotNetClean(s => s.SetProject(Solution));
             DotNetTasks.DotNetClean();
         });
