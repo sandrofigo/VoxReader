@@ -60,7 +60,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             // DotNetTasks.DotNetBuild(s => s.SetProjectFile(Solution.VoxReader));
-            DotNetTasks.DotNetBuild();
+            DotNetTasks.DotNetBuild(s => s.SetConfiguration(Configuration));
         });
 
     Target Test => _ => _
@@ -68,7 +68,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             // DotNetTasks.DotNetTest(s => s.SetProcessWorkingDirectory(RootDirectory));
-            DotNetTasks.DotNetTest();
+            DotNetTasks.DotNetTest(s => s.SetConfiguration(Configuration));
         });
 
     // Target ExtractVersionFromTag => _ => _
