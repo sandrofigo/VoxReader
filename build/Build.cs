@@ -18,10 +18,10 @@ using static Nuke.Common.IO.FileSystemTasks;
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
     FetchDepth = 0,
-    OnPushBranches = new[]{"main", "develop"},
-    InvokedTargets = new[]{nameof(Test)},
+    OnPushBranches = new[] { "main", "develop" },
+    InvokedTargets = new[] { nameof(Test) },
     EnableGitHubToken = true,
-    ImportSecrets = new[]{nameof(NuGetApiKey)})]
+    ImportSecrets = new[] { nameof(NuGetApiKey) })]
 class Build : NukeBuild
 {
     public static int Main() => Execute<Build>(x => x.Test);
@@ -29,7 +29,7 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")] readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
     // [Parameter] readonly string GitHubAccessToken;
-    
+
     [Parameter("NuGet API Key"), Secret] readonly string NuGetApiKey;
 
     [Solution(GenerateProjects = true)] readonly Solution Solution;
@@ -51,24 +51,27 @@ class Build : NukeBuild
         .Executes(() =>
         {
             EnsureCleanDirectory(PackOutputPath);
-            // DotNetTasks.DotNetClean(s => s.SetProject(Solution));
-            DotNetTasks.DotNetClean();
+            DotNetTasks.DotNetClean(s => s
+                .SetProject(Solution));
         });
 
     Target Compile => _ => _
         .DependsOn(Clean)
         .Executes(() =>
         {
-            // DotNetTasks.DotNetBuild(s => s.SetProjectFile(Solution.VoxReader));
-            DotNetTasks.DotNetBuild(s => s.SetConfiguration(Configuration));
+            DotNetTasks.DotNetBuild(s => s
+                .SetProjectFile(Solution)
+                .SetConfiguration(Configuration));
         });
 
     Target Test => _ => _
         .DependsOn(Compile)
         .Executes(() =>
         {
-            // DotNetTasks.DotNetTest(s => s.SetProcessWorkingDirectory(RootDirectory));
-            DotNetTasks.DotNetTest(s => s.SetConfiguration(Configuration).SetLoggers("trx;logfilename=test-results.trx"));
+            DotNetTasks.DotNetTest(s => s
+                .SetProjectFile(Solution)
+                .SetConfiguration(Configuration)
+                .SetLoggers("trx;logfilename=test-results.trx"));
         });
 
     // Target ExtractVersionFromTag => _ => _
