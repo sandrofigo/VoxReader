@@ -11,7 +11,6 @@ using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitHub;
 using Octokit;
 
-[CheckBuildProjectConfigurations]
 class Build : NukeBuild
 {
     public static int Main() => Execute<Build>(x => x.Test);
