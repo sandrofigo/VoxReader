@@ -30,19 +30,19 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="data\1x1.7z">
+      <None Update="data\1x1.zip">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="data\256x256.7z">
+      <None Update="data\256x256.zip">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="data\3x3.7z">
+      <None Update="data\3x3.zip">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="data\3x3_2.7z">
+      <None Update="data\3x3_2.zip">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="data\3x3_3.7z">
+      <None Update="data\3x3_3.zip">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

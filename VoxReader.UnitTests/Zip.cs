@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SharpCompress.Archives;
-using SharpCompress.Archives.SevenZip;
+using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
 
 namespace VoxReader.UnitTests
@@ -16,9 +16,9 @@ namespace VoxReader.UnitTests
             
             Directory.CreateDirectory(tempPath);
             
-            using SevenZipArchive archive = SevenZipArchive.Open(archivePath);
+            using ZipArchive archive = ZipArchive.Open(archivePath);
 
-            foreach (SevenZipArchiveEntry entry in archive.Entries.Where(entry => !entry.IsDirectory))
+            foreach (ZipArchiveEntry entry in archive.Entries.Where(entry => !entry.IsDirectory))
             {
                 entry.WriteToDirectory(tempPath, new ExtractionOptions
                 {
