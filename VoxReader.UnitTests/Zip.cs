@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,8 +12,10 @@ namespace VoxReader.UnitTests
     {
         public static IEnumerable<string> UnzipFilesFromSevenZipArchive(string archivePath)
         {
-            string tempPath = Path.Combine(Path.GetTempPath(), nameof(VoxReader));
-
+            string tempPath = Path.Combine(Path.GetTempPath(), nameof(VoxReader), Guid.NewGuid().ToString());
+            
+            Directory.CreateDirectory(tempPath);
+            
             using SevenZipArchive archive = SevenZipArchive.Open(archivePath);
 
             foreach (SevenZipArchiveEntry entry in archive.Entries.Where(entry => !entry.IsDirectory))
