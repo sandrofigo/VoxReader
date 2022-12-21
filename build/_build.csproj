@@ -15,10 +15,4 @@
     <PackageReference Include="Nuke.Common" Version="6.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="..\.gitlab-ci.yml">
-      <Link>.gitlab-ci.yml</Link>
-    </Content>
-  </ItemGroup>
-
 </Project>
