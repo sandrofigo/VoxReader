@@ -20,7 +20,7 @@ class Build : NukeBuild
 
     // [Parameter] readonly string GitHubAccessToken;
 
-    [Solution] readonly Solution Solution;
+    [Solution(GenerateProjects = true)] readonly Solution Solution;
 
     readonly AbsolutePath ProjectPath = (AbsolutePath)Path.Combine(RootDirectory, "VoxReader");
 
@@ -39,26 +39,24 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DeleteDirectory(PackOutputPath);
+            // DotNetTasks.DotNetClean(s => s.SetProject(Solution));
+            DotNetTasks.DotNetClean();
         });
 
     Target Compile => _ => _
         .DependsOn(Clean)
         .Executes(() =>
         {
-            DotNetBuildSettings settings = new DotNetBuildSettings()
-                .SetProjectFile(ProjectPath);
-
-            DotNetTasks.DotNetBuild(settings);
+            // DotNetTasks.DotNetBuild(s => s.SetProjectFile(Solution.VoxReader));
+            DotNetTasks.DotNetBuild();
         });
 
     Target Test => _ => _
         .DependsOn(Compile)
         .Executes(() =>
         {
-            DotNetTestSettings settings = new DotNetTestSettings()
-                .SetProcessWorkingDirectory(RootDirectory);
-
-            DotNetTasks.DotNetTest(settings);
+            // DotNetTasks.DotNetTest(s => s.SetProcessWorkingDirectory(RootDirectory));
+            DotNetTasks.DotNetTest();
         });
 
     // Target ExtractVersionFromTag => _ => _
