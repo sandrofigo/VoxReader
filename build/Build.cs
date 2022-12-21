@@ -16,7 +16,7 @@ using static Nuke.Common.IO.FileSystemTasks;
 [GitHubActions(
     "build",
     GitHubActionsImage.UbuntuLatest,
-    AutoGenerate = true,
+    AutoGenerate = false,
     FetchDepth = 0,
     OnPushBranches = new[]{"main", "develop"},
     InvokedTargets = new[]{nameof(Test)},
@@ -68,7 +68,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             // DotNetTasks.DotNetTest(s => s.SetProcessWorkingDirectory(RootDirectory));
-            DotNetTasks.DotNetTest(s => s.SetConfiguration(Configuration).SetResultsDirectory(RootDirectory).SetLoggers("trx;logfilename=test-results.trx"));
+            DotNetTasks.DotNetTest(s => s.SetConfiguration(Configuration).SetLoggers("trx;logfilename=test-results.trx"));
         });
 
     // Target ExtractVersionFromTag => _ => _

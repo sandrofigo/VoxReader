@@ -47,5 +47,5 @@ jobs:
         if: always()
         with:
           name: Unit Tests
-          path: test-results.trx
+          path: */test-results.trx
           reporter: dotnet-trx
