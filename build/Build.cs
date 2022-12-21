@@ -68,7 +68,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             // DotNetTasks.DotNetTest(s => s.SetProcessWorkingDirectory(RootDirectory));
-            DotNetTasks.DotNetTest(s => s.SetConfiguration(Configuration));
+            DotNetTasks.DotNetTest(s => s.SetConfiguration(Configuration).SetResultsDirectory(RootDirectory).SetLoggers("trx;logfilename=test-results.trx"));
         });
 
     // Target ExtractVersionFromTag => _ => _

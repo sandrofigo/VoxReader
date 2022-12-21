@@ -42,3 +42,10 @@ jobs:
         env:
           NuGetApiKey: ${{ secrets.NUGET_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Unit Tests
+          path: test-results.trx
+          reporter: dotnet-trx
