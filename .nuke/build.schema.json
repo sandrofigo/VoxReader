@@ -6,10 +6,6 @@
     "build": {
       "type": "object",
       "properties": {
-        "CI_COMMIT_REF_NAME": {
-          "type": "string",
-          "description": "The branch or tag name on which the build is executed (GitLab)"
-        },
         "Configuration": {
           "type": "string",
           "description": "Configuration to build - Default is 'Debug' (local) or 'Release' (server)",
@@ -22,9 +18,6 @@
           "type": "boolean",
           "description": "Indicates to continue a previously failed build attempt"
         },
-        "GitHubAccessToken": {
-          "type": "string"
-        },
         "Help": {
           "type": "boolean",
           "description": "Shows the help text for this build assembly"
@@ -36,6 +29,7 @@
             "AppVeyor",
             "AzurePipelines",
             "Bamboo",
+            "Bitbucket",
             "Bitrise",
             "GitHubActions",
             "GitLab",
@@ -52,6 +46,11 @@
         "NoLogo": {
           "type": "boolean",
           "description": "Disables displaying the NUKE logo"
+        },
+        "NuGetApiKey": {
+          "type": "string",
+          "description": "NuGet API Key",
+          "default": "Secrets must be entered via 'nuke :secrets [profile]'"
         },
         "Partition": {
           "type": "string",
@@ -80,10 +79,6 @@
             "enum": [
               "Clean",
               "Compile",
-              "ExtractVersionFromTag",
-              "GitHubRelease",
-              "Pack",
-              "PublishNuGetPackage",
               "Test"
             ]
           }
@@ -100,10 +95,6 @@
             "enum": [
               "Clean",
               "Compile",
-              "ExtractVersionFromTag",
-              "GitHubRelease",
-              "Pack",
-              "PublishNuGetPackage",
               "Test"
             ]
           }

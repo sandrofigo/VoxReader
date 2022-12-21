@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SharpCompress.Archives;
-using SharpCompress.Archives.SevenZip;
+using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
 
 namespace VoxReader.UnitTests
@@ -11,11 +12,13 @@ namespace VoxReader.UnitTests
     {
         public static IEnumerable<string> UnzipFilesFromSevenZipArchive(string archivePath)
         {
-            string tempPath = Path.Combine(Path.GetTempPath(), nameof(VoxReader));
+            string tempPath = Path.Combine(Path.GetTempPath(), nameof(VoxReader), Guid.NewGuid().ToString());
+            
+            Directory.CreateDirectory(tempPath);
+            
+            using ZipArchive archive = ZipArchive.Open(archivePath);
 
-            using SevenZipArchive archive = SevenZipArchive.Open(archivePath);
-
-            foreach (SevenZipArchiveEntry entry in archive.Entries.Where(entry => !entry.IsDirectory))
+            foreach (ZipArchiveEntry entry in archive.Entries.Where(entry => !entry.IsDirectory))
             {
                 entry.WriteToDirectory(tempPath, new ExtractionOptions
                 {

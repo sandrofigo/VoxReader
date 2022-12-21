@@ -7,11 +7,11 @@ namespace VoxReader.UnitTests
 {
     public class UnitTests
     {
-        private const string TestFile_3x3 = "data/3x3.7z";
-        private const string TestFile_3x3_2 = "data/3x3_2.7z";
-        private const string TestFile_3x3_3 = "data/3x3_3.7z";
-        private const string TestFile_1x1 = "data/1x1.7z";
-        private const string TestFile_256x256 = "data/256x256.7z";
+        private const string TestFile_3x3 = "data/3x3.zip";
+        private const string TestFile_3x3_2 = "data/3x3_2.zip";
+        private const string TestFile_3x3_3 = "data/3x3_3.zip";
+        private const string TestFile_1x1 = "data/1x1.zip";
+        private const string TestFile_256x256 = "data/256x256.zip";
 
         [Theory]
         [InlineData(TestFile_3x3, 1)]
