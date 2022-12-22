@@ -1,30 +1,43 @@
 using System;
 using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.StaticFiles;
 using NuGet.Versioning;
 using Nuke.Common;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
+using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitHub;
+using Nuke.Common.Utilities.Collections;
 using Octokit;
+using Serilog;
 using static Nuke.Common.IO.FileSystemTasks;
 
 [GitHubActions(
-    "build",
+    "test",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
     FetchDepth = 0,
-    OnPushBranches = new[] { "main", "develop" },
+    OnPushBranches = new[] { "**" },
     InvokedTargets = new[] { nameof(Test) },
+    EnableGitHubToken = true,
+    ImportSecrets = new[] { nameof(NuGetApiKey) })]
+[GitHubActions(
+    "release",
+    GitHubActionsImage.UbuntuLatest,
+    AutoGenerate = false,
+    FetchDepth = 0,
+    OnPushTags = new[] { "v[0-9]+.[0-9]+.[0-9]+" },
+    InvokedTargets = new[] { nameof(Pack) },
     EnableGitHubToken = true,
     ImportSecrets = new[] { nameof(NuGetApiKey) })]
 class Build : NukeBuild
 {
-    public static int Main() => Execute<Build>(x => x.Test);
+    public static int Main() => Execute<Build>(x => x.Pack);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")] readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
@@ -40,19 +53,15 @@ class Build : NukeBuild
 
     SemanticVersion PackageVersion;
 
-    // [Parameter("The branch or tag name on which the build is executed (GitLab)")] readonly string CI_COMMIT_REF_NAME = string.Empty;
-
-    // bool IsOnMasterBranch => CI_COMMIT_REF_NAME == "master";
-    // bool IsOnDevelopBranch => CI_COMMIT_REF_NAME == "develop";
-
-    // bool IsOnVersionTag => Helper.IsValidVersionTag(CI_COMMIT_REF_NAME, out SemanticVersion _);
+    [GitRepository]
+    readonly GitRepository GitRepository;
 
     Target Clean => _ => _
         .Executes(() =>
         {
             EnsureCleanDirectory(PackOutputPath);
             DotNetTasks.DotNetClean(s => s
-                .SetProject(Solution));
+            .SetProject(Solution));
         });
 
     Target Compile => _ => _
@@ -60,8 +69,8 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTasks.DotNetBuild(s => s
-                .SetProjectFile(Solution)
-                .SetConfiguration(Configuration));
+            .SetProjectFile(Solution)
+            .SetConfiguration(Configuration));
         });
 
     Target Test => _ => _
@@ -69,21 +78,19 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTasks.DotNetTest(s => s
-                .SetProjectFile(Solution)
-                .SetConfiguration(Configuration)
-                .SetLoggers("trx;logfilename=test-results.trx"));
+            .SetProjectFile(Solution)
+            .SetConfiguration(Configuration)
+            .SetLoggers("trx;logfilename=test-results.trx"));
         });
 
-    // Target ExtractVersionFromTag => _ => _
-    //     .Executes(() =>
-    //     {
-    //         bool success = Helper.IsValidVersionTag(CI_COMMIT_REF_NAME, out PackageVersion);
-    //
-    //         if (!success)
-    //             Logger.Normal($"Could not extract version from '{CI_COMMIT_REF_NAME}'");
-    //
-    //         Logger.Info($"Package Version: {PackageVersion.ToString()}");
-    //     });
+    Target Pack => _ => _
+        .DependsOn(Test)
+        .OnlyWhenStatic(() => GitRepository.CurrentCommitHasVersionTag())
+        // .OnlyWhenStatic(() => Configuration == Configuration.Release)
+        .Executes(() =>
+        {
+            Log.Information("Version: {Version}", GitRepository.GetLatestVersionTag());
+        });
 
     // Target Pack => _ => _
     //     .DependsOn(Test)
