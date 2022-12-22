@@ -59,6 +59,7 @@ class Build : NukeBuild
         });
 
     Target Restore => _ => _
+        .DependsOn(Clean)
         .Executes(() =>
         {
             DotNetTasks.DotNetRestore(s => s
@@ -66,12 +67,19 @@ class Build : NukeBuild
         });
 
     Target Compile => _ => _
-        .DependsOn(Clean)
+        .DependsOn(Restore)
         .Executes(() =>
         {
+            SemanticVersion version = GitRepository.GetLatestVersionTag();
+
             DotNetTasks.DotNetBuild(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
+                .SetVersion(version.ToString())
+                .SetAssemblyVersion($"{version.Major}.0.0.0") // See https://learn.microsoft.com/en-us/dotnet/standard/library-guidance/versioning
+                .SetInformationalVersion(version.ToString())
+                .SetFileVersion(version.ToString())
+                .SetCopyright($"Copyright {DateTime.UtcNow.Year} (c) Sandro Figo")
                 .EnableNoRestore());
         });
 
@@ -83,8 +91,8 @@ class Build : NukeBuild
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
                 .SetLoggers("trx;logfilename=test-results.trx")
-                .EnableNoBuild()
-                .EnableNoRestore());
+                .EnableNoRestore()
+                .EnableNoBuild());
         });
 
     Target Pack => _ => _
@@ -100,14 +108,10 @@ class Build : NukeBuild
             DotNetTasks.DotNetPack(s => s
                 .SetProject(Solution.VoxReader)
                 .SetConfiguration(Configuration)
-                .SetVersion(version.ToString())
-                .SetAssemblyVersion($"{version.Major}.0.0.0") // See https://learn.microsoft.com/en-us/dotnet/standard/library-guidance/versioning
-                .SetInformationalVersion(version.ToString())
-                .SetFileVersion(version.ToString())
-                .SetCopyright($"Copyright {DateTime.UtcNow.Year} (c) Sandro Figo")
                 .SetOutputDirectory(PublishDirectory)
-                .EnableNoBuild()
-                .EnableNoRestore());
+                .SetVersion(version.ToString())
+                .EnableNoRestore()
+                .EnableNoBuild());
         });
 
     // Target GitHubRelease => _ => _
