@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.StaticFiles;
 using NuGet.Versioning;
 using Nuke.Common;
+using Nuke.Common.ChangeLog;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
@@ -40,28 +41,28 @@ class Build : NukeBuild
     public static int Main() => Execute<Build>(x => x.Pack);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")] readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
-
-    // [Parameter] readonly string GitHubAccessToken;
-
+    
     [Parameter("NuGet API Key"), Secret] readonly string NuGetApiKey;
 
     [Solution(GenerateProjects = true)] readonly Solution Solution;
 
-    readonly AbsolutePath ProjectPath = (AbsolutePath)Path.Combine(RootDirectory, "VoxReader");
-
-    readonly AbsolutePath PackOutputPath = (AbsolutePath)Path.Combine(RootDirectory, "publish");
-
-    SemanticVersion PackageVersion;
-
-    [GitRepository]
-    readonly GitRepository GitRepository;
+    readonly AbsolutePath PublishDirectory = (AbsolutePath)Path.Combine(RootDirectory, "publish");
+    
+    [GitRepository] readonly GitRepository GitRepository;
 
     Target Clean => _ => _
         .Executes(() =>
         {
-            EnsureCleanDirectory(PackOutputPath);
+            EnsureCleanDirectory(PublishDirectory);
             DotNetTasks.DotNetClean(s => s
-            .SetProject(Solution));
+                .SetProject(Solution));
+        });
+
+    Target Restore => _ => _
+        .Executes(() =>
+        {
+            DotNetTasks.DotNetRestore(s => s
+                .SetProjectFile(Solution));
         });
 
     Target Compile => _ => _
@@ -69,8 +70,9 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTasks.DotNetBuild(s => s
-            .SetProjectFile(Solution)
-            .SetConfiguration(Configuration));
+                .SetProjectFile(Solution)
+                .SetConfiguration(Configuration)
+                .EnableNoRestore());
         });
 
     Target Test => _ => _
@@ -78,34 +80,35 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTasks.DotNetTest(s => s
-            .SetProjectFile(Solution)
-            .SetConfiguration(Configuration)
-            .SetLoggers("trx;logfilename=test-results.trx"));
+                .SetProjectFile(Solution)
+                .SetConfiguration(Configuration)
+                .SetLoggers("trx;logfilename=test-results.trx")
+                .EnableNoBuild()
+                .EnableNoRestore());
         });
 
     Target Pack => _ => _
         .DependsOn(Test)
         .OnlyWhenStatic(() => GitRepository.CurrentCommitHasVersionTag())
-        // .OnlyWhenStatic(() => Configuration == Configuration.Release)
+        .Produces(PublishDirectory / "*.nupkg")
         .Executes(() =>
         {
-            Log.Information("Version: {Version}", GitRepository.GetLatestVersionTag());
-        });
+            SemanticVersion version = GitRepository.GetLatestVersionTag();
 
-    // Target Pack => _ => _
-    //     .DependsOn(Test)
-    //     .DependsOn(ExtractVersionFromTag)
-    //     .Executes(() =>
-    //     {
-    //         DotNetPackSettings settings = new DotNetPackSettings()
-    //             .SetConfiguration(Configuration.Release)
-    //             .SetProject(ProjectPath)
-    //             .SetVersion(PackageVersion.ToString())
-    //             .SetCopyright($"Copyright {DateTime.UtcNow.Year} (c) Sandro Figo")
-    //             .SetOutputDirectory(PackOutputPath);
-    //
-    //         DotNetTasks.DotNetPack(settings);
-    //     });
+            Log.Information("Version: {Version}", version);
+            
+            DotNetTasks.DotNetPack(s => s
+                .SetProject(Solution.VoxReader)
+                .SetConfiguration(Configuration)
+                .SetVersion(version.ToString())
+                .SetAssemblyVersion($"{version.Major}.0.0.0") // See https://learn.microsoft.com/en-us/dotnet/standard/library-guidance/versioning
+                .SetInformationalVersion(version.ToString())
+                .SetFileVersion(version.ToString())
+                .SetCopyright($"Copyright {DateTime.UtcNow.Year} (c) Sandro Figo")
+                .SetOutputDirectory(PublishDirectory)
+                .EnableNoBuild()
+                .EnableNoRestore());
+        });
 
     // Target GitHubRelease => _ => _
     //     .Requires(() => GitHubAccessToken)
