@@ -20,6 +20,8 @@ on:
   push:
     tags:
       - v[0-9]+.[0-9]+.[0-9]+
+    paths-ignore:
+      - '**/README.md'
 
 jobs:
   ubuntu-latest:
@@ -37,8 +39,8 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-      - name: Run './build.cmd PublishNuGetPackage'
-        run: ./build.cmd PublishNuGetPackage
+      - name: Run './build.cmd PrepareGitHubRelease'
+        run: ./build.cmd PrepareGitHubRelease
         env:
           NuGetApiKey: ${{ secrets.NUGET_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -20,6 +20,10 @@ on:
   push:
     branches:
       - '**'
+    paths-ignore:
+      - '**/README.md'
+      - '**/CHANGELOG.md'
+      - '**/LICENSE.md'
 
 jobs:
   ubuntu-latest:
@@ -40,7 +44,6 @@ jobs:
       - name: Run './build.cmd Test'
         run: ./build.cmd Test
         env:
-          NuGetApiKey: ${{ secrets.NUGET_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Test Report
         uses: dorny/test-reporter@v1

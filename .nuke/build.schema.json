@@ -81,6 +81,8 @@
               "Compile",
               "Pack",
               "PrepareGitHubRelease",
+              "PublishPackageToGithub",
+              "PublishPackageToNuGet",
               "Restore",
               "Test"
             ]
@@ -100,6 +102,8 @@
               "Compile",
               "Pack",
               "PrepareGitHubRelease",
+              "PublishPackageToGithub",
+              "PublishPackageToNuGet",
               "Restore",
               "Test"
             ]
