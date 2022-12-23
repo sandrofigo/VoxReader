@@ -33,7 +33,7 @@ using static Nuke.Common.IO.PathConstruction;
     AutoGenerate = false,
     FetchDepth = 0,
     OnPushTags = new[] { "v[0-9]+.[0-9]+.[0-9]+" },
-    InvokedTargets = new[] { nameof(PrepareGitHubRelease) },
+    InvokedTargets = new[] { nameof(PublishNuGetPackage) },
     EnableGitHubToken = true,
     ImportSecrets = new[] { nameof(NuGetApiKey) })]
 class Build : NukeBuild
@@ -217,9 +217,10 @@ class Build : NukeBuild
     //         }
     //     });
 
-    // Target PublishNuGetPackage => _ => _
-    //     .DependsOn(GitHubRelease)
-    //     .Executes(() =>
-    //     {
-    //     });
+    Target PublishNuGetPackage => _ => _
+        .DependsOn(PrepareGitHubRelease)
+        .Executes(() =>
+        {
+            Log.Warning("{Target} not implemented!", nameof(PublishNuGetPackage));
+        });
 }
