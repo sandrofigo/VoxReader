@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using Microsoft.AspNetCore.StaticFiles;
 using NuGet.Versioning;
 using Nuke.Common;
@@ -17,6 +16,7 @@ using Nuke.Common.Utilities.Collections;
 using Octokit;
 using Serilog;
 using static Nuke.Common.IO.FileSystemTasks;
+using static Nuke.Common.IO.PathConstruction;
 
 [GitHubActions(
     "test",
@@ -33,7 +33,7 @@ using static Nuke.Common.IO.FileSystemTasks;
     AutoGenerate = false,
     FetchDepth = 0,
     OnPushTags = new[] { "v[0-9]+.[0-9]+.[0-9]+" },
-    InvokedTargets = new[] { nameof(Pack) },
+    InvokedTargets = new[] { nameof(PrepareGitHubRelease) },
     EnableGitHubToken = true,
     ImportSecrets = new[] { nameof(NuGetApiKey) })]
 class Build : NukeBuild
@@ -41,13 +41,13 @@ class Build : NukeBuild
     public static int Main() => Execute<Build>(x => x.Pack);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")] readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
-    
+
     [Parameter("NuGet API Key"), Secret] readonly string NuGetApiKey;
 
     [Solution(GenerateProjects = true)] readonly Solution Solution;
 
     readonly AbsolutePath PublishDirectory = (AbsolutePath)Path.Combine(RootDirectory, "publish");
-    
+
     [GitRepository] readonly GitRepository GitRepository;
 
     Target Clean => _ => _
@@ -111,7 +111,7 @@ class Build : NukeBuild
             SemanticVersion version = GitRepository.GetLatestVersionTag();
 
             Log.Information("Version: {Version}", version);
-            
+
             DotNetTasks.DotNetPack(s => s
                 .SetProject(Solution.VoxReader)
                 .SetConfiguration(Configuration)
@@ -119,6 +119,56 @@ class Build : NukeBuild
                 .SetVersion(version.ToString())
                 .EnableNoRestore()
                 .EnableNoBuild());
+        });
+
+    Target PrepareGitHubRelease => _ => _
+        .Consumes(Pack)
+        .Executes(async () =>
+        {
+            var unreleasedChangelogSectionNotes = ChangelogTasks.ExtractChangelogSectionNotes(RootDirectory / "CHANGELOG.md");
+            string changelog = string.Join(Environment.NewLine, unreleasedChangelogSectionNotes);
+
+            GitHubTasks.GitHubClient = new GitHubClient(new ProductHeaderValue("VoxReader"))
+            {
+                Credentials = new Credentials(GitHubActions.Instance.Token)
+            };
+
+            string owner = GitRepository.GetGitHubOwner();
+            string name = GitRepository.GetGitHubName();
+
+            SemanticVersion version = GitRepository.GetLatestVersionTag();
+
+            var newRelease = new NewRelease($"v{version}")
+            {
+                Draft = true,
+                Name = $"v{version}",
+                Prerelease = version.IsPrerelease,
+                Body = changelog
+            };
+
+            Release createdRelease = await GitHubTasks.GitHubClient.Repository.Release.Create(owner, name, newRelease);
+
+
+            foreach (AbsolutePath file in PublishDirectory.GlobFiles("*.nupkg"))
+            {
+                await using FileStream fileStream = File.OpenRead(file);
+
+                if (!new FileExtensionContentTypeProvider().TryGetContentType(file, out string contentType))
+                {
+                    contentType = "application/octet-stream";
+                }
+
+                var assetUpload = new ReleaseAssetUpload
+                {
+                    FileName = file.Name,
+                    ContentType = contentType,
+                    RawData = fileStream
+                };
+
+                await GitHubTasks.GitHubClient.Repository.Release.UploadAsset(createdRelease, assetUpload);
+            }
+
+            // await GitHubTasks.GitHubClient.Repository.Release.Edit(owner, name, createdRelease.Id, new ReleaseUpdate { Draft = false });
         });
 
     // Target GitHubRelease => _ => _
