@@ -123,6 +123,7 @@ class Build : NukeBuild
 
     Target PrepareGitHubRelease => _ => _
         .Consumes(Pack)
+        .DependsOn(Pack)
         .Executes(async () =>
         {
             var unreleasedChangelogSectionNotes = ChangelogTasks.ExtractChangelogSectionNotes(RootDirectory / "CHANGELOG.md");
