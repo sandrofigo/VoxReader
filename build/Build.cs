@@ -70,17 +70,24 @@ class Build : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
-            SemanticVersion version = GitRepository.GetLatestVersionTag();
-
-            DotNetTasks.DotNetBuild(s => s
+            DotNetBuildSettings settings = new DotNetBuildSettings()
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
-                .SetVersion(version.ToString())
-                .SetAssemblyVersion($"{version.Major}.0.0.0") // See https://learn.microsoft.com/en-us/dotnet/standard/library-guidance/versioning
-                .SetInformationalVersion(version.ToString())
-                .SetFileVersion(version.ToString())
-                .SetCopyright($"Copyright {DateTime.UtcNow.Year} (c) Sandro Figo")
-                .EnableNoRestore());
+                .EnableNoRestore();
+
+            if (GitRepository.CurrentCommitHasVersionTag())
+            {
+                SemanticVersion version = GitRepository.GetLatestVersionTag();
+
+                settings = settings
+                    .SetVersion(version.ToString())
+                    .SetAssemblyVersion($"{version.Major}.0.0.0") // See https://learn.microsoft.com/en-us/dotnet/standard/library-guidance/versioning
+                    .SetInformationalVersion(version.ToString())
+                    .SetFileVersion(version.ToString())
+                    .SetCopyright($"Copyright {DateTime.UtcNow.Year} (c) Sandro Figo");
+            }
+
+            DotNetTasks.DotNetBuild(settings);
         });
 
     Target Test => _ => _
