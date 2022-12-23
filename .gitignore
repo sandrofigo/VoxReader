@@ -582,3 +582,5 @@ fabric.properties
 .idea/
 
 test-results.trx
+
+.nuke/temp/
