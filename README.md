@@ -1,4 +1,4 @@
-# VoxReader
+# VoxReader <img src="https://media.githubusercontent.com/media/sandrofigo/VoxReader/main/images/icon.png" alt="VoxReader Icon" width="28" style="margin: -4 0;">
 
 [![latest](https://img.shields.io/nuget/v/VoxReader)](https://www.nuget.org/packages/VoxReader/)
 [![downloads](https://img.shields.io/nuget/dt/VoxReader?color=blue)](https://www.nuget.org/packages/VoxReader/)
