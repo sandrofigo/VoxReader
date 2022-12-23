@@ -80,6 +80,8 @@
               "Clean",
               "Compile",
               "Pack",
+              "PrepareGitHubRelease",
+              "Restore",
               "Test"
             ]
           }
@@ -97,6 +99,8 @@
               "Clean",
               "Compile",
               "Pack",
+              "PrepareGitHubRelease",
+              "Restore",
               "Test"
             ]
           }
