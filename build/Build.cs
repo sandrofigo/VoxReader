@@ -19,21 +19,20 @@ using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 
 [GitHubActions(
-    "test",
+    "build",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
     FetchDepth = 0,
     OnPushBranches = new[] { "**" },
     InvokedTargets = new[] { nameof(Test) },
-    EnableGitHubToken = true,
-    ImportSecrets = new[] { nameof(NuGetApiKey) })]
+    EnableGitHubToken = true)]
 [GitHubActions(
     "release",
     GitHubActionsImage.UbuntuLatest,
     AutoGenerate = false,
     FetchDepth = 0,
     OnPushTags = new[] { "v[0-9]+.[0-9]+.[0-9]+" },
-    InvokedTargets = new[] { nameof(PublishNuGetPackage) },
+    InvokedTargets = new[] { nameof(PrepareGitHubRelease) },
     EnableGitHubToken = true,
     ImportSecrets = new[] { nameof(NuGetApiKey) })]
 class Build : NukeBuild
@@ -124,6 +123,7 @@ class Build : NukeBuild
     Target PrepareGitHubRelease => _ => _
         .Consumes(Pack)
         .DependsOn(Pack)
+        .Triggers(PublishPackageToGithub, PublishPackageToNuGet)
         .Executes(async () =>
         {
             var unreleasedChangelogSectionNotes = ChangelogTasks.ExtractChangelogSectionNotes(RootDirectory / "CHANGELOG.md");
@@ -172,55 +172,31 @@ class Build : NukeBuild
             // await GitHubTasks.GitHubClient.Repository.Release.Edit(owner, name, createdRelease.Id, new ReleaseUpdate { Draft = false });
         });
 
-    // Target GitHubRelease => _ => _
-    //     .Requires(() => GitHubAccessToken)
-    //     .DependsOn(Pack)
-    //     .OnlyWhenDynamic(() => IsOnVersionTag)
-    //     .Executes(() =>
-    //     {
-    //         GitHubTasks.GitHubClient = new GitHubClient(new ProductHeaderValue("VoxReader"))
-    //         {
-    //             Credentials = new Credentials(GitHubAccessToken)
-    //         };
-    //
-    //         var release = new NewRelease($"v{PackageVersion}")
-    //         {
-    //             Body = "Changes:\n - TODO",
-    //             Draft = true,
-    //             Name = PackageVersion.ToString(),
-    //             TargetCommitish = "master"
-    //         };
-    //
-    //         Release createdRelease = GitHubTasks.GitHubClient.Repository.Release.Create("sandrofigo", "VoxReader", release).Result;
-    //
-    //         // Add artifacts to release
-    //         foreach (AbsolutePath artifact in PackOutputPath.GlobFiles("*"))
-    //         {
-    //             if (!FileSystemTasks.FileExists(artifact))
-    //                 continue;
-    //
-    //             if (!new FileExtensionContentTypeProvider().TryGetContentType(artifact, out string assetContentType))
-    //             {
-    //                 assetContentType = "application/x-binary";
-    //             }
-    //
-    //             var releaseAssetUpload = new ReleaseAssetUpload
-    //             {
-    //                 ContentType = assetContentType,
-    //                 FileName = Path.GetFileName(artifact),
-    //                 RawData = File.OpenRead(artifact)
-    //             };
-    //
-    //             ReleaseAsset createdReleaseAsset = GitHubTasks.GitHubClient.Repository.Release.UploadAsset(createdRelease, releaseAssetUpload).Result;
-    //
-    //             Logger.Info($"Added '{releaseAssetUpload.FileName}' to '{release.Name}'.");
-    //         }
-    //     });
-
-    Target PublishNuGetPackage => _ => _
-        .DependsOn(PrepareGitHubRelease)
+    Target PublishPackageToGithub => _ => _
         .Executes(() =>
         {
-            Log.Warning("{Target} not implemented!", nameof(PublishNuGetPackage));
+            foreach (AbsolutePath file in PublishDirectory.GlobFiles("*.nupkg"))
+            {
+                DotNetTasks.DotNetNuGetPush(s => s
+                    .SetTargetPath(file)
+                    .SetSource($"https://nuget.pkg.github.com/{GitHubActions.Instance.RepositoryOwner}/index.json")
+                    .SetApiKey(GitHubActions.Instance.Token)
+                    .EnableSkipDuplicate()
+                );
+            }
+        });
+
+    Target PublishPackageToNuGet => _ => _
+        .Executes(() =>
+        {
+            foreach (AbsolutePath file in PublishDirectory.GlobFiles("*.nupkg"))
+            {
+                DotNetTasks.DotNetNuGetPush(s => s
+                    .SetTargetPath(file)
+                    .SetSource("https://api.nuget.org/v3/index.json")
+                    .SetApiKey(NuGetApiKey)
+                    .EnableSkipDuplicate()
+                );
+            }
         });
 }
