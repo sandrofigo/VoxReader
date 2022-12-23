@@ -144,7 +144,7 @@ class Build : NukeBuild
                 Draft = true,
                 Name = version.ToString(),
                 Prerelease = version.IsPrerelease,
-                Body = changelog + "abc123"
+                Body = changelog
             };
 
             Release createdRelease = await GitHubTasks.GitHubClient.Repository.Release.Create(owner, name, newRelease);
