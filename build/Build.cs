@@ -169,7 +169,7 @@ class Build : NukeBuild
                 await GitHubTasks.GitHubClient.Repository.Release.UploadAsset(createdRelease, assetUpload);
             }
 
-            // await GitHubTasks.GitHubClient.Repository.Release.Edit(owner, name, createdRelease.Id, new ReleaseUpdate { Draft = false });
+            await GitHubTasks.GitHubClient.Repository.Release.Edit(owner, name, createdRelease.Id, new ReleaseUpdate { Draft = false });
         });
 
     Target PublishPackageToGithub => _ => _
