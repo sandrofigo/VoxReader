@@ -53,7 +53,7 @@ class Build : NukeBuild
     {
         // Validate latest version in changelog file matches the version tag in git
         Assert.True(ChangelogTasksExtensions.TryGetLatestVersionInChangelog(RootDirectory / "CHANGELOG.md", out SemanticVersion version, out string rawVersionValue) && version == GitRepository.GetLatestVersionTag(),
-            $"Latest version '{rawVersionValue}' in changelog file does not match the version tag '{GitRepository.GetLatestVersionTag()}'!");
+            $"Latest version '{rawVersionValue}' in the changelog file does not match the version tag '{GitRepository.GetLatestVersionTag()}'!");
     }
 
     Target Clean => _ => _
