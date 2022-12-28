@@ -84,8 +84,7 @@
               "PublishPackageToGithub",
               "PublishPackageToNuGet",
               "Restore",
-              "Test",
-              "VerifyTagAndUnityPackageVersionMatch"
+              "Test"
             ]
           }
         },
@@ -106,8 +105,7 @@
               "PublishPackageToGithub",
               "PublishPackageToNuGet",
               "Restore",
-              "Test",
-              "VerifyTagAndUnityPackageVersionMatch"
+              "Test"
             ]
           }
         },
