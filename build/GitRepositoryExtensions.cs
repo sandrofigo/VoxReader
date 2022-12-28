@@ -17,8 +17,7 @@ public static class GitRepositoryExtensions
     {
         var versionTagsOnCurrentCommit = gitRepository.Tags.Select(t => SemanticVersion.TryParse(t.TrimStart('v'), out SemanticVersion v) ? v : null).WhereNotNull().OrderByDescending(t => t).ToArray();
 
-        if (!versionTagsOnCurrentCommit.Any())
-            Assert.Fail($"The current commit '{gitRepository.Commit}' has no valid tag!");
+        Assert.True(versionTagsOnCurrentCommit.Any(), $"The current commit '{gitRepository.Commit}' has no valid tag!");
 
         return versionTagsOnCurrentCommit.First();
     }
