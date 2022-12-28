@@ -1,5 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using NuGet.Versioning;
+using Nuke.Common;
+using Nuke.Common.Git;
 
 public static class Helper
 {
@@ -11,7 +13,7 @@ public static class Helper
 
         if (!match.Success)
             return false;
-        
+
         semanticVersion = new SemanticVersion(
             int.Parse(match.Groups["major"].Value),
             int.Parse(match.Groups["minor"].Value),
