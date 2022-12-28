@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using Microsoft.AspNetCore.StaticFiles;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NuGet.Versioning;
 using Nuke.Common;
 using Nuke.Common.ChangeLog;
@@ -120,9 +122,20 @@ class Build : NukeBuild
                 .EnableNoBuild());
         });
 
+    Target VerifyTagAndUnityPackageVersionMatch => _ => _
+        .Executes(() =>
+        {
+            dynamic packageFile = JsonConvert.DeserializeObject(File.ReadAllText(Solution.VoxReader.Directory / "package.json"));
+            SemanticVersion versionInPackageFile = SemanticVersion.Parse(packageFile.version.ToString());
+
+            SemanticVersion versionTag = GitRepository.GetLatestVersionTag();
+
+            Assert.True(versionInPackageFile == versionTag, $"The version '{versionInPackageFile}' in the Unity package file does not match the latest version tag '{versionTag}'!");
+        });
+
     Target PrepareGitHubRelease => _ => _
         .Consumes(Pack)
-        .DependsOn(Pack)
+        .DependsOn(Pack, VerifyTagAndUnityPackageVersionMatch)
         .Triggers(PublishPackageToGithub, PublishPackageToNuGet)
         .Executes(async () =>
         {

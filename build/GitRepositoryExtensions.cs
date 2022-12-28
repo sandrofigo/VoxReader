@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NuGet.Versioning;
+using Nuke.Common;
 using Nuke.Common.Git;
 using Nuke.Common.Utilities.Collections;
 
@@ -14,7 +15,10 @@ public static class GitRepositoryExtensions
 
     public static SemanticVersion GetLatestVersionTag(this GitRepository gitRepository)
     {
-        var versionTagsOnCurrentCommit = gitRepository.Tags.Select(t => SemanticVersion.TryParse(t.TrimStart('v'), out SemanticVersion v) ? v : null).WhereNotNull().OrderByDescending(t => t);
+        var versionTagsOnCurrentCommit = gitRepository.Tags.Select(t => SemanticVersion.TryParse(t.TrimStart('v'), out SemanticVersion v) ? v : null).WhereNotNull().OrderByDescending(t => t).ToArray();
+
+        if (!versionTagsOnCurrentCommit.Any())
+            Assert.Fail($"The current commit '{gitRepository.Commit}' has no valid tag!");
 
         return versionTagsOnCurrentCommit.First();
     }
