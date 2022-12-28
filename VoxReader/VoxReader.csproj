@@ -14,5 +14,9 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>1591</NoWarn>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="com.sandrofigo.voxreader.asmdef" />
+    </ItemGroup>
     
 </Project>
