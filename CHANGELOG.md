@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Version verification for changelog file in build pipeline (GitHub Actions)
+
 ### Fixed
 
 - Fixed path to icon in project file
