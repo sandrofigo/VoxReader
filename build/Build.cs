@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using Microsoft.AspNetCore.StaticFiles;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NuGet.Versioning;
 using Nuke.Common;
 using Nuke.Common.ChangeLog;
@@ -56,6 +58,14 @@ class Build : NukeBuild
             // Validate latest version in changelog file matches the version tag in git
             Assert.True(ChangelogTasksExtensions.TryGetLatestVersionInChangelog(RootDirectory / "CHANGELOG.md", out SemanticVersion version, out string rawVersionValue) && version == GitRepository.GetLatestVersionTag(),
                 $"Latest version '{rawVersionValue}' in the changelog file does not match the version tag '{GitRepository.GetLatestVersionTag()}'!");
+
+            // Verify version in Unity package file matches the version tag in git
+            dynamic packageFile = JsonConvert.DeserializeObject(File.ReadAllText(Solution.VoxReader.Directory / "package.json"));
+            SemanticVersion versionInPackageFile = SemanticVersion.Parse(packageFile.version.ToString());
+
+            SemanticVersion versionTag = GitRepository.GetLatestVersionTag();
+
+            Assert.True(versionInPackageFile == versionTag, $"The version '{versionInPackageFile}' in the Unity package file does not match the latest version tag '{versionTag}'!");
         }
     }
 
