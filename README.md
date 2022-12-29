@@ -41,6 +41,11 @@ IPalette palette = voxFile.Palette;
 byte[] rawData = voxFile.Chunks[0].Content;
 ```
 
+## Unity
+
+The package is also available on [OpenUPM](https://openupm.com/packages/com.sandrofigo.voxreader/) for the Unity game engine.
+Follow the [manual installation](https://openupm.com/packages/com.sandrofigo.voxreader/?subPage=readme#modal-manualinstallation) or the [CLI installation](https://openupm.com/packages/com.sandrofigo.voxreader/?subPage=readme#modal-commandlinetool) instructions on the OpenUPM page to install the package in your project.
+
 ## Extending the library
 
 The file format specification made by [ephtracy](https://github.com/ephtracy) is available at [.vox file format](https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt)
