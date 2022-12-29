@@ -73,6 +73,10 @@ StyleCopReport.xml
 *_h.h
 *.ilk
 *.meta
+
+# Include Unity meta files
+!VoxReader/*.meta
+
 *.obj
 *.iobj
 *.pch

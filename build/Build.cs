@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.StaticFiles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -66,6 +67,16 @@ class Build : NukeBuild
             SemanticVersion versionTag = GitRepository.GetLatestVersionTag();
 
             Assert.True(versionInPackageFile == versionTag, $"The version '{versionInPackageFile}' in the Unity package file does not match the latest version tag '{versionTag}'!");
+        }
+        
+        // Verify that all *.cs files have a Unity meta file (if the meta file is missing the file will be ignored when imported into Unity)
+        // TODO: check meta file for all files and directories
+        var voxReaderSourceFiles = Solution.VoxReader.Directory.GlobFiles("*.cs").OrderBy(f => f.ToString()).ToHashSet();
+        var voxReaderSourceMetaFiles = Solution.VoxReader.Directory.GlobFiles("*.cs.meta").OrderBy(f => f.ToString()).ToHashSet();
+
+        foreach (AbsolutePath sourceFile in voxReaderSourceFiles)
+        {
+            Assert.True(voxReaderSourceMetaFiles.Contains((AbsolutePath)(sourceFile + ".meta")), $"'{sourceFile}' is missing a Unity .meta file!");
         }
     }
 
