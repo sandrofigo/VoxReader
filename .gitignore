@@ -75,7 +75,7 @@ StyleCopReport.xml
 *.meta
 
 # Include Unity meta files
-!VoxReader/*.meta
+!VoxReader/**/*.meta
 
 *.obj
 *.iobj

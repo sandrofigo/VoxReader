@@ -18,7 +18,7 @@
     <ItemGroup>
       <None Remove="com.sandrofigo.voxreader.asmdef" />
       <None Remove="package.json" />
-      <None Remove="*.meta" />
+      <None Remove="**/*.meta" />
     </ItemGroup>
     
 </Project>
