@@ -1,6 +1,7 @@
 # VoxReader <img src="https://media.githubusercontent.com/media/sandrofigo/VoxReader/main/images/icon.png" alt="VoxReader Icon" width="28" style="margin: -4 0;">
 
 [![latest](https://img.shields.io/nuget/v/VoxReader)](https://www.nuget.org/packages/VoxReader/)
+[![openupm](https://img.shields.io/npm/v/com.sandrofigo.voxreader?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.sandrofigo.voxreader/)
 [![downloads](https://img.shields.io/nuget/dt/VoxReader?color=blue)](https://www.nuget.org/packages/VoxReader/)
 [![build](https://github.com/sandrofigo/VoxReader/actions/workflows/build.yml/badge.svg)](https://github.com/sandrofigo/VoxReader/actions/workflows/build.yml)
 
