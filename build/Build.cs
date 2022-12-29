@@ -71,6 +71,7 @@ class Build : NukeBuild
         
         // Verify that all *.cs files have a Unity meta file (if the meta file is missing the file will be ignored when imported into Unity)
         // TODO: check meta file for all files and directories
+        // TODO: check if meta file count is equal to source file count
         var voxReaderSourceFiles = Solution.VoxReader.Directory.GlobFiles("**/*.cs")
             .Where(f => !f.ToString().Contains(Solution.VoxReader.Directory / "obj"))
             .Where(f => !f.ToString().Contains(Solution.VoxReader.Directory / "bin"))
