@@ -113,6 +113,9 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
                 .EnableNoRestore();
 
+            if (IsServerBuild)
+                settings = settings.EnableContinuousIntegrationBuild();
+
             if (GitRepository.CurrentCommitHasVersionTag())
             {
                 SemanticVersion version = GitRepository.GetLatestVersionTag();
