@@ -24,6 +24,11 @@ on:
       - '**/README.md'
       - '**/CHANGELOG.md'
       - '**/LICENSE.md'
+  pull_request:
+    paths-ignore:
+      - '**/README.md'
+      - '**/CHANGELOG.md'
+      - '**/LICENSE.md'
 
 jobs:
   ubuntu-latest:
