@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using VoxReader.Interfaces;
+﻿using VoxReader.Interfaces;
 
 namespace VoxReader.Chunks
 {
@@ -28,10 +27,28 @@ namespace VoxReader.Chunks
 
             int frameCount = FormatParser.ParseInt32();
 
-            if (frameCount > 0)
+            Frames = new Frame[frameCount];
+            
+            for (int i = 0; i < frameCount; i++)
             {
-                //TODO: implement frame parsing
-                Frames = Enumerable.Repeat(new Frame(), frameCount).ToArray();
+                var frameDictionary = FormatParser.ParseDictionary();
+
+                byte frameRotation = 0;
+                if (frameDictionary.TryGetValue("_r", out string r))
+                    frameRotation = byte.Parse(r);
+
+                var frameTranslation = new Vector3(0,0,0);
+                if (frameDictionary.TryGetValue("_t", out string t))
+                {
+                    string[] values = t.Split(' ');
+                    frameTranslation = new Vector3(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
+                }
+
+                Frames[i] = new Frame
+                {
+                    Rotation = frameRotation,
+                    Translation = frameTranslation
+                };
             }
         }
     }
