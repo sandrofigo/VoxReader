@@ -23,35 +23,41 @@ namespace VoxReader
         {
             var sizeChunks = mainChunk.GetChildren<ISizeChunk>();
             var voxelChunks = mainChunk.GetChildren<IVoxelChunk>();
-            var shapeNodeChunks = mainChunk.GetChildren<IShapeNodeChunk>();
 
             if (sizeChunks.Length != voxelChunks.Length)
                 throw new InvalidDataException("Can not extract models, because the number of SIZE chunks does not match the number of XYZI chunks!");
 
-            var shapeNodeChunksQueue = new Queue<IShapeNodeChunk>(shapeNodeChunks);
+            var shapeNodeChunks = mainChunk.GetChildren<IShapeNodeChunk>();
+            var transformNodeChunks = mainChunk.GetChildren<ITransformNodeChunk>();
 
-            var processedModels = new Dictionary<int, Model>();
-
-            int duplicateModelCount = 0;
-            
-            for (int i = 0; i < shapeNodeChunks.Length; i++)
+            var transformNodesThatHaveAShapeNode = new Dictionary<ITransformNodeChunk, IShapeNodeChunk>();
+            foreach (ITransformNodeChunk transformNodeChunk in transformNodeChunks)
             {
-                Vector3 size = sizeChunks[i - duplicateModelCount].Size;
-                var voxels = voxelChunks[i - duplicateModelCount].Voxels.Select(voxel => new Voxel(voxel.Position, palette.Colors[voxel.ColorIndex - 1])).ToArray();
-
-                int id = shapeNodeChunksQueue.Dequeue().Models[0];
-
-                if (processedModels.ContainsKey(id))
+                foreach (IShapeNodeChunk shapeNodeChunk in shapeNodeChunks)
                 {
-                    // Create copy of already existing model
-                    duplicateModelCount++;
-                    yield return processedModels[id].GetCopy();
+                    if (transformNodeChunk.ChildNodeId != shapeNodeChunk.NodeId)
+                        continue;
+
+                    transformNodesThatHaveAShapeNode.Add(transformNodeChunk, shapeNodeChunk);
+                    break;
                 }
-                else
+            }
+
+            var processedModelIds = new HashSet<int>();
+
+            foreach (var keyValuePair in transformNodesThatHaveAShapeNode)
+            {
+                int[] ids = keyValuePair.Value.Models;
+
+                foreach (int id in ids)
                 {
+                    string name = keyValuePair.Key.Name;
+                    Vector3 position = keyValuePair.Key.Frames[0].Translation;
+                    Vector3 size = sizeChunks[id].Size;
+                    var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, palette.Colors[voxel.ColorIndex - 1])).ToArray();
+
                     // Create new model
-                    var model = new Model(id, size, voxels, false);
-                    processedModels.Add(id, model);
+                    var model = new Model(id, name, position, size, voxels, !processedModelIds.Add(id));
                     yield return model;
                 }
             }
