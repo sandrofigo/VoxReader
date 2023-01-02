@@ -12,6 +12,43 @@ namespace VoxReader.UnitTests
         private const string TestFile_3x3_3 = "data/3x3_3.zip";
         private const string TestFile_1x1 = "data/1x1.zip";
         private const string TestFile_256x256 = "data/256x256.zip";
+        private const string TestFile_MultipleModels = "data/multiple_models.zip";
+        private const string TestFile_3x3x3_at_center_with_corner = "data/3x3x3_at_center_with_corner.zip";
+        private const string TestFile_groups = "data/groups.zip";
+
+        // [Fact]
+        // public void VoxReader_Read_ModelPositionsAreCorrectInGroups()
+        // {
+        //     string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_groups).First();
+        //
+        //     IVoxFile voxFile = VoxReader.Read(file);
+        //     voxFile.Models.Single(m => m.Name == "obj1").Position.Should().Be(new Vector3(0, 0, 0));
+        //     voxFile.Models.Single(m => m.Name == "obj1 - copy").Position.Should().Be(new Vector3(1, 1, 1));
+        // }
+
+        [Fact]
+        public void VoxReader_Read_ModelPositionsAreCorrect()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_MultipleModels).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+            voxFile.Models.Single(m => m.Name == "black").Position.Should().Be(new Vector3(0, 0, 0));
+            voxFile.Models.Single(m => m.Name == "red").Position.Should().Be(new Vector3(2, 0, 0));
+            voxFile.Models.Single(m => m.Name == "green").Position.Should().Be(new Vector3(0, 2, 0));
+            voxFile.Models.Single(m => m.Name == "blue").Position.Should().Be(new Vector3(0, 0, 2));
+            voxFile.Models.Single(m => m.Name == "yellow").Position.Should().Be(new Vector3(0, 0, -2));
+            voxFile.Models.Single(m => m.Name == "magenta").Position.Should().Be(new Vector3(0, -2, 0));
+            voxFile.Models.Single(m => m.Name == "cyan").Position.Should().Be(new Vector3(-2, 0, 0));
+        }
+
+        [Fact]
+        public void VoxReader_Read_ModelPositionIsCorrectFor3x3x3Model()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_3x3x3_at_center_with_corner).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+            voxFile.Models.Single(m => m.Name == "obj1").Position.Should().Be(new Vector3(1, 1, 1));
+        }
 
         [Theory]
         [InlineData(TestFile_3x3, 1)]
