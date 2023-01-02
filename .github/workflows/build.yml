@@ -31,8 +31,8 @@ on:
       - '**/LICENSE.md'
 
 jobs:
-  ubuntu-latest:
-    name: ubuntu-latest
+  nuke-build:
+    name: NUKE build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
