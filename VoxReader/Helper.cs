@@ -29,6 +29,15 @@ namespace VoxReader
 
             var shapeNodeChunks = mainChunk.GetChildren<IShapeNodeChunk>();
             var transformNodeChunks = mainChunk.GetChildren<ITransformNodeChunk>();
+            var groupNodeChunks = mainChunk.GetChildren<IGroupNodeChunk>();
+
+            var allNodes = new Dictionary<int, INodeChunk>();
+            foreach (ITransformNodeChunk t in transformNodeChunks)
+                allNodes.Add(t.NodeId, t);
+            foreach (IGroupNodeChunk g in groupNodeChunks)
+                allNodes.Add(g.NodeId, g);
+            foreach (IShapeNodeChunk s in shapeNodeChunks)
+                allNodes.Add(s.NodeId, s);
 
             var transformNodesThatHaveAShapeNode = new Dictionary<ITransformNodeChunk, IShapeNodeChunk>();
             foreach (ITransformNodeChunk transformNodeChunk in transformNodeChunks)
@@ -47,12 +56,15 @@ namespace VoxReader
 
             foreach (var keyValuePair in transformNodesThatHaveAShapeNode)
             {
-                int[] ids = keyValuePair.Value.Models;
+                ITransformNodeChunk transformNodeChunk = keyValuePair.Key;
+                IShapeNodeChunk shapeNodeChunk = keyValuePair.Value;
+
+                int[] ids = shapeNodeChunk.Models;
 
                 foreach (int id in ids)
                 {
-                    string name = keyValuePair.Key.Name;
-                    Vector3 position = keyValuePair.Key.Frames[0].Translation;
+                    string name = transformNodeChunk.Name;
+                    Vector3 position = GetGlobalTranslation(transformNodeChunk);
                     Vector3 size = sizeChunks[id].Size;
                     var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, palette.Colors[voxel.ColorIndex - 1])).ToArray();
 
@@ -60,6 +72,45 @@ namespace VoxReader
                     var model = new Model(id, name, position, size, voxels, !processedModelIds.Add(id));
                     yield return model;
                 }
+            }
+
+            Vector3 GetGlobalTranslation(ITransformNodeChunk target)
+            {
+                Vector3 position = target.Frames[0].Translation;
+                
+                while (TryGetParentTransformNodeChunk(target, out ITransformNodeChunk parent))
+                {
+                    position += parent.Frames[0].Translation;
+                    
+                    target = parent;
+                }
+
+                return position;
+            }
+
+            bool TryGetParentTransformNodeChunk(ITransformNodeChunk target, out ITransformNodeChunk parent)
+            {
+                //TODO: performance here is questionable; might need an additional scene structure to query the parent efficiently
+                foreach (IGroupNodeChunk groupNodeChunk in groupNodeChunks)
+                {
+                    foreach (int parentGroupNodeChunkChildId in groupNodeChunk.ChildrenNodes)
+                    {
+                        if (parentGroupNodeChunkChildId != target.NodeId)
+                            continue;
+
+                        foreach (ITransformNodeChunk transformNodeChunk in transformNodeChunks)
+                        {
+                            if (transformNodeChunk.ChildNodeId != groupNodeChunk.NodeId)
+                                continue;
+
+                            parent = transformNodeChunk;
+                            return true;
+                        }
+                    }
+                }
+
+                parent = null;
+                return false;
             }
         }
     }
