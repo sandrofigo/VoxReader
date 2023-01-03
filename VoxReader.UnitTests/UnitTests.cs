@@ -17,11 +17,29 @@ namespace VoxReader.UnitTests
         private const string TestFile_groups = "data/groups.zip";
 
         [Fact]
+        public void VoxReader_Read_GlobalVoxelPositionIsCorrect()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_groups).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Models.Single(m => m.Name == "obj1").Voxels[0].GlobalPosition.Should().Be(new Vector3(0, 0, 0));
+            voxFile.Models.Single(m => m.Name == "obj2").Voxels[0].GlobalPosition.Should().Be(new Vector3(0, 0, 2));
+
+            voxFile.Models.Single(m => m.Name == "obj3").Voxels.Single(v => v.Color == Color.Blue).GlobalPosition.Should().Be(new Vector3(-3, 0, 3));
+            voxFile.Models.Single(m => m.Name == "obj3").Voxels.Single(v => v.Color == Color.Red).GlobalPosition.Should().Be(new Vector3(-1, 2, 5));
+            
+            voxFile.Models.Single(m => m.Name == "obj4").Voxels.Single(v => v.Color == Color.Blue).GlobalPosition.Should().Be(new Vector3(-3, 0, 7));
+            voxFile.Models.Single(m => m.Name == "obj4").Voxels.Single(v => v.Color == Color.Red).GlobalPosition.Should().Be(new Vector3(-1, 2, 9));
+        }
+        
+        [Fact]
         public void VoxReader_Read_ModelNamesAreParsedCorrectly()
         {
             string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_groups).First();
 
             IVoxFile voxFile = VoxReader.Read(file);
+            
             voxFile.Models.Should().ContainSingle(m => m.Name == "obj1");
             voxFile.Models.Should().ContainSingle(m => m.Name == "obj2");
             voxFile.Models.Should().ContainSingle(m => m.Name == "obj3");
@@ -35,6 +53,7 @@ namespace VoxReader.UnitTests
             string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_groups).First();
 
             IVoxFile voxFile = VoxReader.Read(file);
+            
             voxFile.Models.Single(m => m.Name == "obj1").Position.Should().Be(new Vector3(0, 0, 0));
             voxFile.Models.Single(m => m.Name == "obj2").Position.Should().Be(new Vector3(0, 0, 2));
             voxFile.Models.Single(m => m.Name == "obj3").Position.Should().Be(new Vector3(-2, 1, 4));
@@ -48,6 +67,7 @@ namespace VoxReader.UnitTests
             string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_MultipleModels).First();
 
             IVoxFile voxFile = VoxReader.Read(file);
+            
             voxFile.Models.Single(m => m.Name == "black").Position.Should().Be(new Vector3(0, 0, 0));
             voxFile.Models.Single(m => m.Name == "red").Position.Should().Be(new Vector3(2, 0, 0));
             voxFile.Models.Single(m => m.Name == "green").Position.Should().Be(new Vector3(0, 2, 0));
@@ -63,6 +83,7 @@ namespace VoxReader.UnitTests
             string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_3x3x3_at_center_with_corner).First();
 
             IVoxFile voxFile = VoxReader.Read(file);
+            
             voxFile.Models.Single(m => m.Name == "obj1").Position.Should().Be(new Vector3(1, 1, 1));
         }
 
