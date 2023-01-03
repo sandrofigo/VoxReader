@@ -15,6 +15,7 @@
         Layer,
         Object,
         Camera,
-        Note
+        Note,
+        IndexMap
     }
 }

@@ -34,6 +34,7 @@ namespace VoxReader
                 case ChunkType.Object:
                 case ChunkType.Camera:
                 case ChunkType.Note:
+                case ChunkType.IndexMap:
                     return new Chunk(data);
                 default:
                     throw new ArgumentOutOfRangeException();
