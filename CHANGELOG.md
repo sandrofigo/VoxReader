@@ -7,11 +7,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 -->
 
-## [Unreleased]
+## [2.1.2] - 2023-01-03
+
+### Fixed
+
+- Match version in Unity package file with release version
+
+## [2.1.1] - 2023-01-03
 
 ### Changed
 
 - Renamed workflow jobs (GitHub Actions)
+
+### Fixed
+
+- Fixed `KeyNotFoundException` when trying to read a vox file containing an IMAP chunk
 
 ## [2.1.0] - 2022-12-30
 

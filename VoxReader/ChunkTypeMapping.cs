@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace VoxReader
 {
@@ -6,8 +7,14 @@ namespace VoxReader
     {
         private static readonly Dictionary<string, ChunkType> _mappings = new();
 
-        public static ChunkType GetChunkId(string chunkType) => _mappings[chunkType];
-        
+        public static ChunkType GetChunkId(string chunkType)
+        {
+            if (_mappings.TryGetValue(chunkType, out ChunkType type))
+                return type;
+            
+            throw new ArgumentOutOfRangeException(nameof(chunkType), $"Could not resolve '{chunkType}' to an internal chunk type. Has the format specification changed?");
+        }
+
         static ChunkTypeMapping()
         {
             _mappings.Add("MAIN", ChunkType.Main);
@@ -24,6 +31,7 @@ namespace VoxReader
             _mappings.Add("rOBJ", ChunkType.Object);
             _mappings.Add("rCAM", ChunkType.Camera);
             _mappings.Add("NOTE", ChunkType.Note);
+            _mappings.Add("IMAP", ChunkType.IndexMap);
         }
     }
 }
