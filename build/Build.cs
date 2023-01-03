@@ -52,43 +52,38 @@ class Build : NukeBuild
 
     [GitRepository] readonly GitRepository GitRepository;
 
-    protected override void OnBuildInitialized()
-    {
-        if (GitRepository.CurrentCommitHasVersionTag())
+    Target Validate => _ => _
+        .Executes(() =>
         {
-            // Validate latest version in changelog file matches the version tag in git
-            Assert.True(ChangelogTasksExtensions.TryGetLatestVersionInChangelog(RootDirectory / "CHANGELOG.md", out SemanticVersion version, out string rawVersionValue) && version == GitRepository.GetLatestVersionTag(),
-                $"Latest version '{rawVersionValue}' in the changelog file does not match the version tag '{GitRepository.GetLatestVersionTag()}'!");
+            bool changelogHasValidVersion = ChangelogTasksExtensions.TryGetLatestVersionInChangelog(RootDirectory / "CHANGELOG.md", out SemanticVersion latestChangelogVersion, out string latestRawChangelogVersionValue);
 
-            // Verify version in Unity package file matches the version tag in git
-            dynamic packageFile = JsonConvert.DeserializeObject(File.ReadAllText(Solution.VoxReader.Directory / "package.json"));
-            SemanticVersion versionInPackageFile = SemanticVersion.Parse(packageFile.version.ToString());
+            SemanticVersion versionInUnityPackageFile = Helper.GetVersionFromUnityPackageFile(Solution.VoxReader.Directory / "package.json");
 
-            SemanticVersion versionTag = GitRepository.GetLatestVersionTag();
+            if (GitRepository.CurrentCommitHasVersionTag())
+            {
+                SemanticVersion versionTag = GitRepository.GetLatestVersionTag();
 
-            Assert.True(versionInPackageFile == versionTag, $"The version '{versionInPackageFile}' in the Unity package file does not match the latest version tag '{versionTag}'!");
-        }
-        
-        // Verify that all *.cs files have a Unity meta file (if the meta file is missing the file will be ignored when imported into Unity)
-        // TODO: check meta file for all files and directories
-        // TODO: check if meta file count is equal to source file count
-        var voxReaderSourceFiles = Solution.VoxReader.Directory.GlobFiles("**/*.cs")
-            .Where(f => !f.ToString().Contains(Solution.VoxReader.Directory / "obj"))
-            .Where(f => !f.ToString().Contains(Solution.VoxReader.Directory / "bin"))
-            .OrderBy(f => f.ToString())
-            .ToHashSet();
-        var voxReaderSourceMetaFiles = Solution.VoxReader.Directory.GlobFiles("**/*.cs.meta")
-            .Where(f => !f.ToString().Contains(Solution.VoxReader.Directory / "obj"))
-            .Where(f => !f.ToString().Contains(Solution.VoxReader.Directory / "bin"))
-            .OrderBy(f => f.ToString()).ToHashSet();
+                Assert.True(changelogHasValidVersion, $"Could not parse '{latestRawChangelogVersionValue}' as the latest version from the changelog file!");
 
-        foreach (AbsolutePath sourceFile in voxReaderSourceFiles)
-        {
-            Assert.True(voxReaderSourceMetaFiles.Contains((AbsolutePath)(sourceFile + ".meta")), $"'{sourceFile}' is missing a Unity .meta file!");
-        }
-    }
+                Assert.True(latestChangelogVersion == versionInUnityPackageFile,
+                    $"The latest version '{latestChangelogVersion}' in the changelog file does not match the version '{versionInUnityPackageFile}' in the Unity package file!");
+                
+                Assert.True(latestChangelogVersion == versionTag,
+                    $"Latest version '{latestRawChangelogVersionValue}' in the changelog file does not match the version tag '{versionTag}'!");
+
+                Assert.True(versionInUnityPackageFile == versionTag,
+                    $"The version '{versionInUnityPackageFile}' in the Unity package file does not match the latest version tag '{versionTag}'!");
+            }
+
+            // Verify that all files and directories have a Unity meta file (if the meta file is missing the file will be ignored when imported into Unity)
+            Helper.AssertThatUnityMetaFilesExist(Solution.VoxReader.Directory, p =>
+                p.StartsWith(Solution.VoxReader.Directory / "bin")
+                || p.StartsWith(Solution.VoxReader.Directory / "obj")
+            );
+        });
 
     Target Clean => _ => _
+        .DependsOn(Validate)
         .Executes(() =>
         {
             EnsureCleanDirectory(PublishDirectory);
