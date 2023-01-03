@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Parse model position
 - Parse model name
+- Better validation for Unity meta files in build pipeline
 
 ## [2.1.2] - 2023-01-03
 
