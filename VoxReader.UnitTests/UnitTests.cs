@@ -16,15 +16,31 @@ namespace VoxReader.UnitTests
         private const string TestFile_3x3x3_at_center_with_corner = "data/3x3x3_at_center_with_corner.zip";
         private const string TestFile_groups = "data/groups.zip";
 
-        // [Fact]
-        // public void VoxReader_Read_ModelPositionsAreCorrectInGroups()
-        // {
-        //     string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_groups).First();
-        //
-        //     IVoxFile voxFile = VoxReader.Read(file);
-        //     voxFile.Models.Single(m => m.Name == "obj1").Position.Should().Be(new Vector3(0, 0, 0));
-        //     voxFile.Models.Single(m => m.Name == "obj1 - copy").Position.Should().Be(new Vector3(1, 1, 1));
-        // }
+        [Fact]
+        public void VoxReader_Read_ModelNamesAreParsedCorrectly()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_groups).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+            voxFile.Models.Should().ContainSingle(m => m.Name == "obj1");
+            voxFile.Models.Should().ContainSingle(m => m.Name == "obj2");
+            voxFile.Models.Should().ContainSingle(m => m.Name == "obj3");
+            voxFile.Models.Should().ContainSingle(m => m.Name == "obj4");
+            voxFile.Models.Should().ContainSingle(m => m.Name == "obj5");
+        }
+
+        [Fact]
+        public void VoxReader_Read_ModelPositionsAreCorrectInGroups()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_groups).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+            voxFile.Models.Single(m => m.Name == "obj1").Position.Should().Be(new Vector3(0, 0, 0));
+            voxFile.Models.Single(m => m.Name == "obj2").Position.Should().Be(new Vector3(0, 0, 2));
+            voxFile.Models.Single(m => m.Name == "obj3").Position.Should().Be(new Vector3(-2, 1, 4));
+            voxFile.Models.Single(m => m.Name == "obj4").Position.Should().Be(new Vector3(-2, 1, 8));
+            voxFile.Models.Single(m => m.Name == "obj5").Position.Should().Be(new Vector3(2, 1, 8));
+        }
 
         [Fact]
         public void VoxReader_Read_ModelPositionsAreCorrect()
