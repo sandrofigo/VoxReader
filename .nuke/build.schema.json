@@ -84,7 +84,8 @@
               "PublishPackageToGithub",
               "PublishPackageToNuGet",
               "Restore",
-              "Test"
+              "Test",
+              "Validate"
             ]
           }
         },
@@ -105,7 +106,8 @@
               "PublishPackageToGithub",
               "PublishPackageToNuGet",
               "Restore",
-              "Test"
+              "Test",
+              "Validate"
             ]
           }
         },
