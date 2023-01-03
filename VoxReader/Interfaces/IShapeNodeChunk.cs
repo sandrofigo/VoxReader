@@ -3,7 +3,7 @@
     internal interface IShapeNodeChunk : INodeChunk
     {
         /// <summary>
-        /// The number of models. Must be '1'.
+        /// The number of models.
         /// </summary>
         int ModelCount { get; }
         

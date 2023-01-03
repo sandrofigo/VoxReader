@@ -4,14 +4,18 @@ namespace VoxReader
 {
     public class Model : IModel
     {
+        public string Name { get; }
+        public Vector3 Position { get; }
         public Vector3 Size { get; }
         public Voxel[] Voxels { get; }
         public int Id { get; }
         public bool IsCopy { get; }
 
-        public Model(int id, Vector3 size, Voxel[] voxels, bool isCopy)
+        public Model(int id, string name, Vector3 position, Vector3 size, Voxel[] voxels, bool isCopy)
         {
             Id = id;
+            Name = name;
+            Position = position;
             Size = size;
             Voxels = voxels;
             IsCopy = isCopy;
@@ -19,12 +23,12 @@ namespace VoxReader
 
         internal Model GetCopy()
         {
-            return new(Id, Size, Voxels, true);
+            return new(Id, Name, Position, Size, Voxels, true);
         }
         
         public override string ToString()
         {
-            return $"Id: {Id}, Size: {Size}, Voxel Count: {Voxels.Length}";
+            return $"Id: {Id}, Name: {Name}, Position: {Position}, Size: {Size}, Voxel Count: {Voxels.Length}";
         }
     }
 }

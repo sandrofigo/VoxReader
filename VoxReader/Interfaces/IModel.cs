@@ -3,6 +3,16 @@ namespace VoxReader.Interfaces
     public interface IModel
     {
         /// <summary>
+        /// The name of the model.
+        /// </summary>
+        string Name { get; }
+        
+        /// <summary>
+        /// The position of the model.
+        /// </summary>
+        Vector3 Position { get; }
+        
+        /// <summary>
         /// The size of the model.
         /// </summary>
         Vector3 Size { get; }

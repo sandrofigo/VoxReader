@@ -1,11 +1,44 @@
+using System;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("VoxReader.UnitTests")]
 
 namespace VoxReader
 {
-    public readonly struct Color
+    public readonly struct Color : IEquatable<Color>
     {
+        public bool Equals(Color other)
+        {
+            return R == other.R && G == other.G && B == other.B && A == other.A;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Color other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = R.GetHashCode();
+                hashCode = (hashCode * 397) ^ G.GetHashCode();
+                hashCode = (hashCode * 397) ^ B.GetHashCode();
+                hashCode = (hashCode * 397) ^ A.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(Color left, Color right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Color left, Color right)
+        {
+            return !left.Equals(right);
+        }
+
         /// <summary>
         /// The red component of the color.
         /// </summary>

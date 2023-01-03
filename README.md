@@ -12,7 +12,7 @@ A C# library to read .vox files created with [MagicaVoxel](https://ephtracy.gith
 ## Currently supported features
 
 At the moment it is possible to read:
-- the size of all models
+- the name, size and position of all models
 - all individual voxels including their color and position
 - the palette that was used for the model
 - all raw data related to the scene
@@ -48,6 +48,6 @@ Follow the [manual installation](https://openupm.com/packages/com.sandrofigo.vox
 
 ## Extending the library
 
-The file format specification made by [ephtracy](https://github.com/ephtracy) is available at [.vox file format](https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt)
+The file format specification made by [ephtracy](https://github.com/ephtracy) is available at [.vox file format](https://github.com/ephtracy/voxel-model)
 
 Support this project with a ⭐️, report an issue or if you feel adventurous and would like to extend the functionality open a pull request.

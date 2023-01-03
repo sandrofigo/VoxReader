@@ -23,37 +23,94 @@ namespace VoxReader
         {
             var sizeChunks = mainChunk.GetChildren<ISizeChunk>();
             var voxelChunks = mainChunk.GetChildren<IVoxelChunk>();
-            var shapeNodeChunks = mainChunk.GetChildren<IShapeNodeChunk>();
 
             if (sizeChunks.Length != voxelChunks.Length)
                 throw new InvalidDataException("Can not extract models, because the number of SIZE chunks does not match the number of XYZI chunks!");
 
-            var shapeNodeChunksQueue = new Queue<IShapeNodeChunk>(shapeNodeChunks);
+            var shapeNodeChunks = mainChunk.GetChildren<IShapeNodeChunk>();
+            var transformNodeChunks = mainChunk.GetChildren<ITransformNodeChunk>();
+            var groupNodeChunks = mainChunk.GetChildren<IGroupNodeChunk>();
 
-            var processedModels = new Dictionary<int, Model>();
+            var allNodes = new Dictionary<int, INodeChunk>();
+            foreach (ITransformNodeChunk t in transformNodeChunks)
+                allNodes.Add(t.NodeId, t);
+            foreach (IGroupNodeChunk g in groupNodeChunks)
+                allNodes.Add(g.NodeId, g);
+            foreach (IShapeNodeChunk s in shapeNodeChunks)
+                allNodes.Add(s.NodeId, s);
 
-            int duplicateModelCount = 0;
-            
-            for (int i = 0; i < shapeNodeChunks.Length; i++)
+            var transformNodesThatHaveAShapeNode = new Dictionary<ITransformNodeChunk, IShapeNodeChunk>();
+            foreach (ITransformNodeChunk transformNodeChunk in transformNodeChunks)
             {
-                Vector3 size = sizeChunks[i - duplicateModelCount].Size;
-                var voxels = voxelChunks[i - duplicateModelCount].Voxels.Select(voxel => new Voxel(voxel.Position, palette.Colors[voxel.ColorIndex - 1])).ToArray();
-
-                int id = shapeNodeChunksQueue.Dequeue().Models[0];
-
-                if (processedModels.ContainsKey(id))
+                foreach (IShapeNodeChunk shapeNodeChunk in shapeNodeChunks)
                 {
-                    // Create copy of already existing model
-                    duplicateModelCount++;
-                    yield return processedModels[id].GetCopy();
+                    if (transformNodeChunk.ChildNodeId != shapeNodeChunk.NodeId)
+                        continue;
+
+                    transformNodesThatHaveAShapeNode.Add(transformNodeChunk, shapeNodeChunk);
+                    break;
                 }
-                else
+            }
+
+            var processedModelIds = new HashSet<int>();
+
+            foreach (var keyValuePair in transformNodesThatHaveAShapeNode)
+            {
+                ITransformNodeChunk transformNodeChunk = keyValuePair.Key;
+                IShapeNodeChunk shapeNodeChunk = keyValuePair.Value;
+
+                int[] ids = shapeNodeChunk.Models;
+
+                foreach (int id in ids)
                 {
+                    string name = transformNodeChunk.Name;
+                    Vector3 position = GetGlobalTranslation(transformNodeChunk);
+                    Vector3 size = sizeChunks[id].Size;
+                    var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, palette.Colors[voxel.ColorIndex - 1])).ToArray();
+
                     // Create new model
-                    var model = new Model(id, size, voxels, false);
-                    processedModels.Add(id, model);
+                    var model = new Model(id, name, position, size, voxels, !processedModelIds.Add(id));
                     yield return model;
                 }
+            }
+
+            Vector3 GetGlobalTranslation(ITransformNodeChunk target)
+            {
+                Vector3 position = target.Frames[0].Translation;
+                
+                while (TryGetParentTransformNodeChunk(target, out ITransformNodeChunk parent))
+                {
+                    position += parent.Frames[0].Translation;
+                    
+                    target = parent;
+                }
+
+                return position;
+            }
+
+            bool TryGetParentTransformNodeChunk(ITransformNodeChunk target, out ITransformNodeChunk parent)
+            {
+                //TODO: performance here is questionable; might need an additional scene structure to query the parent efficiently
+                foreach (IGroupNodeChunk groupNodeChunk in groupNodeChunks)
+                {
+                    foreach (int parentGroupNodeChunkChildId in groupNodeChunk.ChildrenNodes)
+                    {
+                        if (parentGroupNodeChunkChildId != target.NodeId)
+                            continue;
+
+                        foreach (ITransformNodeChunk transformNodeChunk in transformNodeChunks)
+                        {
+                            if (transformNodeChunk.ChildNodeId != groupNodeChunk.NodeId)
+                                continue;
+
+                            parent = transformNodeChunk;
+                            return true;
+                        }
+                    }
+                }
+
+                parent = null;
+                return false;
             }
         }
     }
