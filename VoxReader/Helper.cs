@@ -64,9 +64,10 @@ namespace VoxReader
                 foreach (int id in ids)
                 {
                     string name = transformNodeChunk.Name;
-                    Vector3 position = GetGlobalTranslation(transformNodeChunk);
                     Vector3 size = sizeChunks[id].Size;
-                    var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, palette.Colors[voxel.ColorIndex - 1])).ToArray();
+                    Vector3 position = GetGlobalTranslation(transformNodeChunk);
+
+                    var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, position + voxel.Position - size / 2, palette.Colors[voxel.ColorIndex - 1])).ToArray();
 
                     // Create new model
                     var model = new Model(id, name, position, size, voxels, !processedModelIds.Add(id));
@@ -77,11 +78,11 @@ namespace VoxReader
             Vector3 GetGlobalTranslation(ITransformNodeChunk target)
             {
                 Vector3 position = target.Frames[0].Translation;
-                
+
                 while (TryGetParentTransformNodeChunk(target, out ITransformNodeChunk parent))
                 {
                     position += parent.Frames[0].Translation;
-                    
+
                     target = parent;
                 }
 
