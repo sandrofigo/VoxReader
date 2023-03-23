@@ -17,6 +17,29 @@ namespace VoxReader.UnitTests
         private const string TestFile_3x3x3_at_center_with_corner = "data/3x3x3_at_center_with_corner.zip";
         private const string TestFile_groups = "data/groups.zip";
         private const string TestFile_notes = "data/color_notes.zip";
+        private const string TestFile_no_notes = "data/no_notes.zip";
+
+        [Fact]
+        public void VoxReader_Read_PaletteColorPositionMatchesNoteRow()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_notes).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.Colors[248].Should().Be(Color.Red);
+            voxFile.Palette.Colors[136].Should().Be(Color.Green);
+            voxFile.Palette.Colors[0].Should().Be(Color.Blue);
+        }
+
+        [Fact]
+        public void VoxReader_ReadFileWithNoNotes_NotesAreEmptyStrings()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_no_notes).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.Notes.Should().AllBe("");
+        }
 
         [Fact]
         public void VoxReader_Read_NotesAreParsedCorrectly()
