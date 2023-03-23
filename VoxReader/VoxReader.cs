@@ -25,7 +25,7 @@ namespace VoxReader
 
             return Read(data);
         }
-        
+
         /// <summary>
         /// Reads the data from the provided byte array.
         /// </summary>
@@ -35,7 +35,9 @@ namespace VoxReader
 
             IChunk mainChunk = ChunkFactory.Parse(data.GetRange(8));
 
-            var palette = new Palette(mainChunk.GetChild<IPaletteChunk>().Colors);
+            var noteChunk = mainChunk.GetChild<INoteChunk>();
+
+            var palette = new Palette(mainChunk.GetChild<IPaletteChunk>().Colors, noteChunk?.Notes ?? Array.Empty<string>());
 
             var models = Helper.ExtractModels(mainChunk, palette).ToArray();
 

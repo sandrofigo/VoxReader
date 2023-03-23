@@ -6,10 +6,12 @@ namespace VoxReader
     public class Palette : IPalette
     {
         public Color[] Colors { get; }
+        public string[] Notes { get; }
 
-        public Palette(Color[] colors)
+        public Palette(Color[] colors, string[] notes)
         {
             Colors = colors;
+            Notes = notes;
         }
 
         public override string ToString()
