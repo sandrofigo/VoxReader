@@ -8,11 +8,9 @@ namespace VoxReader.Chunks
 
         public PaletteChunk(byte[] data) : base(data)
         {
-            Colors = new Color[256];
-
             var formatParser = new FormatParser(Content);
 
-            Colors = formatParser.ParseColors(Colors.Length);
+            Colors = formatParser.ParseColors(256);
         }
     }
 }
