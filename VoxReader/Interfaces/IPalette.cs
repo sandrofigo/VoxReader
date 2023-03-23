@@ -4,5 +4,6 @@ namespace VoxReader.Interfaces
     {
         Color[] Colors { get; }
         string[] Notes { get; }
+        Color[] GetColorsByNote(string note);
     }
 }

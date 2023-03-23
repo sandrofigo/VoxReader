@@ -7,6 +7,10 @@ namespace VoxReader
     {
         public Color[] Colors { get; }
         public string[] Notes { get; }
+        public Color[] GetColorsByNote(string note)
+        {
+            throw new System.NotImplementedException();
+        }
 
         public Palette(Color[] colors, string[] notes)
         {

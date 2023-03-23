@@ -18,6 +18,35 @@ namespace VoxReader.UnitTests
         private const string TestFile_groups = "data/groups.zip";
         private const string TestFile_notes = "data/color_notes.zip";
         private const string TestFile_no_notes = "data/no_notes.zip";
+        private const string TestFile_color_indices = "data/color_indices_test.zip";
+
+        [Fact]
+        public void VoxReader_Read_ColorIndicesAreCorrect()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.Colors[154].Should().Be(Color.Blue);
+            voxFile.Palette.Colors[152].Should().Be(Color.Red);
+            voxFile.Palette.Colors[133].Should().Be(Color.Yellow);
+            voxFile.Palette.Colors[99].Should().Be(Color.Green);
+            voxFile.Palette.Colors[90].Should().Be(Color.Magenta);
+            voxFile.Palette.Colors[16].Should().Be(Color.Blue);
+        }
+
+        [Fact]
+        public void VoxReader_Read_NoteNameMatchesColorsInTheSameRow()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.GetColorsByNote("note 1").Should().ContainInOrder(Color.Red, Color.Black, Color.Blue, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
+            voxFile.Palette.GetColorsByNote("note 2").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Yellow, Color.Black, Color.Black);
+            voxFile.Palette.GetColorsByNote("note 3").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Green, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Magenta, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
+            voxFile.Palette.GetColorsByNote("note 4").Should().ContainInOrder(Color.Blue, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
+        }
 
         [Fact]
         public void VoxReader_Read_PaletteColorPositionMatchesNoteRow()
@@ -169,6 +198,20 @@ namespace VoxReader.UnitTests
             {
                 models[i].Voxels.Should().HaveCount(expectedCount[i]);
             }
+        }
+
+        [Fact]
+        public void VoxReader_ReadFileFromVersion0_99_6_4_VoxelColorIsCorrect()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            IModel model = voxFile.Models.First();
+
+            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 2, 0)).Color.Should().Be(Color.Red);
+            model.Voxels.First(voxel => voxel.Position == new Vector3(1, 1, 0)).Color.Should().Be(Color.Green);
+            model.Voxels.First(voxel => voxel.Position == new Vector3(2, 0, 0)).Color.Should().Be(Color.Blue);
         }
 
         [Fact]
