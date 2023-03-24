@@ -15,6 +15,7 @@ At the moment it is possible to read:
 - the name, size and position of all models
 - all individual voxels including their color and position
 - the palette that was used for the model
+- the notes stored in the palette
 - all raw data related to the scene
 - miscellaneous raw data
 
