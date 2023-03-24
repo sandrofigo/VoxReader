@@ -77,6 +77,7 @@ namespace VoxReader
         internal static readonly Color Blue = new(0, 0, 255, 255);
         internal static readonly Color Yellow = new(255, 255, 0, 255);
         internal static readonly Color Magenta = new(255, 0, 255, 255);
+        internal static readonly Color Cyan = new(0, 255, 255, 255);
         internal static readonly Color White = new(255, 255, 255, 255);
         internal static readonly Color Black = new(0, 0, 0, 255);
     }

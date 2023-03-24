@@ -17,7 +17,7 @@ namespace VoxReader.UnitTests
         private const string TestFile_groups = "data/groups.zip";
         private const string TestFile_notes = "data/color_notes.zip";
         private const string TestFile_no_notes = "data/no_notes.zip";
-        private const string TestFile_color_indices = "data/color_indices_test.zip";
+        private const string TestFile_color_indices = "data/color_indices.zip";
 
         [Fact]
         public void VoxReader_Read_ColorIndicesAreCorrect()
@@ -26,6 +26,8 @@ namespace VoxReader.UnitTests
 
             IVoxFile voxFile = VoxReader.Read(file);
 
+            voxFile.Palette.Colors[254].Should().Be(Color.Cyan);
+            voxFile.Palette.Colors[251].Should().Be(Color.Yellow);
             voxFile.Palette.Colors[154].Should().Be(Color.Blue);
             voxFile.Palette.Colors[152].Should().Be(Color.Red);
             voxFile.Palette.Colors[133].Should().Be(Color.Yellow);
@@ -45,6 +47,7 @@ namespace VoxReader.UnitTests
             voxFile.Palette.GetColorsByNote("note 2").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Yellow, Color.Black, Color.Black);
             voxFile.Palette.GetColorsByNote("note 3").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Green, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Magenta, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
             voxFile.Palette.GetColorsByNote("note 4").Should().ContainInOrder(Color.Blue, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
+            voxFile.Palette.GetColorsByNote("note 5").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Yellow, Color.Black, Color.Black, Color.Cyan);
         }
 
         [Fact]
