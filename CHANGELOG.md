@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for parsing palette notes
+- Added method to get palette colors grouped by palette note texts
 
 ### Fixed
 

@@ -10,10 +10,14 @@ namespace VoxReader.Interfaces
         /// <summary>
         /// The mapped colors that are visible in the palette UI from MagicaVoxel.
         /// </summary>
-        /// <remarks>The color index in MagicaVoxel starts at <c>1</c>, but this collection starts at <c>0</c>. You need to take this offset into account to get the right color.</remarks>
+        /// <remarks>The color index in MagicaVoxel starts at <c>1</c>, but this collection starts at <c>0</c>. You need to take this offset into account when accessing this collection.</remarks>
         Color[] Colors { get; }
 
         string[] Notes { get; }
+
+        /// <summary>
+        /// Returns all colors from every row in the palette where the note text matches the provided text.
+        /// </summary>
         Color[] GetColorsByNote(string note);
     }
 }

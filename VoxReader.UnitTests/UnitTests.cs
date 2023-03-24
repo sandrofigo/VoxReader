@@ -35,7 +35,7 @@ namespace VoxReader.UnitTests
         }
 
         [Fact]
-        public void VoxReader_Read_NoteNameMatchesColorsInTheSameRow()
+        public void VoxReader_GetColorsByNote_NoteNameMatchesColorsInTheSameRow()
         {
             string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices).First();
 
@@ -45,6 +45,16 @@ namespace VoxReader.UnitTests
             voxFile.Palette.GetColorsByNote("note 2").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Yellow, Color.Black, Color.Black);
             voxFile.Palette.GetColorsByNote("note 3").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Green, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Magenta, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
             voxFile.Palette.GetColorsByNote("note 4").Should().ContainInOrder(Color.Blue, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
+        }
+
+        [Fact]
+        public void VoxReader_GetColorsByNote_NotMatchingNoteReturnsEmptyCollection()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.GetColorsByNote("no match").Should().BeEmpty();
         }
 
         [Fact]

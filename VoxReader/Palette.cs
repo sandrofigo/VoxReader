@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Text;
 using VoxReader.Interfaces;
 
@@ -11,7 +13,35 @@ namespace VoxReader
 
         public Color[] GetColorsByNote(string note)
         {
-            throw new System.NotImplementedException();
+            var noteIndices = new List<int>();
+
+            for (int i = 0; i < Notes.Length; i++)
+            {
+                if (Notes[i] == note)
+                {
+                    noteIndices.Add(i);
+                }
+            }
+
+            if (noteIndices.Count == 0)
+                return Array.Empty<Color>();
+
+            var colors = new List<Color>();
+
+            foreach (int noteIndex in noteIndices)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    int colorIndex = Math.Abs(noteIndex - 31) * 8 + i;
+                    
+                    if(colorIndex >= Colors.Length)
+                        continue;
+                    
+                    colors.Add(Colors[colorIndex]);
+                }
+            }
+
+            return colors.ToArray();
         }
 
         public Palette(Color[] rawColors, Color[] colors, string[] notes)
