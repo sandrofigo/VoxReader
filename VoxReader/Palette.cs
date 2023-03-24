@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using VoxReader.Interfaces;
 
@@ -11,44 +12,52 @@ namespace VoxReader
         public Color[] Colors { get; }
         public string[] Notes { get; }
 
-        public Color[] GetColorsByNote(string note)
+        public Palette(Color[] rawColors, Color[] colors, string[] notes)
         {
-            var noteIndices = new List<int>();
+            RawColors = rawColors;
+            Colors = colors;
+            Notes = notes;
+        }
 
+        private IEnumerable<int> GetNoteIndices(string note)
+        {
             for (int i = 0; i < Notes.Length; i++)
             {
                 if (Notes[i] == note)
                 {
-                    noteIndices.Add(i);
+                    yield return i;
                 }
             }
+        }
 
-            if (noteIndices.Count == 0)
-                return Array.Empty<Color>();
+        public Color[] GetColorsByNote(string note)
+        {
+            return GetColorIndicesByNote(note).Select(index => Colors[index]).ToArray();
+        }
 
-            var colors = new List<Color>();
+        public int[] GetColorIndicesByNote(string note)
+        {
+            int[] noteIndices = GetNoteIndices(note).ToArray();
+
+            if (noteIndices.Length == 0)
+                return Array.Empty<int>();
+
+            var colors = new List<int>();
 
             foreach (int noteIndex in noteIndices)
             {
                 for (int i = 0; i < 8; i++)
                 {
                     int colorIndex = Math.Abs(noteIndex - 31) * 8 + i;
-                    
-                    if(colorIndex >= Colors.Length)
+
+                    if (colorIndex >= Colors.Length)
                         continue;
-                    
-                    colors.Add(Colors[colorIndex]);
+
+                    colors.Add(colorIndex);
                 }
             }
 
             return colors.ToArray();
-        }
-
-        public Palette(Color[] rawColors, Color[] colors, string[] notes)
-        {
-            RawColors = rawColors;
-            Colors = colors;
-            Notes = notes;
         }
 
         public override string ToString()

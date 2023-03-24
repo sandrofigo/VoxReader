@@ -20,6 +20,28 @@ namespace VoxReader.UnitTests
         private const string TestFile_color_indices = "data/color_indices.zip";
         private const string TestFile_color_indices2 = "data/color_indices_2.zip";
 
+        [Fact]
+        public void VoxReader_GetColorIndicesByNote_ReturnsEmptyArrayWhenNoteTextDoesNotMatch()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices2).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.GetColorIndicesByNote("no match").Should().BeEmpty();
+        }
+
+        [Fact]
+        public void VoxReader_GetColorIndicesByNote_ColorIndicesAreCorrect()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices2).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.GetColorIndicesByNote("red").Should().ContainInOrder(248, 249, 250, 251, 252, 253, 254);
+            voxFile.Palette.GetColorIndicesByNote("mixed").Should().ContainInOrder(144, 145, 146, 147, 148, 149, 150);
+            voxFile.Palette.GetColorIndicesByNote("green").Should().ContainInOrder(0, 1, 2, 3, 4, 5, 6);
+        }
+
         [Theory]
         [InlineData(TestFile_color_indices, 0, 2, 0, 152)]
         [InlineData(TestFile_color_indices, 1, 1, 0, 99)]

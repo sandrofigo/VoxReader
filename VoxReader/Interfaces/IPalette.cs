@@ -16,8 +16,13 @@ namespace VoxReader.Interfaces
         string[] Notes { get; }
 
         /// <summary>
-        /// Returns all colors from every row in the palette where the note text matches the provided text.
+        /// Returns all colors from every row in the palette where the note text matches the provided <c>string</c>.
         /// </summary>
         Color[] GetColorsByNote(string note);
+
+        /// <summary>
+        /// Returns all mapped color indices from every row in the palette where the note text matches the provided <c>string</c>.
+        /// </summary>
+        int[] GetColorIndicesByNote(string note);
     }
 }

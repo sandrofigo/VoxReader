@@ -12,7 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for parsing palette notes
-- Added method to get palette colors grouped by palette note texts
+- Added method `Palette.GetColorsByNote` to get palette colors grouped by palette note texts
+- Added method `Palette.GetColorIndicesByNote` to get mapped palette color indices grouped by palette note texts
+- Added mapped color index to voxel
 
 ### Fixed
 
