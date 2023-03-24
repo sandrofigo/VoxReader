@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for parsing palette notes
 
+### Fixed
+
+- Fixed wrong colors in palette when an IMAP chunk exists
+
 ## [3.1.0] - 2023-01-03
 
 ### Added
