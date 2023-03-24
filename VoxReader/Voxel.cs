@@ -17,11 +17,17 @@ namespace VoxReader
         /// </summary>
         public Color Color { get; }
 
-        internal Voxel(Vector3 position, Vector3 globalPosition, Color color)
+        /// <summary>
+        /// The mapped index of the voxel color that is visible in the palette UI from MagicaVoxel.
+        /// </summary>
+        public int ColorIndex { get; }
+
+        internal Voxel(Vector3 position, Vector3 globalPosition, Color color, int mappedColorIndex)
         {
             Position = position;
             GlobalPosition = globalPosition;
             Color = color;
+            ColorIndex = mappedColorIndex;
         }
 
         public override string ToString()

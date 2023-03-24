@@ -18,6 +18,23 @@ namespace VoxReader.UnitTests
         private const string TestFile_notes = "data/color_notes.zip";
         private const string TestFile_no_notes = "data/no_notes.zip";
         private const string TestFile_color_indices = "data/color_indices.zip";
+        private const string TestFile_color_indices2 = "data/color_indices_2.zip";
+
+        [Theory]
+        [InlineData(TestFile_color_indices, 0, 2, 0, 152)]
+        [InlineData(TestFile_color_indices, 1, 1, 0, 99)]
+        [InlineData(TestFile_color_indices, 2, 0, 0, 16)]
+        [InlineData(TestFile_color_indices2, 0, 1, 0, 0)]
+        [InlineData(TestFile_color_indices2, 1, 2, 0, 144)]
+        [InlineData(TestFile_color_indices2, 2, 0, 0, 254)]
+        public void VoxReader_Read_ColorIndicesOnVoxelAreCorrect(string testFile, int x, int y, int z, int expectedIndex)
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(testFile).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Models.First().Voxels.First(voxel => voxel.Position == new Vector3(x, y, z)).ColorIndex.Should().Be(expectedIndex);
+        }
 
         [Fact]
         public void VoxReader_Read_ColorIndicesAreCorrect()

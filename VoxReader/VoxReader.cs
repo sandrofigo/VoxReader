@@ -43,14 +43,7 @@ namespace VoxReader
 
             for (int i = 0; i < mappedColors.Length; i++)
             {
-                if (indexMapChunk != null)
-                {
-                    mappedColors[i] = rawColors[indexMapChunk.ColorIndices[i] - 1];
-                }
-                else
-                {
-                    mappedColors[i] = rawColors[i];
-                }
+                mappedColors[i] = rawColors[Helper.GetMappedColorIndex(indexMapChunk, i)];
             }
 
             var palette = new Palette(rawColors, mappedColors, noteChunk?.Notes ?? Array.Empty<string>());
