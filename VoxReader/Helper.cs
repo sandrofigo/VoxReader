@@ -52,13 +52,10 @@ namespace VoxReader
                 }
             }
 
-            // Inverse index map for mapped color index on voxel
+            // Create inverse index map for mapped color index on voxel
             var indexMapChunk = mainChunk.GetChild<IIndexMapChunk>();
-            var rawColors = mainChunk.GetChild<IPaletteChunk>().Colors;
-            var mappedColors = new Color[rawColors.Length - 1];
-
             var inverseIndexMap = new Dictionary<int, int>();
-            for (int i = 0; i < mappedColors.Length; i++)
+            for (int i = 0; i < palette.RawColors.Length - 1; i++)
             {
                 inverseIndexMap.Add(GetMappedColorIndex(indexMapChunk, i), i);
             }
