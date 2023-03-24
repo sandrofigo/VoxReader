@@ -15,6 +15,137 @@ namespace VoxReader.UnitTests
         private const string TestFile_MultipleModels = "data/multiple_models.zip";
         private const string TestFile_3x3x3_at_center_with_corner = "data/3x3x3_at_center_with_corner.zip";
         private const string TestFile_groups = "data/groups.zip";
+        private const string TestFile_notes = "data/color_notes.zip";
+        private const string TestFile_no_notes = "data/no_notes.zip";
+        private const string TestFile_color_indices = "data/color_indices.zip";
+        private const string TestFile_color_indices2 = "data/color_indices_2.zip";
+
+        [Fact]
+        public void VoxReader_GetColorIndicesByNote_ReturnsEmptyArrayWhenNoteTextDoesNotMatch()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices2).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.GetColorIndicesByNote("no match").Should().BeEmpty();
+        }
+
+        [Fact]
+        public void VoxReader_GetColorIndicesByNote_ColorIndicesAreCorrect()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices2).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.GetColorIndicesByNote("red").Should().ContainInOrder(248, 249, 250, 251, 252, 253, 254);
+            voxFile.Palette.GetColorIndicesByNote("mixed").Should().ContainInOrder(144, 145, 146, 147, 148, 149, 150);
+            voxFile.Palette.GetColorIndicesByNote("green").Should().ContainInOrder(0, 1, 2, 3, 4, 5, 6);
+        }
+
+        [Theory]
+        [InlineData(TestFile_color_indices, 0, 2, 0, 152)]
+        [InlineData(TestFile_color_indices, 1, 1, 0, 99)]
+        [InlineData(TestFile_color_indices, 2, 0, 0, 16)]
+        [InlineData(TestFile_color_indices2, 0, 1, 0, 0)]
+        [InlineData(TestFile_color_indices2, 1, 2, 0, 144)]
+        [InlineData(TestFile_color_indices2, 2, 0, 0, 254)]
+        public void VoxReader_Read_ColorIndicesOnVoxelAreCorrect(string testFile, int x, int y, int z, int expectedIndex)
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(testFile).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Models.First().Voxels.First(voxel => voxel.Position == new Vector3(x, y, z)).ColorIndex.Should().Be(expectedIndex);
+        }
+
+        [Fact]
+        public void VoxReader_Read_ColorIndicesAreCorrect()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.Colors[254].Should().Be(Color.Cyan);
+            voxFile.Palette.Colors[251].Should().Be(Color.Yellow);
+            voxFile.Palette.Colors[154].Should().Be(Color.Blue);
+            voxFile.Palette.Colors[152].Should().Be(Color.Red);
+            voxFile.Palette.Colors[133].Should().Be(Color.Yellow);
+            voxFile.Palette.Colors[99].Should().Be(Color.Green);
+            voxFile.Palette.Colors[90].Should().Be(Color.Magenta);
+            voxFile.Palette.Colors[16].Should().Be(Color.Blue);
+        }
+
+        [Fact]
+        public void VoxReader_GetColorsByNote_NoteNameMatchesColorsInTheSameRow()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.GetColorsByNote("note 1").Should().ContainInOrder(Color.Red, Color.Black, Color.Blue, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
+            voxFile.Palette.GetColorsByNote("note 2").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Yellow, Color.Black, Color.Black);
+            voxFile.Palette.GetColorsByNote("note 3").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Green, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Magenta, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
+            voxFile.Palette.GetColorsByNote("note 4").Should().ContainInOrder(Color.Blue, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
+            voxFile.Palette.GetColorsByNote("note 5").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Yellow, Color.Black, Color.Black, Color.Cyan);
+        }
+
+        [Fact]
+        public void VoxReader_GetColorsByNote_NotMatchingNoteReturnsEmptyCollection()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.GetColorsByNote("no match").Should().BeEmpty();
+        }
+
+        [Fact]
+        public void VoxReader_Read_PaletteColorPositionMatchesNoteRow()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_notes).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.Colors[248].Should().Be(Color.Red);
+            voxFile.Palette.Colors[136].Should().Be(Color.Green);
+            voxFile.Palette.Colors[0].Should().Be(Color.Blue);
+        }
+
+        [Fact]
+        public void VoxReader_ReadFileWithNoNotes_NotesAreEmptyStrings()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_no_notes).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.Notes.Should().AllBe("");
+        }
+
+        [Fact]
+        public void VoxReader_Read_NotesAreParsedCorrectly()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_notes).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            for (int i = 0; i < 32; i++)
+            {
+                int iLocal = i;
+                voxFile.Palette.Notes.Should().ContainSingle(note => note == $"note {iLocal + 1}");
+            }
+        }
+
+        [Theory]
+        [InlineData(TestFile_3x3, 32)]
+        [InlineData(TestFile_notes, 32)]
+        public void VoxReader_Read_NoteCountIsCorrect(string testFile, int expectedCount)
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(testFile).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Palette.Notes.Should().HaveCount(expectedCount);
+        }
 
         [Fact]
         public void VoxReader_Read_GlobalVoxelPositionIsCorrect()
@@ -28,18 +159,18 @@ namespace VoxReader.UnitTests
 
             voxFile.Models.Single(m => m.Name == "obj3").Voxels.Single(v => v.Color == Color.Blue).GlobalPosition.Should().Be(new Vector3(-3, 0, 3));
             voxFile.Models.Single(m => m.Name == "obj3").Voxels.Single(v => v.Color == Color.Red).GlobalPosition.Should().Be(new Vector3(-1, 2, 5));
-            
+
             voxFile.Models.Single(m => m.Name == "obj4").Voxels.Single(v => v.Color == Color.Blue).GlobalPosition.Should().Be(new Vector3(-3, 0, 7));
             voxFile.Models.Single(m => m.Name == "obj4").Voxels.Single(v => v.Color == Color.Red).GlobalPosition.Should().Be(new Vector3(-1, 2, 9));
         }
-        
+
         [Fact]
         public void VoxReader_Read_ModelNamesAreParsedCorrectly()
         {
             string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_groups).First();
 
             IVoxFile voxFile = VoxReader.Read(file);
-            
+
             voxFile.Models.Should().ContainSingle(m => m.Name == "obj1");
             voxFile.Models.Should().ContainSingle(m => m.Name == "obj2");
             voxFile.Models.Should().ContainSingle(m => m.Name == "obj3");
@@ -53,7 +184,7 @@ namespace VoxReader.UnitTests
             string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_groups).First();
 
             IVoxFile voxFile = VoxReader.Read(file);
-            
+
             voxFile.Models.Single(m => m.Name == "obj1").Position.Should().Be(new Vector3(0, 0, 0));
             voxFile.Models.Single(m => m.Name == "obj2").Position.Should().Be(new Vector3(0, 0, 2));
             voxFile.Models.Single(m => m.Name == "obj3").Position.Should().Be(new Vector3(-2, 1, 4));
@@ -67,7 +198,7 @@ namespace VoxReader.UnitTests
             string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_MultipleModels).First();
 
             IVoxFile voxFile = VoxReader.Read(file);
-            
+
             voxFile.Models.Single(m => m.Name == "black").Position.Should().Be(new Vector3(0, 0, 0));
             voxFile.Models.Single(m => m.Name == "red").Position.Should().Be(new Vector3(2, 0, 0));
             voxFile.Models.Single(m => m.Name == "green").Position.Should().Be(new Vector3(0, 2, 0));
@@ -83,7 +214,7 @@ namespace VoxReader.UnitTests
             string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_3x3x3_at_center_with_corner).First();
 
             IVoxFile voxFile = VoxReader.Read(file);
-            
+
             voxFile.Models.Single(m => m.Name == "obj1").Position.Should().Be(new Vector3(1, 1, 1));
         }
 
@@ -118,6 +249,20 @@ namespace VoxReader.UnitTests
             {
                 models[i].Voxels.Should().HaveCount(expectedCount[i]);
             }
+        }
+
+        [Fact]
+        public void VoxReader_ReadFileFromVersion0_99_6_4_VoxelColorIsCorrect()
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_color_indices).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            IModel model = voxFile.Models.First();
+
+            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 2, 0)).Color.Should().Be(Color.Red);
+            model.Voxels.First(voxel => voxel.Position == new Vector3(1, 1, 0)).Color.Should().Be(Color.Green);
+            model.Voxels.First(voxel => voxel.Position == new Vector3(2, 0, 0)).Color.Should().Be(Color.Blue);
         }
 
         [Fact]

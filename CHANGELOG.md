@@ -7,6 +7,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 -->
 
+## [4.0.0] - 2023-03-24
+
+### Added
+
+- Added support for parsing palette notes
+- Added method `Palette.GetColorsByNote` to get palette colors grouped by palette note texts
+- Added method `Palette.GetColorIndicesByNote` to get mapped palette color indices grouped by palette note texts
+- Added mapped color index to voxel
+
+### Fixed
+
+- Fixed wrong colors in palette when an IMAP chunk exists
+
+### Changed
+
+- `Palette.Colors` now stores the mapped colors that are visible in the UI of MagicaVoxel instead of the raw colors parsed from the `.vox` file
+
 ## [3.1.0] - 2023-01-03
 
 ### Added

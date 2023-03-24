@@ -25,7 +25,7 @@ namespace VoxReader
 
             return Read(data);
         }
-        
+
         /// <summary>
         /// Reads the data from the provided byte array.
         /// </summary>
@@ -35,7 +35,18 @@ namespace VoxReader
 
             IChunk mainChunk = ChunkFactory.Parse(data.GetRange(8));
 
-            var palette = new Palette(mainChunk.GetChild<IPaletteChunk>().Colors);
+            var noteChunk = mainChunk.GetChild<INoteChunk>();
+
+            var rawColors = mainChunk.GetChild<IPaletteChunk>().Colors;
+            var indexMapChunk = mainChunk.GetChild<IIndexMapChunk>();
+            var mappedColors = new Color[rawColors.Length - 1];
+
+            for (int i = 0; i < mappedColors.Length; i++)
+            {
+                mappedColors[i] = rawColors[Helper.GetMappedColorIndex(indexMapChunk, i)];
+            }
+
+            var palette = new Palette(rawColors, mappedColors, noteChunk?.Notes ?? Array.Empty<string>());
 
             var models = Helper.ExtractModels(mainChunk, palette).ToArray();
 

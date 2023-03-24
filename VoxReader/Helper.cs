@@ -52,6 +52,14 @@ namespace VoxReader
                 }
             }
 
+            // Create inverse index map for mapped color index on voxel
+            var indexMapChunk = mainChunk.GetChild<IIndexMapChunk>();
+            var inverseIndexMap = new Dictionary<int, int>();
+            for (int i = 0; i < palette.RawColors.Length - 1; i++)
+            {
+                inverseIndexMap.Add(GetMappedColorIndex(indexMapChunk, i), i);
+            }
+
             var processedModelIds = new HashSet<int>();
 
             foreach (var keyValuePair in transformNodesThatHaveAShapeNode)
@@ -67,7 +75,7 @@ namespace VoxReader
                     Vector3 size = sizeChunks[id].Size;
                     Vector3 position = GetGlobalTranslation(transformNodeChunk);
 
-                    var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, position + voxel.Position - size / 2, palette.Colors[voxel.ColorIndex - 1])).ToArray();
+                    var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, position + voxel.Position - size / 2, palette.RawColors[voxel.ColorIndex - 1], inverseIndexMap[voxel.ColorIndex - 1])).ToArray();
 
                     // Create new model
                     var model = new Model(id, name, position, size, voxels, !processedModelIds.Add(id));
@@ -113,6 +121,14 @@ namespace VoxReader
                 parent = null;
                 return false;
             }
+        }
+
+        internal static int GetMappedColorIndex(IIndexMapChunk indexMapChunk, int rawIndex)
+        {
+            if (indexMapChunk == null)
+                return rawIndex;
+
+            return indexMapChunk.ColorIndices[rawIndex] - 1;
         }
     }
 }

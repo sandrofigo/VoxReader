@@ -11,12 +11,12 @@ namespace VoxReader.Interfaces
         /// All models contained in the file.
         /// </summary>
         IModel[] Models { get; }
-        
+
         /// <summary>
         /// The palette that is stored in the file.
         /// </summary>
         IPalette Palette { get; }
-        
+
         /// <summary>
         /// All chunks inside the MAIN chunk.
         /// </summary>
