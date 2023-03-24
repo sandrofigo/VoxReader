@@ -30,12 +30,13 @@ namespace VoxReader
                     return new ShapeNodeChunk(data);
                 case ChunkType.Note:
                     return new NoteChunk(data);
+                case ChunkType.IndexMap:
+                    return new IndexMapChunk(data);
                 case ChunkType.MaterialOld:
                 case ChunkType.MaterialNew:
                 case ChunkType.Layer:
                 case ChunkType.Object:
                 case ChunkType.Camera:
-                case ChunkType.IndexMap:
                     return new Chunk(data);
                 default:
                     throw new ArgumentOutOfRangeException();

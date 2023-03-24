@@ -37,7 +37,23 @@ namespace VoxReader
 
             var noteChunk = mainChunk.GetChild<INoteChunk>();
 
-            var palette = new Palette(mainChunk.GetChild<IPaletteChunk>().Colors, noteChunk?.Notes ?? Array.Empty<string>());
+            var rawColors = mainChunk.GetChild<IPaletteChunk>().Colors;
+            var indexMapChunk = mainChunk.GetChild<IIndexMapChunk>();
+            var mappedColors = new Color[rawColors.Length - 1];
+
+            for (int i = 0; i < mappedColors.Length; i++)
+            {
+                if (indexMapChunk != null)
+                {
+                    mappedColors[i] = rawColors[indexMapChunk.ColorIndices[i] - 1];
+                }
+                else
+                {
+                    mappedColors[i] = rawColors[i];
+                }
+            }
+
+            var palette = new Palette(rawColors, mappedColors, noteChunk?.Notes ?? Array.Empty<string>());
 
             var models = Helper.ExtractModels(mainChunk, palette).ToArray();
 

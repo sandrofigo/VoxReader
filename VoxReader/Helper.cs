@@ -67,7 +67,7 @@ namespace VoxReader
                     Vector3 size = sizeChunks[id].Size;
                     Vector3 position = GetGlobalTranslation(transformNodeChunk);
 
-                    var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, position + voxel.Position - size / 2, palette.Colors[voxel.ColorIndex - 1])).ToArray();
+                    var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, position + voxel.Position - size / 2, palette.RawColors[voxel.ColorIndex - 1])).ToArray();
 
                     // Create new model
                     var model = new Model(id, name, position, size, voxels, !processedModelIds.Add(id));
