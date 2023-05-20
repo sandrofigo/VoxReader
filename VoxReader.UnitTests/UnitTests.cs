@@ -161,6 +161,24 @@ namespace VoxReader.UnitTests
         }
 
         [Theory]
+        [InlineData(TestFile_3x3, "yellow", 0, 0, 0)]
+        [InlineData(TestFile_3x3, "red", 2, 0, 0)]
+        [InlineData(TestFile_3x3, "green", 0, 2, 0)]
+        [InlineData(TestFile_3x3, "blue", 0, 0, 2)]
+        [InlineData(TestFile_3x3_exported_as_vox, "yellow", 0, 0, 0)]
+        [InlineData(TestFile_3x3_exported_as_vox, "red", 2, 0, 0)]
+        [InlineData(TestFile_3x3_exported_as_vox, "green", 0, 2, 0)]
+        [InlineData(TestFile_3x3_exported_as_vox, "blue", 0, 0, 2)]
+        public void VoxReader_Read_VoxelPositionIsCorrect(string testFile, string voxelColorToSearch, int desiredPositionX, int desiredPositionY, int desiredPositionZ)
+        {
+            string file = Zip.UnzipFilesFromSevenZipArchive(testFile).First();
+
+            IVoxFile voxFile = VoxReader.Read(file);
+
+            voxFile.Models.First().Voxels.Single(v => v.Color == Color.GetColorFromName(voxelColorToSearch)).Position.Should().Be(new Vector3(desiredPositionX, desiredPositionY, desiredPositionZ));
+        }
+
+        [Theory]
         [InlineData(TestFile_groups, "obj1", "red", 0, 0, 0)]
         [InlineData(TestFile_groups, "obj2", "red", 0, 0, 2)]
         [InlineData(TestFile_groups, "obj3", "blue", -3, 0, 3)]
@@ -296,10 +314,10 @@ namespace VoxReader.UnitTests
 
             IModel model = voxFile.Models.First();
 
-            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 0, 0)).Color.Should().Be(new Color(255, 177, 27, 255));
-            model.Voxels.First(voxel => voxel.Position == new Vector3(2, 0, 0)).Color.Should().Be(new Color(203, 64, 66, 255));
-            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 2, 0)).Color.Should().Be(new Color(27, 129, 62, 255));
-            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 0, 2)).Color.Should().Be(new Color(0, 92, 175, 255));
+            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 0, 0)).Color.Should().Be(Color.Yellow);
+            model.Voxels.First(voxel => voxel.Position == new Vector3(2, 0, 0)).Color.Should().Be(Color.Red);
+            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 2, 0)).Color.Should().Be(Color.Green);
+            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 0, 2)).Color.Should().Be(Color.Blue);
         }
 
         [Theory]
