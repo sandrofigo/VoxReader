@@ -31,14 +31,6 @@ namespace VoxReader
             var transformNodeChunks = mainChunk.GetChildren<ITransformNodeChunk>();
             var groupNodeChunks = mainChunk.GetChildren<IGroupNodeChunk>();
 
-            var allNodes = new Dictionary<int, INodeChunk>();
-            foreach (ITransformNodeChunk t in transformNodeChunks)
-                allNodes.Add(t.NodeId, t);
-            foreach (IGroupNodeChunk g in groupNodeChunks)
-                allNodes.Add(g.NodeId, g);
-            foreach (IShapeNodeChunk s in shapeNodeChunks)
-                allNodes.Add(s.NodeId, s);
-
             var transformNodesThatHaveAShapeNode = new Dictionary<ITransformNodeChunk, IShapeNodeChunk>();
             foreach (ITransformNodeChunk transformNodeChunk in transformNodeChunks)
             {
@@ -67,7 +59,7 @@ namespace VoxReader
                 yield return new Model(0, null, new Vector3(), size, voxels, false);
                 yield break;
             }
-            
+
             var processedModelIds = new HashSet<int>();
 
             foreach (var keyValuePair in transformNodesThatHaveAShapeNode)
