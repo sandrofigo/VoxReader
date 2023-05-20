@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using NuGet.Versioning;
 using Nuke.Common;
 using Nuke.Common.IO;
+using Serilog;
 
 public static class Helper
 {
@@ -34,6 +35,8 @@ public static class Helper
     /// <param name="excludePredicate">All paths to check are passed to this function. Return TRUE to exclude the current path.</param>
     public static void AssertThatUnityMetaFilesExist(AbsolutePath directory, Func<AbsolutePath, bool> excludePredicate = null)
     {
+        Log.Information("Checking if all necessary Unity .meta files exist...");
+        
         var directories = directory.GlobDirectories("**").Where(d => d != directory);
 
         foreach (AbsolutePath d in directories)

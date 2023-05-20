@@ -60,6 +60,14 @@ namespace VoxReader
                 inverseIndexMap.Add(GetMappedColorIndex(indexMapChunk, i), i);
             }
 
+            if (mainChunk.Children.Length == 3) // If a vox file was exported as .vox instead of saved as a .vox project it only contains a size, voxel and palette chunk
+            {
+                Vector3 size = sizeChunks[0].Size;
+                var voxels = voxelChunks[0].Voxels.Select(voxel => new Voxel(voxel.Position, voxel.Position, palette.RawColors[voxel.ColorIndex - 1], inverseIndexMap[voxel.ColorIndex - 1])).ToArray();
+                yield return new Model(0, null, new Vector3(), size, voxels, false);
+                yield break;
+            }
+            
             var processedModelIds = new HashSet<int>();
 
             foreach (var keyValuePair in transformNodesThatHaveAShapeNode)
@@ -73,12 +81,12 @@ namespace VoxReader
                 {
                     string name = transformNodeChunk.Name;
                     Vector3 size = sizeChunks[id].Size;
-                    Vector3 position = GetGlobalTranslation(transformNodeChunk);
+                    Vector3 translation = GetGlobalTranslation(transformNodeChunk);
 
-                    var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, position + voxel.Position - size / 2, palette.RawColors[voxel.ColorIndex - 1], inverseIndexMap[voxel.ColorIndex - 1])).ToArray();
+                    var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, translation + voxel.Position - size / 2, palette.RawColors[voxel.ColorIndex - 1], inverseIndexMap[voxel.ColorIndex - 1])).ToArray();
 
                     // Create new model
-                    var model = new Model(id, name, position, size, voxels, !processedModelIds.Add(id));
+                    var model = new Model(id, name, translation, size, voxels, !processedModelIds.Add(id));
                     yield return model;
                 }
             }

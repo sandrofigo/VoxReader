@@ -80,5 +80,21 @@ namespace VoxReader
         internal static readonly Color Cyan = new(0, 255, 255, 255);
         internal static readonly Color White = new(255, 255, 255, 255);
         internal static readonly Color Black = new(0, 0, 0, 255);
+
+        internal static Color GetColorFromName(string name)
+        {
+            return name.Trim().ToLowerInvariant() switch
+            {
+                "red" => Red,
+                "green" => Green,
+                "blue" => Blue,
+                "yellow" => Yellow,
+                "magenta" => Magenta,
+                "cyan" => Cyan,
+                "white" => White,
+                "black" => Black,
+                _ => throw new ArgumentOutOfRangeException(nameof(name), $"'{name}' was not recognized as a valid color name!")
+            };
+        }
     }
 }
