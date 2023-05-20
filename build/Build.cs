@@ -35,7 +35,7 @@ using static Nuke.Common.IO.PathConstruction;
     AutoGenerate = false,
     FetchDepth = 0,
     OnPushTags = new[] { "v[0-9]+.[0-9]+.[0-9]+" },
-    InvokedTargets = new[] { nameof(PrepareGitHubRelease) },
+    InvokedTargets = new[] { nameof(PublishGitHubRelease) },
     EnableGitHubToken = true,
     ImportSecrets = new[] { nameof(NuGetApiKey) })]
 class Build : NukeBuild
@@ -67,7 +67,7 @@ class Build : NukeBuild
 
                 Assert.True(latestChangelogVersion == versionInUnityPackageFile,
                     $"The latest version '{latestChangelogVersion}' in the changelog file does not match the version '{versionInUnityPackageFile}' in the Unity package file!");
-                
+
                 Assert.True(latestChangelogVersion == versionTag,
                     $"Latest version '{latestRawChangelogVersionValue}' in the changelog file does not match the version tag '{versionTag}'!");
 
@@ -157,7 +157,7 @@ class Build : NukeBuild
                 .EnableNoBuild());
         });
 
-    Target PrepareGitHubRelease => _ => _
+    Target PublishGitHubRelease => _ => _
         .Consumes(Pack)
         .DependsOn(Pack)
         .Triggers(PublishPackageToGithub, PublishPackageToNuGet)

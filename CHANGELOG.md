@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 -->
 
+## [4.1.0] - 2023-05-20
+
+### Added
+
+- Added support for exported .vox files that are not .vox project files
+
+### Fixed
+
+- Fixed the model count being zero when trying to parse an exported .vox file instead of a .vox project file
+
 ## [4.0.0] - 2023-03-24
 
 ### Added
