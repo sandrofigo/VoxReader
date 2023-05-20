@@ -185,10 +185,14 @@ namespace VoxReader.UnitTests
         [InlineData(TestFile_groups, "obj3", "red", -1, 2, 5)]
         [InlineData(TestFile_groups, "obj4", "blue", -3, 0, 7)]
         [InlineData(TestFile_groups, "obj4", "red", -1, 2, 9)]
-        [InlineData(TestFile_3x3_exported_as_vox, "", "yellow", 0, 0, 0)]
-        [InlineData(TestFile_3x3_exported_as_vox, "", "red", 2, 0, 0)]
-        [InlineData(TestFile_3x3_exported_as_vox, "", "green", 0, 2, 0)]
-        [InlineData(TestFile_3x3_exported_as_vox, "", "blue", 0, 0, 2)]
+        [InlineData(TestFile_3x3, null, "yellow", -2, -2, 0)]
+        [InlineData(TestFile_3x3, null, "red", 0, -2, 0)]
+        [InlineData(TestFile_3x3, null, "green", -2, 0, 0)]
+        [InlineData(TestFile_3x3, null, "blue", -2, -2, 2)]
+        [InlineData(TestFile_3x3_exported_as_vox, null, "yellow", 0, 0, 0)]
+        [InlineData(TestFile_3x3_exported_as_vox, null, "red", 2, 0, 0)]
+        [InlineData(TestFile_3x3_exported_as_vox, null, "green", 0, 2, 0)]
+        [InlineData(TestFile_3x3_exported_as_vox, null, "blue", 0, 0, 2)]
         public void VoxReader_Read_GlobalVoxelPositionIsCorrect(string testFile, string modelName, string voxelColorToSearch, int desiredGlobalPositionX, int desiredGlobalPositionY, int desiredGlobalPositionZ)
         {
             string file = Zip.UnzipFilesFromSevenZipArchive(testFile).First();
