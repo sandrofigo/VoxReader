@@ -179,7 +179,7 @@ class Build : NukeBuild
             var newRelease = new NewRelease($"v{version}")
             {
                 Draft = true,
-                Name = version.ToString(),
+                Name = $"v{version}",
                 Prerelease = version.IsPrerelease,
                 Body = changelog
             };
