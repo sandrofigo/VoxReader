@@ -160,21 +160,24 @@ namespace VoxReader.UnitTests
             voxFile.Palette.Notes.Should().HaveCount(expectedCount);
         }
 
-        [Fact]
-        public void VoxReader_Read_GlobalVoxelPositionIsCorrect()
+        [Theory]
+        [InlineData(TestFile_groups, "obj1", "red", 0, 0, 0)]
+        [InlineData(TestFile_groups, "obj2", "red", 0, 0, 2)]
+        [InlineData(TestFile_groups, "obj3", "blue", -3, 0, 3)]
+        [InlineData(TestFile_groups, "obj3", "red", -1, 2, 5)]
+        [InlineData(TestFile_groups, "obj4", "blue", -3, 0, 7)]
+        [InlineData(TestFile_groups, "obj4", "red", -1, 2, 9)]
+        [InlineData(TestFile_3x3_exported_as_vox, "", "yellow", 0, 0, 0)]
+        [InlineData(TestFile_3x3_exported_as_vox, "", "red", 2, 0, 0)]
+        [InlineData(TestFile_3x3_exported_as_vox, "", "green", 0, 2, 0)]
+        [InlineData(TestFile_3x3_exported_as_vox, "", "blue", 0, 0, 2)]
+        public void VoxReader_Read_GlobalVoxelPositionIsCorrect(string testFile, string modelName, string voxelColorToSearch, int desiredGlobalPositionX, int desiredGlobalPositionY, int desiredGlobalPositionZ)
         {
-            string file = Zip.UnzipFilesFromSevenZipArchive(TestFile_groups).First();
+            string file = Zip.UnzipFilesFromSevenZipArchive(testFile).First();
 
             IVoxFile voxFile = VoxReader.Read(file);
 
-            voxFile.Models.Single(m => m.Name == "obj1").Voxels[0].GlobalPosition.Should().Be(new Vector3(0, 0, 0));
-            voxFile.Models.Single(m => m.Name == "obj2").Voxels[0].GlobalPosition.Should().Be(new Vector3(0, 0, 2));
-
-            voxFile.Models.Single(m => m.Name == "obj3").Voxels.Single(v => v.Color == Color.Blue).GlobalPosition.Should().Be(new Vector3(-3, 0, 3));
-            voxFile.Models.Single(m => m.Name == "obj3").Voxels.Single(v => v.Color == Color.Red).GlobalPosition.Should().Be(new Vector3(-1, 2, 5));
-
-            voxFile.Models.Single(m => m.Name == "obj4").Voxels.Single(v => v.Color == Color.Blue).GlobalPosition.Should().Be(new Vector3(-3, 0, 7));
-            voxFile.Models.Single(m => m.Name == "obj4").Voxels.Single(v => v.Color == Color.Red).GlobalPosition.Should().Be(new Vector3(-1, 2, 9));
+            voxFile.Models.Single(m => m.Name == modelName).Voxels.Single(v => v.Color == Color.GetColorFromName(voxelColorToSearch)).GlobalPosition.Should().Be(new Vector3(desiredGlobalPositionX, desiredGlobalPositionY, desiredGlobalPositionZ));
         }
 
         [Fact]
