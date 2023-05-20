@@ -67,7 +67,7 @@ class Build : NukeBuild
 
                 Assert.True(latestChangelogVersion == versionInUnityPackageFile,
                     $"The latest version '{latestChangelogVersion}' in the changelog file does not match the version '{versionInUnityPackageFile}' in the Unity package file!");
-                
+
                 Assert.True(latestChangelogVersion == versionTag,
                     $"Latest version '{latestRawChangelogVersionValue}' in the changelog file does not match the version tag '{versionTag}'!");
 
