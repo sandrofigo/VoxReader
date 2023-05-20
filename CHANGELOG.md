@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Removed redundant code when parsing models
+- Removed unused code when parsing models
 
 ## [4.1.0] - 2023-05-20
 
