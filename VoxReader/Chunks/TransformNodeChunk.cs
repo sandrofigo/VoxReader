@@ -33,7 +33,7 @@ namespace VoxReader.Chunks
             {
                 var frameDictionary = FormatParser.ParseDictionary();
 
-                byte frameRotation = 0;
+                byte frameRotation = 0b0000_0100;
                 if (frameDictionary.TryGetValue("_r", out string r))
                     frameRotation = byte.Parse(r);
 
@@ -46,7 +46,7 @@ namespace VoxReader.Chunks
 
                 Frames[i] = new Frame
                 {
-                    Rotation = frameRotation,
+                    Rotation = new Matrix3(frameRotation),
                     Translation = frameTranslation
                 };
             }

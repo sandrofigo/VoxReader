@@ -56,7 +56,7 @@ namespace VoxReader
             {
                 Vector3 size = sizeChunks[0].Size;
                 var voxels = voxelChunks[0].Voxels.Select(voxel => new Voxel(voxel.Position, voxel.Position, palette.RawColors[voxel.ColorIndex - 1], inverseIndexMap[voxel.ColorIndex - 1])).ToArray();
-                yield return new Model(0, null, new Vector3(), size, voxels, false);
+                yield return new Model(0, null, new Vector3(), Matrix3.Identity, size, voxels, false);
                 yield break;
             }
 
@@ -74,11 +74,12 @@ namespace VoxReader
                     string name = transformNodeChunk.Name;
                     Vector3 size = sizeChunks[id].Size;
                     Vector3 translation = GetGlobalTranslation(transformNodeChunk);
+                    Matrix3 rotation = GetGlobalRotation(transformNodeChunk);
 
                     var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, translation + voxel.Position - size / 2, palette.RawColors[voxel.ColorIndex - 1], inverseIndexMap[voxel.ColorIndex - 1])).ToArray();
 
                     // Create new model
-                    var model = new Model(id, name, translation, size, voxels, !processedModelIds.Add(id));
+                    var model = new Model(id, name, translation, rotation, size, voxels, !processedModelIds.Add(id));
                     yield return model;
                 }
             }
@@ -95,6 +96,20 @@ namespace VoxReader
                 }
 
                 return position;
+            }
+
+            Matrix3 GetGlobalRotation(ITransformNodeChunk target)
+            {
+                Matrix3 rotation = target.Frames[0].Rotation;
+
+                while (TryGetParentTransformNodeChunk(target, out ITransformNodeChunk parent))
+                {
+                    rotation *= parent.Frames[0].Rotation;
+
+                    target = parent;
+                }
+
+                return rotation;
             }
 
             bool TryGetParentTransformNodeChunk(ITransformNodeChunk target, out ITransformNodeChunk parent)
