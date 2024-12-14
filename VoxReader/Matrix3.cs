@@ -68,14 +68,31 @@ namespace VoxReader
                 a[2, 0] * b.X + a[2, 1] * b.Y + a[2, 2] * b.Z);
         }
 
+        public Vector3 RotateIndex(Vector3 b)
+        {
+            float offsetX = b.X + 0.5f;
+            float offsetY = b.Y + 0.5f;
+            float offsetZ = b.Z + 0.5f;
+
+            float valX = this[0, 0] * offsetX + this[0, 1] * offsetY + this[0, 2] * offsetZ;
+            float valY = this[1, 0] * offsetX + this[1, 1] * offsetY + this[1, 2] * offsetZ;
+            float valZ = this[2, 0] * offsetX + this[2, 1] * offsetY + this[2, 2] * offsetZ;
+
+            return new Vector3(
+                (int)Math.Floor(valX),
+                (int)Math.Floor(valY),
+                (int)Math.Floor(valZ));
+        }
+
+
         public bool Equals(Matrix3 other)
         {
             if (other == null)
                 return false;
 
-            for(int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
             {
-                for(int j = 0; j < 3; j++)
+                for (int j = 0; j < 3; j++)
                 {
                     if (this[i, j] != other[i, j])
                         return false;
