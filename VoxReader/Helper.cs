@@ -74,7 +74,6 @@ namespace VoxReader
                 foreach (int id in ids)
                 {
                     string name = transformNodeChunk.Name;
-                    // -> global size
                     Vector3 localSize = sizeChunks[id].Size;
                     Vector3 globalPos = GetGlobalTranslation(transformNodeChunk);
                     Matrix3 globalRotation = GetGlobalRotation(transformNodeChunk);
