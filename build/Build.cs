@@ -1,9 +1,6 @@
 using System;
 using System.IO;
-using System.Linq;
 using Microsoft.AspNetCore.StaticFiles;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NuGet.Versioning;
 using Nuke.Common;
 using Nuke.Common.ChangeLog;
@@ -21,23 +18,6 @@ using Serilog;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 
-[GitHubActions(
-    "build",
-    GitHubActionsImage.UbuntuLatest,
-    AutoGenerate = false,
-    FetchDepth = 0,
-    OnPushBranches = new[] { "**" },
-    InvokedTargets = new[] { nameof(Test) },
-    EnableGitHubToken = true)]
-[GitHubActions(
-    "release",
-    GitHubActionsImage.UbuntuLatest,
-    AutoGenerate = false,
-    FetchDepth = 0,
-    OnPushTags = new[] { "v[0-9]+.[0-9]+.[0-9]+" },
-    InvokedTargets = new[] { nameof(PublishGitHubRelease) },
-    EnableGitHubToken = true,
-    ImportSecrets = new[] { nameof(NuGetApiKey) })]
 class Build : NukeBuild
 {
     public static int Main() => Execute<Build>(x => x.Pack);
@@ -48,7 +28,7 @@ class Build : NukeBuild
 
     [Solution(GenerateProjects = true)] readonly Solution Solution;
 
-    readonly AbsolutePath PublishDirectory = (AbsolutePath)Path.Combine(RootDirectory, "publish");
+    readonly AbsolutePath PublishDirectory = Path.Combine(RootDirectory, "publish");
 
     [GitRepository] readonly GitRepository GitRepository;
 
@@ -86,7 +66,7 @@ class Build : NukeBuild
         .DependsOn(Validate)
         .Executes(() =>
         {
-            EnsureCleanDirectory(PublishDirectory);
+            PublishDirectory.CreateOrCleanDirectory();
             DotNetTasks.DotNetClean(s => s
                 .SetProject(Solution));
         });
