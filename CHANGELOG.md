@@ -17,8 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Voxel and model positions are now accessed via the `GlobalPosition` or `LocalPosition` property
-- Model size is now accessed via the `GlobalSize` or `LocalSize` property
+- Voxel and model positions are now accessed via the `GlobalPosition` and `LocalPosition` property
+- Model size is now accessed via the `GlobalSize` and `LocalSize` property
 
 ## [4.1.1] - 2023-05-20
 
