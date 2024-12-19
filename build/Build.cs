@@ -20,7 +20,7 @@ using static Nuke.Common.IO.PathConstruction;
 
 class Build : NukeBuild
 {
-    public static int Main() => Execute<Build>(x => x.Pack);
+    public static int Main() => Execute<Build>(x => x.Test);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")] readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
