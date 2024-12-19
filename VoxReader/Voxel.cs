@@ -1,12 +1,7 @@
-using System;
-
 namespace VoxReader
 {
     public readonly struct Voxel
     {
-        [Obsolete("Use localposition instead.")]
-        public Vector3 Position => LocalPosition;
-
         /// <summary>
         /// The position of the voxel in the model.
         /// </summary>
@@ -37,7 +32,7 @@ namespace VoxReader
 
         public override string ToString()
         {
-            return $"LPosition: [{LocalPosition}], Color: [{Color}]";
+            return $"Global Position: [{GlobalPosition}], Local Position: [{LocalPosition}], Color: [{Color}]";
         }
     }
 }

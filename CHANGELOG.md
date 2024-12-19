@@ -12,7 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for model rotations
-- Voxel positions are now accessed via `GlobalPosition` and `LocalPosition`
+- Voxel and model positions are now accessed via `GlobalPosition` or `LocalPosition`
+- Model size is now accessed via `GlobalSize` or `LocalSize`
 
 ## [4.1.1] - 2023-05-20
 

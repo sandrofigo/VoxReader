@@ -15,9 +15,6 @@ namespace VoxReader
         public int Id { get; }
         public bool IsCopy { get; }
 
-        public Vector3 Position => LocalPosition;
-        public Vector3 Size => LocalSize;
-
         public Model(int id, string name, Voxel[] voxels, bool isCopy, Vector3 position, Vector3 localPosition, Matrix3 rotation, Matrix3 localRotation, Vector3 localSize)
         {
             Id = id;
@@ -38,10 +35,10 @@ namespace VoxReader
         {
             return new(Id, Name, Voxels, true, GlobalPosition, LocalPosition, GlobalRotation, LocalRotation, LocalSize);
         }
-        
+
         public override string ToString()
         {
-            return $"Id: {Id}, Name: {Name}, GPosition: {GlobalPosition}, GRotation: {GlobalRotation}, GSize: {GlobalSize}, Voxel Count: {Voxels.Length}";
+            return $"Id: {Id}, Name: {Name}, Global Position: {GlobalPosition}, Local Position: {LocalPosition}, Global Rotation: {GlobalRotation}, Local Rotation: {LocalRotation}, Global Size: {GlobalSize}, Local Size: {LocalSize}, Voxel Count: {Voxels.Length}";
         }
     }
 }

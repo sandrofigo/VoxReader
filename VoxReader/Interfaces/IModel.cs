@@ -1,5 +1,3 @@
-using System;
-
 namespace VoxReader.Interfaces
 {
     public interface IModel
@@ -9,19 +7,13 @@ namespace VoxReader.Interfaces
         /// </summary>
         string Name { get; }
 
-        [Obsolete("Use LocalPosition instead.")]
-        Vector3 Position { get; }
-
-        [Obsolete("Use LocalSize instead.")]
-        Vector3 Size { get; }
-
         /// <summary>
         /// The global position of the model in the world.
         /// </summary>
         Vector3 GlobalPosition { get; }
 
         /// <summary>
-        /// The position of the model relative to it's parent.
+        /// The position of the model relative to its parent.
         /// </summary>
         Vector3 LocalPosition { get; }
 
@@ -31,19 +23,19 @@ namespace VoxReader.Interfaces
         Matrix3 GlobalRotation { get; }
 
         /// <summary>
-        /// The rotation of the model relative to it's parent.
+        /// The rotation of the model relative to its parent.
         /// </summary>
         Matrix3 LocalRotation { get; }
 
         /// <summary>
-        /// The global size of the model. In magicavoxel models don't have a scale factor, but rotations can swap side lengths.
+        /// The global size of the model. MagicaVoxel models don't have a scale factor, but rotations can swap side lengths.
         /// <see cref="LocalSize"/> and <see cref="GlobalSize"/> will always have the same volume, but may be differently rotated from each other. 
         /// </summary>
         Vector3 GlobalSize { get; }
 
 
         /// <summary>
-        /// The local size of the model. In magicavoxel models don't have a scale factor, but rotations can swap side lengths.
+        /// The local size of the model. MagicaVoxel models don't have a scale factor, but rotations can swap side lengths.
         /// <see cref="LocalSize"/> and <see cref="GlobalSize"/> will always have the same volume, but may be differently rotated from each other. 
         /// </summary>
         Vector3 LocalSize { get; }

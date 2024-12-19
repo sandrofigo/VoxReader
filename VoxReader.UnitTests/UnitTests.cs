@@ -66,7 +66,7 @@ namespace VoxReader.UnitTests
 
             IVoxFile voxFile = VoxReader.Read(file);
 
-            voxFile.Models.First().Voxels.First(voxel => voxel.Position == new Vector3(x, y, z)).ColorIndex.Should().Be(expectedIndex);
+            voxFile.Models.First().Voxels.First(voxel => voxel.LocalPosition == new Vector3(x, y, z)).ColorIndex.Should().Be(expectedIndex);
         }
 
         [Theory]
@@ -175,7 +175,7 @@ namespace VoxReader.UnitTests
 
             IVoxFile voxFile = VoxReader.Read(file);
 
-            voxFile.Models.First().Voxels.Single(v => v.Color == Color.GetColorFromName(voxelColorToSearch)).Position.Should().Be(new Vector3(desiredPositionX, desiredPositionY, desiredPositionZ));
+            voxFile.Models.First().Voxels.Single(v => v.Color == Color.GetColorFromName(voxelColorToSearch)).LocalPosition.Should().Be(new Vector3(desiredPositionX, desiredPositionY, desiredPositionZ));
         }
 
         [Theory]
@@ -302,9 +302,9 @@ namespace VoxReader.UnitTests
 
             IModel model = voxFile.Models.First();
 
-            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 2, 0)).Color.Should().Be(Color.Red);
-            model.Voxels.First(voxel => voxel.Position == new Vector3(1, 1, 0)).Color.Should().Be(Color.Green);
-            model.Voxels.First(voxel => voxel.Position == new Vector3(2, 0, 0)).Color.Should().Be(Color.Blue);
+            model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 2, 0)).Color.Should().Be(Color.Red);
+            model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(1, 1, 0)).Color.Should().Be(Color.Green);
+            model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(2, 0, 0)).Color.Should().Be(Color.Blue);
         }
 
         [Theory]
@@ -318,10 +318,10 @@ namespace VoxReader.UnitTests
 
             IModel model = voxFile.Models.First();
 
-            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 0, 0)).Color.Should().Be(Color.Yellow);
-            model.Voxels.First(voxel => voxel.Position == new Vector3(2, 0, 0)).Color.Should().Be(Color.Red);
-            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 2, 0)).Color.Should().Be(Color.Green);
-            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 0, 2)).Color.Should().Be(Color.Blue);
+            model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 0, 0)).Color.Should().Be(Color.Yellow);
+            model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(2, 0, 0)).Color.Should().Be(Color.Red);
+            model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 2, 0)).Color.Should().Be(Color.Green);
+            model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 0, 2)).Color.Should().Be(Color.Blue);
         }
 
         [Theory]
@@ -335,7 +335,7 @@ namespace VoxReader.UnitTests
 
             IModel model = voxFile.Models.First();
 
-            model.Voxels.First(voxel => voxel.Position == new Vector3(0, 0, 0)).Color.Should().Be(new Color(123, 162, 63, 255));
+            model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 0, 0)).Color.Should().Be(new Color(123, 162, 63, 255));
         }
 
         [Theory]
