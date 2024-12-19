@@ -41,7 +41,7 @@ class Build : NukeBuild
 
             if (GitRepository.CurrentCommitHasVersionTag())
             {
-                SemanticVersion versionTag = GitRepository.GetLatestVersionTag();
+                SemanticVersion versionTag = GitRepository.GetLatestVersionTagOnCurrentCommit();
 
                 Assert.True(changelogHasValidVersion, $"Could not parse '{latestRawChangelogVersionValue}' as the latest version from the changelog file!");
 
@@ -93,7 +93,7 @@ class Build : NukeBuild
 
             if (GitRepository.CurrentCommitHasVersionTag())
             {
-                SemanticVersion version = GitRepository.GetLatestVersionTag();
+                SemanticVersion version = GitRepository.GetLatestVersionTagOnCurrentCommit();
 
                 settings = settings
                     .SetVersion(version.ToString())
@@ -124,7 +124,7 @@ class Build : NukeBuild
         .Produces(PublishDirectory / "*.nupkg")
         .Executes(() =>
         {
-            SemanticVersion version = GitRepository.GetLatestVersionTag();
+            SemanticVersion version = GitRepository.GetLatestVersionTagOnCurrentCommit();
 
             Log.Information("Version: {Version}", version);
 
@@ -154,7 +154,7 @@ class Build : NukeBuild
             string owner = GitRepository.GetGitHubOwner();
             string name = GitRepository.GetGitHubName();
 
-            SemanticVersion version = GitRepository.GetLatestVersionTag();
+            SemanticVersion version = GitRepository.GetLatestVersionTagOnCurrentCommit();
 
             var newRelease = new NewRelease($"v{version}")
             {
@@ -165,7 +165,6 @@ class Build : NukeBuild
             };
 
             Release createdRelease = await GitHubTasks.GitHubClient.Repository.Release.Create(owner, name, newRelease);
-
 
             foreach (AbsolutePath file in PublishDirectory.GlobFiles("*.nupkg"))
             {
