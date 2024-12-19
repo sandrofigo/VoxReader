@@ -12,7 +12,7 @@ A C# library to read .vox files created with [MagicaVoxel](https://ephtracy.gith
 ## Currently supported features
 
 At the moment it is possible to read:
-- the name, size and position of all models
+- the name, size, position and rotation of all models
 - all individual voxels including their color and position
 - the palette that was used for the model
 - the notes stored in the palette
@@ -32,7 +32,7 @@ IModel[] models = voxFile.Models;
 Voxel[] voxels = models[0].Voxels;
 
 // Access properties of a voxel
-Vector3 position = voxels[0].Position;
+Vector3 position = voxels[0].GlobalPosition;
 Color color = voxels[0].Color;
 
 // Access palette of .vox file
