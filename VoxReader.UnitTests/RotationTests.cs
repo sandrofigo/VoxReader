@@ -12,8 +12,6 @@ public class RotationTests
     private const string RotationTestFile3 = "data/rotation_3.zip";
     private const string RotationTestFile4 = "data/rotation_4.zip";
 
-    // TODO: create tests for MODELS: local/global position and local/global size
-
     [Fact]
     public void VoxReader_ReadRotatedModels3x3x3_GlobalVoxelPositionsAreCorrect()
     {
