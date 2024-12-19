@@ -32,13 +32,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added method `Palette.GetColorIndicesByNote` to get mapped palette color indices grouped by palette note texts
 - Added mapped color index to voxel
 
-### Fixed
-
-- Fixed wrong colors in palette when an IMAP chunk exists
-
 ### Changed
 
 - `Palette.Colors` now stores the mapped colors that are visible in the UI of MagicaVoxel instead of the raw colors parsed from the `.vox` file
+
+### Fixed
+
+- Fixed wrong colors in palette when an IMAP chunk exists
 
 ## [3.1.0] - 2023-01-03
 
@@ -119,15 +119,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - 2021-07-18
 
-### Changed
-
-- Simplified access to voxels and model properties
-- Library targets .NET Standard 2.0
-
 ### Added
 
 - Added support for multiple models
 - Added access to raw data for all chunk types
+
+### Changed
+
+- Simplified access to voxels and model properties
+- Library targets .NET Standard 2.0
 
 ## [1.2.0] - 2019-09-08
 
