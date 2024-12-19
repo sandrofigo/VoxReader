@@ -1,15 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using VoxReader.Exceptions;
 
 namespace VoxReader
 {
     public class Matrix3 : IEquatable<Matrix3>
     {
-        public static Matrix3 Identity => new Matrix3(0b0000_0100);
+        public static readonly Matrix3 Identity = new(new[,]
+        {
+            { 1, 0, 0 },
+            { 0, 1, 0 },
+            { 0, 0, 1 }
+        });
 
-        private static readonly int[] Row2Lookup = new int[] { int.MaxValue, int.MaxValue, int.MaxValue, 2, int.MaxValue, 1, 0, int.MaxValue };
+        private static readonly int[] _row2Lookup = { int.MaxValue, int.MaxValue, int.MaxValue, 2, int.MaxValue, 1, 0, int.MaxValue };
 
+        private readonly int[,] m = new int[3, 3];
 
         public int this[int row, int column]
         {
@@ -17,34 +22,31 @@ namespace VoxReader
             set => m[row, column] = value;
         }
 
-        readonly int[,] m = new int[3, 3];
-
         public Matrix3(byte data)
         {
             int row0Index = data & 0b11;
             int row1Index = (data >> 2) & 0b11;
-            int row2Index = Row2Lookup[(1 << row0Index) | (1 << row1Index)];
+            int row2Index = _row2Lookup[(1 << row0Index) | (1 << row1Index)];
             if (row2Index == int.MaxValue)
-                throw new ArgumentException("Invalid roation bytes");
+                throw new InvalidDataException("Invalid rotation bytes!");
 
             int sign0 = (data >> 4) & 1;
             int sign1 = (data >> 5) & 1;
             int sign2 = (data >> 6) & 1;
 
-            m = new int[3, 3];
             m[0, row0Index] = sign0 == 0 ? 1 : -1;
             m[1, row1Index] = sign1 == 0 ? 1 : -1;
             m[2, row2Index] = sign2 == 0 ? 1 : -1;
         }
 
-        public Matrix3()
+        public Matrix3(int[,] data)
         {
-
+            m = data;
         }
 
         public static Matrix3 operator *(Matrix3 a, Matrix3 b)
         {
-            Matrix3 result = new Matrix3();
+            int[,] result = new int[3, 3];
             result[0, 0] = a[0, 0] * b[0, 0] + a[0, 1] * b[1, 0] + a[0, 2] * b[2, 0];
             result[0, 1] = a[0, 0] * b[0, 1] + a[0, 1] * b[1, 1] + a[0, 2] * b[2, 1];
             result[0, 2] = a[0, 0] * b[0, 2] + a[0, 1] * b[1, 2] + a[0, 2] * b[2, 2];
@@ -57,7 +59,7 @@ namespace VoxReader
             result[2, 1] = a[2, 0] * b[0, 1] + a[2, 1] * b[1, 1] + a[2, 2] * b[2, 1];
             result[2, 2] = a[2, 0] * b[0, 2] + a[2, 1] * b[1, 2] + a[2, 2] * b[2, 2];
 
-            return result;
+            return new Matrix3(result);
         }
 
         public static Vector3 operator *(Matrix3 a, Vector3 b)
@@ -98,14 +100,15 @@ namespace VoxReader
                         return false;
                 }
             }
+
             return true;
         }
 
         public override string ToString()
         {
-            return $"(({this[0, 0]}, {this[0, 1]}, {this[0, 2]})\n" +
+            return $"({this[0, 0]}, {this[0, 1]}, {this[0, 2]})\n" +
                    $"({this[1, 0]}, {this[1, 1]}, {this[1, 2]})\n" +
-                   $"({this[2, 0]}, {this[2, 1]}, {this[2, 2]}))";
+                   $"({this[2, 0]}, {this[2, 1]}, {this[2, 2]})";
         }
 
         public override bool Equals(object obj)

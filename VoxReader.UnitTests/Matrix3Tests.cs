@@ -20,40 +20,29 @@ namespace VoxReader.UnitTests
         [Fact]
         public void TestMatrixMultMatrix()
         {
-            var a = new Matrix3();
-            var b = new Matrix3();
+            int[,] dataA = new[,]
+            {
+                { 2, 5, -7 },
+                { -3, -5, 6 },
+                { 0, 3, 2 }
+            };
+            var a = new Matrix3(dataA);
 
-            a[0, 0] = 2;
-            a[0, 1] = 5;
-            a[0, 2] = -7;
-            a[1, 0] = -3;
-            a[1, 1] = -5;
-            a[1, 2] = 6;
-            a[2, 0] = 0;
-            a[2, 1] = 3;
-            a[2, 2] = 2;
+            int[,] dataB = new[,]
+            {
+                { 5, 5, 5 },
+                { 6, -2, -3 },
+                { 2, -3, -2 }
+            };
+            var b = new Matrix3(dataB);
 
-            b[0, 0] = 5;
-            b[0, 1] = 5;
-            b[0, 2] = 5;
-            b[1, 0] = 6;
-            b[1, 1] = -2;
-            b[1, 2] = -3;
-            b[2, 0] = 2;
-            b[2, 1] = -3;
-            b[2, 2] = -2;
-
-            var r = new Matrix3();
-            r[0, 0] = 26;
-            r[0, 1] = 21;
-            r[0, 2] = 9;
-            r[1, 0] = -33;
-            r[1, 1] = -23;
-            r[1, 2] = -12;
-            r[2, 0] = 22;
-            r[2, 1] = -12;
-            r[2, 2] = -13;
-
+            int[,] dataResult = new[,]
+            {
+                { 26, 21, 9 },
+                { -33, -23, -12 },
+                { 22, -12, -13 }
+            };
+            var r = new Matrix3(dataResult);
 
             (a * b).Should().Be(r);
         }
@@ -61,22 +50,19 @@ namespace VoxReader.UnitTests
         [Fact]
         public void TestMatrixMultVector()
         {
-            var a = new Matrix3();
+            int[,] data = new[,]
+            {
+                { 6, 2, 4 },
+                { -1, 4, 3 },
+                { -2, 9, 3 }
+            };
+            var a = new Matrix3(data);
+            
             var b = new Vector3(4, -2, 1);
 
-            a[0, 0] = 6;
-            a[0, 1] = 2;
-            a[0, 2] = 4;
-            a[1, 0] = -1;
-            a[1, 1] = 4;
-            a[1, 2] = 3;
-            a[2, 0] = -2;
-            a[2, 1] = 9;
-            a[2, 2] = 3;
+            var result = new Vector3(24, -9, -23);
 
-            var r = new Vector3(24, -9, -23);
-
-            (a * b).Should().Be(r);
+            (a * b).Should().Be(result);
         }
     }
 }
