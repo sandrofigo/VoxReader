@@ -2,7 +2,7 @@
 {
     public struct Frame
     {
-        public byte Rotation;
+        public Matrix3 Rotation;
         public Vector3 Translation;
     }
 }

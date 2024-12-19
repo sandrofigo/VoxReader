@@ -56,7 +56,7 @@ namespace VoxReader
             {
                 Vector3 size = sizeChunks[0].Size;
                 var voxels = voxelChunks[0].Voxels.Select(voxel => new Voxel(voxel.Position, voxel.Position, palette.RawColors[voxel.ColorIndex - 1], inverseIndexMap[voxel.ColorIndex - 1])).ToArray();
-                yield return new Model(0, null, new Vector3(), size, voxels, false);
+                yield return new Model(0, null, voxels, false, new Vector3(), new Vector3(), Matrix3.Identity, Matrix3.Identity, size);
                 yield break;
             }
 
@@ -72,13 +72,25 @@ namespace VoxReader
                 foreach (int id in ids)
                 {
                     string name = transformNodeChunk.Name;
-                    Vector3 size = sizeChunks[id].Size;
-                    Vector3 translation = GetGlobalTranslation(transformNodeChunk);
+                    Vector3 localSize = sizeChunks[id].Size;
+                    Vector3 globalPos = GetGlobalTranslation(transformNodeChunk);
+                    Matrix3 globalRotation = GetGlobalRotation(transformNodeChunk);
 
-                    var voxels = voxelChunks[id].Voxels.Select(voxel => new Voxel(voxel.Position, translation + voxel.Position - size / 2, palette.RawColors[voxel.ColorIndex - 1], inverseIndexMap[voxel.ColorIndex - 1])).ToArray();
+                    var voxels = voxelChunks[id].Voxels.Select(voxel =>
+                    {
+                        return new Voxel(
+                            voxel.Position,
+                            ApplyTransformationToVoxel(voxel.Position, globalPos, globalRotation, localSize),
+                            palette.RawColors[voxel.ColorIndex - 1], inverseIndexMap[voxel.ColorIndex - 1]);
+                    }).ToArray();
 
                     // Create new model
-                    var model = new Model(id, name, translation, size, voxels, !processedModelIds.Add(id));
+                    var model = new Model(id, name, voxels, !processedModelIds.Add(id),
+                        globalPos,
+                        transformNodeChunk.Frames[0].Translation,
+                        globalRotation,
+                        transformNodeChunk.Frames[0].Rotation,
+                        sizeChunks[id].Size);
                     yield return model;
                 }
             }
@@ -86,15 +98,30 @@ namespace VoxReader
             Vector3 GetGlobalTranslation(ITransformNodeChunk target)
             {
                 Vector3 position = target.Frames[0].Translation;
-
                 while (TryGetParentTransformNodeChunk(target, out ITransformNodeChunk parent))
                 {
-                    position += parent.Frames[0].Translation;
-
+                    position = parent.Frames[0].Rotation * position + parent.Frames[0].Translation;
                     target = parent;
                 }
 
                 return position;
+            }
+
+            Matrix3 GetGlobalRotation(ITransformNodeChunk target)
+            {
+                Matrix3 rotation = target.Frames[0].Rotation;
+                while (TryGetParentTransformNodeChunk(target, out ITransformNodeChunk parent))
+                {
+                    rotation = parent.Frames[0].Rotation * rotation;
+                    target = parent;
+                }
+
+                return rotation;
+            }
+
+            Vector3 ApplyTransformationToVoxel(Vector3 voxelPos, Vector3 globalPivot, Matrix3 globalRot, Vector3 size)
+            {
+                return globalPivot + globalRot.RotateIndex(voxelPos - size / 2);
             }
 
             bool TryGetParentTransformNodeChunk(ITransformNodeChunk target, out ITransformNodeChunk parent)

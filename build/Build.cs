@@ -1,9 +1,6 @@
 using System;
 using System.IO;
-using System.Linq;
 using Microsoft.AspNetCore.StaticFiles;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NuGet.Versioning;
 using Nuke.Common;
 using Nuke.Common.ChangeLog;
@@ -21,26 +18,9 @@ using Serilog;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 
-[GitHubActions(
-    "build",
-    GitHubActionsImage.UbuntuLatest,
-    AutoGenerate = false,
-    FetchDepth = 0,
-    OnPushBranches = new[] { "**" },
-    InvokedTargets = new[] { nameof(Test) },
-    EnableGitHubToken = true)]
-[GitHubActions(
-    "release",
-    GitHubActionsImage.UbuntuLatest,
-    AutoGenerate = false,
-    FetchDepth = 0,
-    OnPushTags = new[] { "v[0-9]+.[0-9]+.[0-9]+" },
-    InvokedTargets = new[] { nameof(PublishGitHubRelease) },
-    EnableGitHubToken = true,
-    ImportSecrets = new[] { nameof(NuGetApiKey) })]
 class Build : NukeBuild
 {
-    public static int Main() => Execute<Build>(x => x.Pack);
+    public static int Main() => Execute<Build>(x => x.Test);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")] readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
@@ -48,7 +28,7 @@ class Build : NukeBuild
 
     [Solution(GenerateProjects = true)] readonly Solution Solution;
 
-    readonly AbsolutePath PublishDirectory = (AbsolutePath)Path.Combine(RootDirectory, "publish");
+    readonly AbsolutePath PublishDirectory = Path.Combine(RootDirectory, "publish");
 
     [GitRepository] readonly GitRepository GitRepository;
 
@@ -61,7 +41,7 @@ class Build : NukeBuild
 
             if (GitRepository.CurrentCommitHasVersionTag())
             {
-                SemanticVersion versionTag = GitRepository.GetLatestVersionTag();
+                SemanticVersion versionTag = GitRepository.GetLatestVersionTagOnCurrentCommit();
 
                 Assert.True(changelogHasValidVersion, $"Could not parse '{latestRawChangelogVersionValue}' as the latest version from the changelog file!");
 
@@ -86,7 +66,7 @@ class Build : NukeBuild
         .DependsOn(Validate)
         .Executes(() =>
         {
-            EnsureCleanDirectory(PublishDirectory);
+            PublishDirectory.CreateOrCleanDirectory();
             DotNetTasks.DotNetClean(s => s
                 .SetProject(Solution));
         });
@@ -113,7 +93,7 @@ class Build : NukeBuild
 
             if (GitRepository.CurrentCommitHasVersionTag())
             {
-                SemanticVersion version = GitRepository.GetLatestVersionTag();
+                SemanticVersion version = GitRepository.GetLatestVersionTagOnCurrentCommit();
 
                 settings = settings
                     .SetVersion(version.ToString())
@@ -144,7 +124,7 @@ class Build : NukeBuild
         .Produces(PublishDirectory / "*.nupkg")
         .Executes(() =>
         {
-            SemanticVersion version = GitRepository.GetLatestVersionTag();
+            SemanticVersion version = GitRepository.GetLatestVersionTagOnCurrentCommit();
 
             Log.Information("Version: {Version}", version);
 
@@ -174,7 +154,7 @@ class Build : NukeBuild
             string owner = GitRepository.GetGitHubOwner();
             string name = GitRepository.GetGitHubName();
 
-            SemanticVersion version = GitRepository.GetLatestVersionTag();
+            SemanticVersion version = GitRepository.GetLatestVersionTagOnCurrentCommit();
 
             var newRelease = new NewRelease($"v{version}")
             {
@@ -185,7 +165,6 @@ class Build : NukeBuild
             };
 
             Release createdRelease = await GitHubTasks.GitHubClient.Repository.Release.Create(owner, name, newRelease);
-
 
             foreach (AbsolutePath file in PublishDirectory.GlobFiles("*.nupkg"))
             {

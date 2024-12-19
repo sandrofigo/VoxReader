@@ -52,6 +52,11 @@ namespace VoxReader
             }
         }
 
+        public Vector3 ToAbsolute()
+        {
+            return new Vector3(Math.Abs(X), Math.Abs(Y), Math.Abs(Z));
+        }
+
         //TODO: add unit tests
 
         public static bool operator ==(Vector3 a, Vector3 b)

@@ -5,8 +5,8 @@ namespace VoxReader
         /// <summary>
         /// The position of the voxel in the model.
         /// </summary>
-        public Vector3 Position { get; }
-        
+        public Vector3 LocalPosition { get; }
+
         /// <summary>
         /// The global position of the voxel in the scene.
         /// </summary>
@@ -22,9 +22,9 @@ namespace VoxReader
         /// </summary>
         public int ColorIndex { get; }
 
-        internal Voxel(Vector3 position, Vector3 globalPosition, Color color, int mappedColorIndex)
+        internal Voxel(Vector3 localPosition, Vector3 globalPosition, Color color, int mappedColorIndex)
         {
-            Position = position;
+            LocalPosition = localPosition;
             GlobalPosition = globalPosition;
             Color = color;
             ColorIndex = mappedColorIndex;
@@ -32,7 +32,7 @@ namespace VoxReader
 
         public override string ToString()
         {
-            return $"Position: [{Position}], Color: [{Color}]";
+            return $"Global Position: [{GlobalPosition}], Local Position: [{LocalPosition}], Color: [{Color}]";
         }
     }
 }

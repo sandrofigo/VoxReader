@@ -13,7 +13,7 @@ public static class GitRepositoryExtensions
         return versionTagsOnCurrentCommit.Any();
     }
 
-    public static SemanticVersion GetLatestVersionTag(this GitRepository gitRepository)
+    public static SemanticVersion GetLatestVersionTagOnCurrentCommit(this GitRepository gitRepository)
     {
         var versionTagsOnCurrentCommit = gitRepository.Tags.Select(t => SemanticVersion.TryParse(t.TrimStart('v'), out SemanticVersion v) ? v : null).WhereNotNull().OrderByDescending(t => t).ToArray();
 
