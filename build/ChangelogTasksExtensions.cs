@@ -6,7 +6,7 @@ public static class ChangelogTasksExtensions
 {
     public static bool TryGetLatestVersionInChangelog(AbsolutePath changelog, out SemanticVersion version, out string rawVersionValue)
     {
-        string[] lines = TextTasks.ReadAllLines(changelog);
+        string[] lines = changelog.ReadAllLines();
 
         foreach (string line in lines)
         {
