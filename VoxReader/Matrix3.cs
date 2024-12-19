@@ -3,7 +3,7 @@ using VoxReader.Exceptions;
 
 namespace VoxReader
 {
-    public class Matrix3 : IEquatable<Matrix3>
+    public struct Matrix3 : IEquatable<Matrix3>
     {
         public static readonly Matrix3 Identity = new(new[,]
         {
@@ -14,7 +14,7 @@ namespace VoxReader
 
         private static readonly int[] _row2Lookup = { int.MaxValue, int.MaxValue, int.MaxValue, 2, int.MaxValue, 1, 0, int.MaxValue };
 
-        private readonly int[,] m = new int[3, 3];
+        private readonly int[,] m;
 
         public int this[int row, int column]
         {
@@ -22,6 +22,9 @@ namespace VoxReader
             set => m[row, column] = value;
         }
 
+        /// <summary>
+        /// Creates a new 3x3 matrix from the given byte representation.
+        /// </summary>
         public Matrix3(byte data)
         {
             int row0Index = data & 0b11;
@@ -34,14 +37,24 @@ namespace VoxReader
             int sign1 = (data >> 5) & 1;
             int sign2 = (data >> 6) & 1;
 
+            m = new int[3, 3];
             m[0, row0Index] = sign0 == 0 ? 1 : -1;
             m[1, row1Index] = sign1 == 0 ? 1 : -1;
             m[2, row2Index] = sign2 == 0 ? 1 : -1;
         }
 
+        /// <summary>
+        /// Creates a new 3x3 matrix from the given data.
+        /// </summary>
+        /// <remarks>Data is copied.</remarks>
         public Matrix3(int[,] data)
         {
-            m = data;
+            if (data.Length != 9)
+                throw new ArgumentException($"{nameof(Matrix3)} must have 9 elements!");
+
+            m = new int[3, 3];
+
+            Array.Copy(data, m, data.Length);
         }
 
         public static Matrix3 operator *(Matrix3 a, Matrix3 b)
@@ -86,34 +99,36 @@ namespace VoxReader
                 (int)Math.Floor(valZ));
         }
 
+        public override string ToString()
+        {
+            return $"[({this[0, 0]}, {this[0, 1]}, {this[0, 2]}), ({this[1, 0]}, {this[1, 1]}, {this[1, 2]}), ({this[2, 0]}, {this[2, 1]}, {this[2, 2]})]";
+        }
 
         public bool Equals(Matrix3 other)
         {
-            if (other == null)
-                return false;
-
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    if (this[i, j] != other[i, j])
-                        return false;
-                }
-            }
-
-            return true;
-        }
-
-        public override string ToString()
-        {
-            return $"({this[0, 0]}, {this[0, 1]}, {this[0, 2]})\n" +
-                   $"({this[1, 0]}, {this[1, 1]}, {this[1, 2]})\n" +
-                   $"({this[2, 0]}, {this[2, 1]}, {this[2, 2]})";
+            return m[0, 0] == other.m[0, 0] && m[0, 1] == other.m[0, 1] && m[0, 2] == other.m[0, 2] &&
+                   m[1, 0] == other.m[1, 0] && m[1, 1] == other.m[1, 1] && m[1, 2] == other.m[1, 2] &&
+                   m[2, 0] == other.m[2, 0] && m[2, 1] == other.m[2, 1] && m[2, 2] == other.m[2, 2];
         }
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as Matrix3);
+            return obj is Matrix3 other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return m != null ? m.GetHashCode() : 0;
+        }
+
+        public static bool operator ==(Matrix3 left, Matrix3 right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Matrix3 left, Matrix3 right)
+        {
+            return !left.Equals(right);
         }
     }
 }
