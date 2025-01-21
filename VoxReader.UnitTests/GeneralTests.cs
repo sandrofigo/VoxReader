@@ -7,23 +7,23 @@ namespace VoxReader.UnitTests;
 
 public class GeneralTests
 {
-    private const string TestFile3X3 = "data/3x3.zip";
-    private const string TestFile3X3ExportedAsVox = "data/3x3_exported_as_vox.zip";
-    private const string TestFile3X32 = "data/3x3_2.zip";
-    private const string TestFile3X33 = "data/3x3_3.zip";
-    private const string TestFile1X1 = "data/1x1.zip";
-    private const string TestFile1X1ExportedAsVox = "data/1x1_exported_as_vox.zip";
-    private const string TestFile256X256 = "data/256x256.zip";
-    private const string TestFile256X256ExportedAsVox = "data/256x256_exported_as_vox.zip";
-    private const string TestFileMultipleModels = "data/multiple_models.zip";
-    private const string TestFile3X3X3AtCenterWithCorner = "data/3x3x3_at_center_with_corner.zip";
-    private const string TestFileGroups = "data/groups.zip";
-    private const string TestFileNotes = "data/color_notes.zip";
-    private const string TestFileNoNotes = "data/no_notes.zip";
-    private const string TestFileColorIndices = "data/color_indices.zip";
-    private const string TestFileColorIndicesExportedAsVox = "data/color_indices_exported_as_vox.zip";
-    private const string TestFileColorIndices2 = "data/color_indices_2.zip";
-    private const string TestFileColorIndices2ExportedAsVox = "data/color_indices_2_exported_as_vox.zip";
+    public const string TestFile3X3 = "data/3x3.zip";
+    public const string TestFile3X3ExportedAsVox = "data/3x3_exported_as_vox.zip";
+    public const string TestFile3X32 = "data/3x3_2.zip";
+    public const string TestFile3X33 = "data/3x3_3.zip";
+    public const string TestFile1X1 = "data/1x1.zip";
+    public const string TestFile1X1ExportedAsVox = "data/1x1_exported_as_vox.zip";
+    public const string TestFile256X256 = "data/256x256.zip";
+    public const string TestFile256X256ExportedAsVox = "data/256x256_exported_as_vox.zip";
+    public const string TestFileMultipleModels = "data/multiple_models.zip";
+    public const string TestFile3X3X3AtCenterWithCorner = "data/3x3x3_at_center_with_corner.zip";
+    public const string TestFileGroups = "data/groups.zip";
+    public const string TestFileNotes = "data/color_notes.zip";
+    public const string TestFileNoNotes = "data/no_notes.zip";
+    public const string TestFileColorIndices = "data/color_indices.zip";
+    public const string TestFileColorIndicesExportedAsVox = "data/color_indices_exported_as_vox.zip";
+    public const string TestFileColorIndices2 = "data/color_indices_2.zip";
+    public const string TestFileColorIndices2ExportedAsVox = "data/color_indices_2_exported_as_vox.zip";
 
     [Fact]
     public void VoxReader_GetColorIndicesByNote_ReturnsEmptyArrayWhenNoteTextDoesNotMatch()
