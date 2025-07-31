@@ -24,6 +24,7 @@ public class GeneralTests
     private const string TestFileColorIndicesExportedAsVox = "data/color_indices_exported_as_vox.zip";
     private const string TestFileColorIndices2 = "data/color_indices_2.zip";
     private const string TestFileColorIndices2ExportedAsVox = "data/color_indices_2_exported_as_vox.zip";
+    private const string TestFileWithMetaChunk = "data/with_META_chunk.zip";
 
     [Fact]
     public void VoxReader_GetColorIndicesByNote_ReturnsEmptyArrayWhenNoteTextDoesNotMatch()
@@ -381,5 +382,13 @@ public class GeneralTests
         IModel model = voxFile.Models.First();
 
         model.Voxels.Should().HaveCount(256 * 256 * 256 - 254 * 254 * 254);
+    }
+
+    [Fact]
+    public void VoxReader_ReadFileWithMetaChunk_DoesNotThrow()
+    {
+        string file = Zip.UnzipFilesFromZipArchive(TestFileWithMetaChunk).First();
+
+        _ = VoxReader.Read(file);
     }
 }
