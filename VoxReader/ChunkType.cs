@@ -16,6 +16,7 @@
         Object,
         Camera,
         Note,
-        IndexMap
+        IndexMap,
+        Meta
     }
 }

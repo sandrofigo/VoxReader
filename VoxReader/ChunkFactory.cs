@@ -37,6 +37,7 @@ namespace VoxReader
                 case ChunkType.Layer:
                 case ChunkType.Object:
                 case ChunkType.Camera:
+                case ChunkType.Meta:
                     return new Chunk(data);
                 default:
                     throw new ArgumentOutOfRangeException();
