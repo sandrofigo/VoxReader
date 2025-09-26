@@ -7,7 +7,7 @@
         <Authors>Sandro Figo</Authors>
         <Description>A C# library to read .vox files created with MagicaVoxel</Description>
         <PackageTags>vox voxel parse file MagicaVoxel reader</PackageTags>
-        <PackageIconUrl>https://github.com/sandrofigo/VoxReader/blob/main/images/icon.png?raw=true</PackageIconUrl>
+        <PackageIcon>icon.png</PackageIcon>
         <PackageProjectUrl>https://github.com/sandrofigo/VoxReader</PackageProjectUrl>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -26,6 +26,7 @@
     
     <ItemGroup>
       <None Include="..\README.md" Pack="true" PackagePath="\" />
+      <None Include="..\images\icon.png" Pack="true" PackagePath="\" />
       <None Remove="com.sandrofigo.voxreader.asmdef" />
       <None Remove="package.json" />
       <None Remove="**/*.meta" />
