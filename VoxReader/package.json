@@ -1,6 +1,6 @@
 {
     "name": "com.sandrofigo.voxreader",
-    "version": "5.0.2",
+    "version": "5.0.3",
     "displayName": "VoxReader",
     "description": "A C# library to read .vox files created with MagicaVoxel",
     "documentationUrl": "https://github.com/sandrofigo/VoxReader",
