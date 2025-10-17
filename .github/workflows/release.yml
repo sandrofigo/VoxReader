@@ -9,6 +9,7 @@ permissions:
   contents: write
   actions: read
   checks: write
+  packages: write
 
 jobs:
   nuke-build:
