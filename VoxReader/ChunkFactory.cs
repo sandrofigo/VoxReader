@@ -6,6 +6,7 @@ namespace VoxReader
 {
     internal static class ChunkFactory
     {
+        
         public static IChunk Parse(byte[] data)
         {
             ChunkType id = Chunk.GetChunkId(data);
