@@ -15,6 +15,11 @@ on:
       - '**/CHANGELOG.md'
       - '**/LICENSE.md'
 
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
 jobs:
   nuke-build:
     name: Test

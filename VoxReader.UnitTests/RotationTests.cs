@@ -11,6 +11,7 @@ public class RotationTests
     private const string RotationTestFile2 = "data/rotation_2.zip";
     private const string RotationTestFile3 = "data/rotation_3.zip";
     private const string RotationTestFile4 = "data/rotation_4.zip";
+    private const string RotationTestFile5 = "data/rotation_5.zip";
 
     [Fact]
     public void VoxReader_ReadRotatedModels3x3x3_GlobalVoxelPositionsAreCorrect()
@@ -159,7 +160,7 @@ public class RotationTests
 
         modelA.GlobalRotation.Should().Be(Matrix3.Identity);
     }
-    
+
     [Fact]
     public void VoxReader_ReadRotatedAndGroupedModelB_LocalRotationIsCorrect()
     {
@@ -226,6 +227,25 @@ public class RotationTests
         IModel modelA = voxFile.Models.First(m => m.Name == modelName);
 
         modelA.GlobalSize.Should().Be(new Vector3(x, y, z));
+    }
+
+    [Fact]
+    public void VoxReader_ReadRotatedAndGroupedModel_GlobalVoxelPositionsAreInsideTheGlobalBounds2()
+    {
+        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile5).First();
+        IVoxFile voxFile = VoxReader.Read(file);
+        foreach (IModel modelA in voxFile.Models)
+        {
+            Vector3 min = modelA.GlobalPosition - modelA.GlobalSize / 2;
+            Vector3 max = min + modelA.GlobalSize;
+            foreach (Voxel v in modelA.Voxels)
+            {
+                v.GlobalPosition.Should().Match<Vector3>(k =>
+                    k.X >= min.X && k.X < max.X &&
+                    k.Y >= min.Y && k.Y < max.Y &&
+                    k.Z >= min.Z && k.Z < max.Z);
+            }
+        }
     }
 
     [Theory]

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using VoxReader.Exceptions;
@@ -83,6 +84,14 @@ namespace VoxReader
                             ApplyTransformationToVoxel(voxel.Position, globalPos, globalRotation, localSize),
                             palette.RawColors[voxel.ColorIndex - 1], inverseIndexMap[voxel.ColorIndex - 1]);
                     }).ToArray();
+
+                    Vector3 min = ApplyTransformationToVoxel(new Vector3(0, 0, 0), globalPos, globalRotation, localSize);
+                    Vector3 max = ApplyTransformationToVoxel(localSize - new Vector3(1, 1, 1), globalPos, globalRotation, localSize);
+
+                    Vector3 globalMin = new Vector3(Math.Min(max.X, min.X), Math.Min(max.Y, min.Y), Math.Min(max.Z, min.Z));
+                    Vector3 globalMax = new Vector3(Math.Max(max.X, min.X), Math.Max(max.Y, min.Y), Math.Max(max.Z, min.Z));
+
+                    globalPos = globalMin + (globalMax - globalMin + new Vector3(1, 1, 1)) / 2;
 
                     // Create new model
                     var model = new Model(id, name, voxels, !processedModelIds.Add(id),
