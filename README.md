@@ -24,8 +24,11 @@ At the moment it is possible to read:
 ## Usage
 
 ```csharp
+using VoxReader;
+using VoxReader.Interfaces;
+
 // Read .vox file
-IVoxFile voxFile = VoxReader.Read("my_awesome_model.vox");
+IVoxFile voxFile = VoxReader.VoxReader.Read("my_awesome_model.vox");
 
 // Access models of .vox file
 IModel[] models = voxFile.Models;
