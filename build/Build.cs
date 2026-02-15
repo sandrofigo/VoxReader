@@ -1,9 +1,10 @@
 using System;
 using System.IO;
+using System.Linq;
+using KeepAChangelog.IO;
 using Microsoft.AspNetCore.StaticFiles;
 using NuGet.Versioning;
 using Nuke.Common;
-using Nuke.Common.ChangeLog;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
@@ -17,6 +18,7 @@ using Octokit;
 using Serilog;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
+using Release = Octokit.Release;
 
 class Build : NukeBuild
 {
@@ -35,21 +37,22 @@ class Build : NukeBuild
     Target Validate => _ => _
         .Executes(() =>
         {
-            bool changelogHasValidVersion = ChangelogTasksExtensions.TryGetLatestVersionInChangelog(RootDirectory / "CHANGELOG.md", out SemanticVersion latestChangelogVersion, out string latestRawChangelogVersionValue);
+            Changelog changelog = Changelog.FromFile(RootDirectory / "CHANGELOG.md");
+
+            var latestChangelogRelease = changelog.Releases.Where(r => r.IsReleased).OrderByDescending(r => r.Version).First();
+            SemanticVersion latestChangelogReleaseVersion = SemanticVersion.Parse(latestChangelogRelease.Version);
 
             SemanticVersion versionInUnityPackageFile = Helper.GetVersionFromUnityPackageFile(Solution.VoxReader.Directory / "package.json");
+
+            Assert.True(latestChangelogReleaseVersion == versionInUnityPackageFile,
+                $"The latest version '{latestChangelogReleaseVersion}' in the changelog file does not match the version '{versionInUnityPackageFile}' in the Unity package file!");
 
             if (GitRepository.CurrentCommitHasVersionTag())
             {
                 SemanticVersion versionTag = GitRepository.GetLatestVersionTagOnCurrentCommit();
 
-                Assert.True(changelogHasValidVersion, $"Could not parse '{latestRawChangelogVersionValue}' as the latest version from the changelog file!");
-
-                Assert.True(latestChangelogVersion == versionInUnityPackageFile,
-                    $"The latest version '{latestChangelogVersion}' in the changelog file does not match the version '{versionInUnityPackageFile}' in the Unity package file!");
-
-                Assert.True(latestChangelogVersion == versionTag,
-                    $"Latest version '{latestRawChangelogVersionValue}' in the changelog file does not match the version tag '{versionTag}'!");
+                Assert.True(latestChangelogReleaseVersion == versionTag,
+                    $"Latest version '{latestChangelogReleaseVersion}' in the changelog file does not match the version tag '{versionTag}'!");
 
                 Assert.True(versionInUnityPackageFile == versionTag,
                     $"The version '{versionInUnityPackageFile}' in the Unity package file does not match the latest version tag '{versionTag}'!");
@@ -143,9 +146,6 @@ class Build : NukeBuild
         .Triggers(PublishPackageToGithub, PublishPackageToNuGet)
         .Executes(async () =>
         {
-            var unreleasedChangelogSectionNotes = ChangelogTasks.ExtractChangelogSectionNotes(RootDirectory / "CHANGELOG.md");
-            string changelog = string.Join(Environment.NewLine, unreleasedChangelogSectionNotes);
-
             GitHubTasks.GitHubClient = new GitHubClient(new ProductHeaderValue("VoxReader"))
             {
                 Credentials = new Credentials(GitHubActions.Instance.Token)
@@ -156,12 +156,18 @@ class Build : NukeBuild
 
             SemanticVersion version = GitRepository.GetLatestVersionTagOnCurrentCommit();
 
+            Changelog changelog = Changelog.FromFile(RootDirectory / "CHANGELOG.md");
+
+            var changelogRelease = changelog.Releases.FirstOrDefault(r => r.Version == version.ToString());
+            if (changelogRelease == null)
+                Assert.Fail("Could not find a changelog release that matches the version tag!");
+
             var newRelease = new NewRelease($"v{version}")
             {
                 Draft = true,
                 Name = $"v{version}",
                 Prerelease = version.IsPrerelease,
-                Body = changelog
+                Body = changelogRelease.ToString()
             };
 
             Release createdRelease = await GitHubTasks.GitHubClient.Repository.Release.Create(owner, name, newRelease);
