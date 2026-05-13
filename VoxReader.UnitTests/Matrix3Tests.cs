@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Xunit;
 
 namespace VoxReader.UnitTests;
@@ -14,7 +14,7 @@ public class Matrix3Tests
     {
         var v = new Vector3(x, y, z);
         Vector3 result = Matrix3.Identity * v;
-        result.Should().Be(v);
+        result.ShouldBe(v);
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public class Matrix3Tests
         };
         var r = new Matrix3(dataResult);
 
-        (a * b).Should().Be(r);
+        (a * b).ShouldBe(r);
     }
 
     [Fact]
@@ -62,6 +62,6 @@ public class Matrix3Tests
 
         var result = new Vector3(24, -9, -23);
 
-        (a * b).Should().Be(result);
+        (a * b).ShouldBe(result);
     }
 }

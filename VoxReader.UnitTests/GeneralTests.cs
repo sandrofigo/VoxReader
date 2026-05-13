@@ -1,5 +1,5 @@
 using System.Linq;
-using FluentAssertions;
+using Shouldly;
 using VoxReader.Interfaces;
 using Xunit;
 
@@ -33,7 +33,7 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Palette.GetColorIndicesByNote("no match").Should().BeEmpty();
+        voxFile.Palette.GetColorIndicesByNote("no match").ShouldBeEmpty();
     }
 
     [Fact]
@@ -43,9 +43,9 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Palette.GetColorIndicesByNote("red").Should().ContainInOrder(248, 249, 250, 251, 252, 253, 254);
-        voxFile.Palette.GetColorIndicesByNote("mixed").Should().ContainInOrder(144, 145, 146, 147, 148, 149, 150);
-        voxFile.Palette.GetColorIndicesByNote("green").Should().ContainInOrder(0, 1, 2, 3, 4, 5, 6);
+        voxFile.Palette.GetColorIndicesByNote("red").ShouldBe([248, 249, 250, 251, 252, 253, 254]);
+        voxFile.Palette.GetColorIndicesByNote("mixed").ShouldBe([144, 145, 146, 147, 148, 149, 150, 151]);
+        voxFile.Palette.GetColorIndicesByNote("green").ShouldBe([0, 1, 2, 3, 4, 5, 6, 7]);
     }
 
     [Theory]
@@ -67,7 +67,7 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Models.First().Voxels.First(voxel => voxel.LocalPosition == new Vector3(x, y, z)).ColorIndex.Should().Be(expectedIndex);
+        voxFile.Models.First().Voxels.First(voxel => voxel.LocalPosition == new Vector3(x, y, z)).ColorIndex.ShouldBe(expectedIndex);
     }
 
     [Theory]
@@ -79,14 +79,14 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Palette.Colors[254].Should().Be(Color.Cyan);
-        voxFile.Palette.Colors[251].Should().Be(Color.Yellow);
-        voxFile.Palette.Colors[154].Should().Be(Color.Blue);
-        voxFile.Palette.Colors[152].Should().Be(Color.Red);
-        voxFile.Palette.Colors[133].Should().Be(Color.Yellow);
-        voxFile.Palette.Colors[99].Should().Be(Color.Green);
-        voxFile.Palette.Colors[90].Should().Be(Color.Magenta);
-        voxFile.Palette.Colors[16].Should().Be(Color.Blue);
+        voxFile.Palette.Colors[254].ShouldBe(Color.Cyan);
+        voxFile.Palette.Colors[251].ShouldBe(Color.Yellow);
+        voxFile.Palette.Colors[154].ShouldBe(Color.Blue);
+        voxFile.Palette.Colors[152].ShouldBe(Color.Red);
+        voxFile.Palette.Colors[133].ShouldBe(Color.Yellow);
+        voxFile.Palette.Colors[99].ShouldBe(Color.Green);
+        voxFile.Palette.Colors[90].ShouldBe(Color.Magenta);
+        voxFile.Palette.Colors[16].ShouldBe(Color.Blue);
     }
 
     [Fact]
@@ -96,11 +96,11 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Palette.GetColorsByNote("note 1").Should().ContainInOrder(Color.Red, Color.Black, Color.Blue, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
-        voxFile.Palette.GetColorsByNote("note 2").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Yellow, Color.Black, Color.Black);
-        voxFile.Palette.GetColorsByNote("note 3").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Green, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Magenta, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
-        voxFile.Palette.GetColorsByNote("note 4").Should().ContainInOrder(Color.Blue, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black);
-        voxFile.Palette.GetColorsByNote("note 5").Should().ContainInOrder(Color.Black, Color.Black, Color.Black, Color.Yellow, Color.Black, Color.Black, Color.Cyan);
+        voxFile.Palette.GetColorsByNote("note 1").ShouldBe([Color.Red, Color.Black, Color.Blue, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black]);
+        voxFile.Palette.GetColorsByNote("note 2").ShouldBe([Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Yellow, Color.Black, Color.Black]);
+        voxFile.Palette.GetColorsByNote("note 3").ShouldBe([Color.Black, Color.Black, Color.Black, Color.Green, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Magenta, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black]);
+        voxFile.Palette.GetColorsByNote("note 4").ShouldBe([Color.Blue, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black, Color.Black]);
+        voxFile.Palette.GetColorsByNote("note 5").ShouldBe([Color.Black, Color.Black, Color.Black, Color.Yellow, Color.Black, Color.Black, Color.Cyan]);
     }
 
     [Fact]
@@ -110,7 +110,7 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Palette.GetColorsByNote("no match").Should().BeEmpty();
+        voxFile.Palette.GetColorsByNote("no match").ShouldBeEmpty();
     }
 
     [Fact]
@@ -120,9 +120,9 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Palette.Colors[248].Should().Be(Color.Red);
-        voxFile.Palette.Colors[136].Should().Be(Color.Green);
-        voxFile.Palette.Colors[0].Should().Be(Color.Blue);
+        voxFile.Palette.Colors[248].ShouldBe(Color.Red);
+        voxFile.Palette.Colors[136].ShouldBe(Color.Green);
+        voxFile.Palette.Colors[0].ShouldBe(Color.Blue);
     }
 
     [Fact]
@@ -132,7 +132,7 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Palette.Notes.Should().AllBe("");
+        voxFile.Palette.Notes.ShouldAllBe(s => s == "");
     }
 
     [Fact]
@@ -145,7 +145,7 @@ public class GeneralTests
         for (int i = 0; i < 32; i++)
         {
             int iLocal = i;
-            voxFile.Palette.Notes.Should().ContainSingle(note => note == $"note {iLocal + 1}");
+            voxFile.Palette.Notes.ShouldContain(note => note == $"note {iLocal + 1}", 1);
         }
     }
 
@@ -158,7 +158,7 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Palette.Notes.Should().HaveCount(expectedCount);
+        voxFile.Palette.Notes.Length.ShouldBe(expectedCount);
     }
 
     [Theory]
@@ -176,7 +176,7 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Models.First().Voxels.Single(v => v.Color == Color.GetColorFromName(voxelColorToSearch)).LocalPosition.Should().Be(new Vector3(desiredPositionX, desiredPositionY, desiredPositionZ));
+        voxFile.Models.First().Voxels.Single(v => v.Color == Color.GetColorFromName(voxelColorToSearch)).LocalPosition.ShouldBe(new Vector3(desiredPositionX, desiredPositionY, desiredPositionZ));
     }
 
     [Theory]
@@ -200,7 +200,7 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Models.Single(m => m.Name == modelName).Voxels.Single(v => v.Color == Color.GetColorFromName(voxelColorToSearch)).GlobalPosition.Should().Be(new Vector3(desiredGlobalPositionX, desiredGlobalPositionY, desiredGlobalPositionZ));
+        voxFile.Models.Single(m => m.Name == modelName).Voxels.Single(v => v.Color == Color.GetColorFromName(voxelColorToSearch)).GlobalPosition.ShouldBe(new Vector3(desiredGlobalPositionX, desiredGlobalPositionY, desiredGlobalPositionZ));
     }
 
     [Fact]
@@ -210,11 +210,11 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Models.Should().ContainSingle(m => m.Name == "obj1");
-        voxFile.Models.Should().ContainSingle(m => m.Name == "obj2");
-        voxFile.Models.Should().ContainSingle(m => m.Name == "obj3");
-        voxFile.Models.Should().ContainSingle(m => m.Name == "obj4");
-        voxFile.Models.Should().ContainSingle(m => m.Name == "obj5");
+        voxFile.Models.ShouldContain(m => m.Name == "obj1", 1);
+        voxFile.Models.ShouldContain(m => m.Name == "obj2", 1);
+        voxFile.Models.ShouldContain(m => m.Name == "obj3", 1);
+        voxFile.Models.ShouldContain(m => m.Name == "obj4", 1);
+        voxFile.Models.ShouldContain(m => m.Name == "obj5", 1);
     }
 
     [Fact]
@@ -224,11 +224,11 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Models.Single(m => m.Name == "obj1").GlobalPosition.Should().Be(new Vector3(0, 0, 0));
-        voxFile.Models.Single(m => m.Name == "obj2").GlobalPosition.Should().Be(new Vector3(0, 0, 2));
-        voxFile.Models.Single(m => m.Name == "obj3").GlobalPosition.Should().Be(new Vector3(-2, 1, 4));
-        voxFile.Models.Single(m => m.Name == "obj4").GlobalPosition.Should().Be(new Vector3(-2, 1, 8));
-        voxFile.Models.Single(m => m.Name == "obj5").GlobalPosition.Should().Be(new Vector3(2, 1, 8));
+        voxFile.Models.Single(m => m.Name == "obj1").GlobalPosition.ShouldBe(new Vector3(0, 0, 0));
+        voxFile.Models.Single(m => m.Name == "obj2").GlobalPosition.ShouldBe(new Vector3(0, 0, 2));
+        voxFile.Models.Single(m => m.Name == "obj3").GlobalPosition.ShouldBe(new Vector3(-2, 1, 4));
+        voxFile.Models.Single(m => m.Name == "obj4").GlobalPosition.ShouldBe(new Vector3(-2, 1, 8));
+        voxFile.Models.Single(m => m.Name == "obj5").GlobalPosition.ShouldBe(new Vector3(2, 1, 8));
     }
 
     [Fact]
@@ -238,13 +238,13 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Models.Single(m => m.Name == "black").GlobalPosition.Should().Be(new Vector3(0, 0, 0));
-        voxFile.Models.Single(m => m.Name == "red").GlobalPosition.Should().Be(new Vector3(2, 0, 0));
-        voxFile.Models.Single(m => m.Name == "green").GlobalPosition.Should().Be(new Vector3(0, 2, 0));
-        voxFile.Models.Single(m => m.Name == "blue").GlobalPosition.Should().Be(new Vector3(0, 0, 2));
-        voxFile.Models.Single(m => m.Name == "yellow").GlobalPosition.Should().Be(new Vector3(0, 0, -2));
-        voxFile.Models.Single(m => m.Name == "magenta").GlobalPosition.Should().Be(new Vector3(0, -2, 0));
-        voxFile.Models.Single(m => m.Name == "cyan").GlobalPosition.Should().Be(new Vector3(-2, 0, 0));
+        voxFile.Models.Single(m => m.Name == "black").GlobalPosition.ShouldBe(new Vector3(0, 0, 0));
+        voxFile.Models.Single(m => m.Name == "red").GlobalPosition.ShouldBe(new Vector3(2, 0, 0));
+        voxFile.Models.Single(m => m.Name == "green").GlobalPosition.ShouldBe(new Vector3(0, 2, 0));
+        voxFile.Models.Single(m => m.Name == "blue").GlobalPosition.ShouldBe(new Vector3(0, 0, 2));
+        voxFile.Models.Single(m => m.Name == "yellow").GlobalPosition.ShouldBe(new Vector3(0, 0, -2));
+        voxFile.Models.Single(m => m.Name == "magenta").GlobalPosition.ShouldBe(new Vector3(0, -2, 0));
+        voxFile.Models.Single(m => m.Name == "cyan").GlobalPosition.ShouldBe(new Vector3(-2, 0, 0));
     }
 
     [Fact]
@@ -254,7 +254,7 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Models.Single(m => m.Name == "obj1").GlobalPosition.Should().Be(new Vector3(1, 1, 1));
+        voxFile.Models.Single(m => m.Name == "obj1").GlobalPosition.ShouldBe(new Vector3(1, 1, 1));
     }
 
     [Theory]
@@ -268,7 +268,7 @@ public class GeneralTests
 
         IVoxFile voxFile = VoxReader.Read(file);
 
-        voxFile.Models.Should().HaveCount(expectedCount);
+        voxFile.Models.Length.ShouldBe(expectedCount);
     }
 
     [Theory]
@@ -284,11 +284,11 @@ public class GeneralTests
 
         var models = voxFile.Models;
 
-        models.Should().HaveCount(expectedCount.Length);
+        models.Length.ShouldBe(expectedCount.Length);
 
         for (int i = 0; i < expectedCount.Length; i++)
         {
-            models[i].Voxels.Should().HaveCount(expectedCount[i]);
+            models[i].Voxels.Length.ShouldBe(expectedCount[i]);
         }
     }
 
@@ -303,9 +303,9 @@ public class GeneralTests
 
         IModel model = voxFile.Models.First();
 
-        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 2, 0)).Color.Should().Be(Color.Red);
-        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(1, 1, 0)).Color.Should().Be(Color.Green);
-        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(2, 0, 0)).Color.Should().Be(Color.Blue);
+        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 2, 0)).Color.ShouldBe(Color.Red);
+        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(1, 1, 0)).Color.ShouldBe(Color.Green);
+        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(2, 0, 0)).Color.ShouldBe(Color.Blue);
     }
 
     [Theory]
@@ -319,10 +319,10 @@ public class GeneralTests
 
         IModel model = voxFile.Models.First();
 
-        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 0, 0)).Color.Should().Be(Color.Yellow);
-        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(2, 0, 0)).Color.Should().Be(Color.Red);
-        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 2, 0)).Color.Should().Be(Color.Green);
-        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 0, 2)).Color.Should().Be(Color.Blue);
+        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 0, 0)).Color.ShouldBe(Color.Yellow);
+        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(2, 0, 0)).Color.ShouldBe(Color.Red);
+        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 2, 0)).Color.ShouldBe(Color.Green);
+        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 0, 2)).Color.ShouldBe(Color.Blue);
     }
 
     [Theory]
@@ -336,7 +336,7 @@ public class GeneralTests
 
         IModel model = voxFile.Models.First();
 
-        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 0, 0)).Color.Should().Be(new Color(123, 162, 63, 255));
+        model.Voxels.First(voxel => voxel.LocalPosition == new Vector3(0, 0, 0)).Color.ShouldBe(new Color(123, 162, 63, 255));
     }
 
     [Theory]
@@ -350,7 +350,7 @@ public class GeneralTests
 
         IModel model = voxFile.Models.First();
 
-        model.Voxels.Should().HaveCount(1);
+        model.Voxels.Length.ShouldBe(1);
     }
 
     [Theory]
@@ -366,7 +366,7 @@ public class GeneralTests
 
         foreach (Voxel voxel in model.Voxels)
         {
-            voxel.Color.Should().Be(new Color(123, 162, 63, 255));
+            voxel.Color.ShouldBe(new Color(123, 162, 63, 255));
         }
     }
 
@@ -381,7 +381,7 @@ public class GeneralTests
 
         IModel model = voxFile.Models.First();
 
-        model.Voxels.Should().HaveCount(256 * 256 * 256 - 254 * 254 * 254);
+        model.Voxels.Length.ShouldBe(256 * 256 * 256 - 254 * 254 * 254);
     }
 
     [Fact]
