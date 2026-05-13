@@ -13,12 +13,12 @@ public static class Zip
     public static IEnumerable<string> UnzipFilesFromZipArchive(string archivePath)
     {
         string tempPath = Path.Combine(Path.GetTempPath(), nameof(VoxReader), Guid.NewGuid().ToString());
-            
-        Directory.CreateDirectory(tempPath);
-            
-        using ZipArchive archive = ZipArchive.Open(archivePath);
 
-        foreach (ZipArchiveEntry entry in archive.Entries.Where(entry => !entry.IsDirectory))
+        Directory.CreateDirectory(tempPath);
+
+        using var archive = ZipArchive.OpenArchive(archivePath);
+
+        foreach (IArchiveEntry entry in archive.Entries.Where(entry => !entry.IsDirectory))
         {
             entry.WriteToDirectory(tempPath, new ExtractionOptions
             {
@@ -26,7 +26,7 @@ public static class Zip
                 Overwrite = true
             });
 
-            yield return Path.Combine(tempPath, entry.Key);
+            yield return Path.Combine(tempPath, entry.Key ?? throw new InvalidOperationException("Entry has no key!"));
         }
     }
 }
