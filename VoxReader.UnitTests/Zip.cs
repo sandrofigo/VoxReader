@@ -1,32 +1,21 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
-using SharpCompress.Common;
 
 namespace VoxReader.UnitTests;
 
 public static class Zip
 {
-    public static IEnumerable<string> UnzipFilesFromZipArchive(string archivePath)
+    public static byte[] GetBytesFromFirstFileInArchive(string archivePath)
     {
-        string tempPath = Path.Combine(Path.GetTempPath(), nameof(VoxReader), Guid.NewGuid().ToString());
-
-        Directory.CreateDirectory(tempPath);
-
         using var archive = ZipArchive.OpenArchive(archivePath);
 
-        foreach (IArchiveEntry entry in archive.Entries.Where(entry => !entry.IsDirectory))
-        {
-            entry.WriteToDirectory(tempPath, new ExtractionOptions
-            {
-                ExtractFullPath = true,
-                Overwrite = true
-            });
+        IArchiveEntry firstFile = archive.Entries.First(entry => !entry.IsDirectory);
 
-            yield return Path.Combine(tempPath, entry.Key ?? throw new InvalidOperationException("Entry has no key!"));
-        }
+        using var memoryStream = new MemoryStream();
+        firstFile.WriteTo(memoryStream);
+
+        return memoryStream.ToArray();
     }
 }

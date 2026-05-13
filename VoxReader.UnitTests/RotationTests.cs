@@ -16,7 +16,7 @@ public class RotationTests
     [Fact]
     public void VoxReader_ReadRotatedModels3x3x3_GlobalVoxelPositionsAreCorrect()
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile2).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile2);
         IVoxFile voxFile = VoxReader.Read(file);
 
         voxFile.Models.First(m => m.Name == "default").Voxels.First(v => v.Color == Color.Red).GlobalPosition.ShouldBe(new Vector3(0, 0, 0));
@@ -44,7 +44,7 @@ public class RotationTests
     [Fact]
     public void VoxReader_ReadRotatedModels3x3x3_LocalVoxelPositionsAreCorrect()
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile2).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile2);
         IVoxFile voxFile = VoxReader.Read(file);
 
         voxFile.Models.First(m => m.Name == "default").Voxels.First(v => v.Color == Color.Red).LocalPosition.ShouldBe(new Vector3(0, 0, 0));
@@ -69,7 +69,7 @@ public class RotationTests
     [Fact]
     public void VoxReader_ReadRotatedModels3x5x4_GlobalVoxelPositionsAreCorrect()
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile3).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile3);
         IVoxFile voxFile = VoxReader.Read(file);
 
         voxFile.Models.First(m => m.Name == "default").Voxels.First(v => v.Color == Color.Red).GlobalPosition.ShouldBe(new Vector3(1, 0, 4));
@@ -97,7 +97,7 @@ public class RotationTests
     [Fact]
     public void VoxReader_ReadRotatedModels3x5x4_LocalVoxelPositionsAreCorrect()
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile3).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile3);
         IVoxFile voxFile = VoxReader.Read(file);
 
         voxFile.Models.First(m => m.Name == "default").Voxels.First(v => v.Color == Color.Red).LocalPosition.ShouldBe(new Vector3(1, 0, 4));
@@ -122,7 +122,7 @@ public class RotationTests
     [Fact]
     public void VoxReader_ReadRotatedAndGroupedModels_GlobalVoxelPositionsAreCorrect()
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile4).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile4);
         IVoxFile voxFile = VoxReader.Read(file);
 
         voxFile.Models.First(m => m.Name == "default").Voxels.First(v => v.Color == Color.Red).GlobalPosition.ShouldBe(new Vector3(1, 0, 4));
@@ -133,7 +133,7 @@ public class RotationTests
     [Fact]
     public void VoxReader_ReadRotatedAndGroupedModels_LocalVoxelPositionsAreCorrect()
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile4).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile4);
         IVoxFile voxFile = VoxReader.Read(file);
 
         voxFile.Models.First(m => m.Name == "default").Voxels.First(v => v.Color == Color.Red).LocalPosition.ShouldBe(new Vector3(1, 0, 4));
@@ -144,7 +144,7 @@ public class RotationTests
     [Fact]
     public void VoxReader_ReadRotatedAndGroupedModelA_LocalRotationIsCorrect()
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile);
         IVoxFile voxFile = VoxReader.Read(file);
         IModel modelA = voxFile.Models.First(m => m.Name == "voxa");
 
@@ -154,7 +154,7 @@ public class RotationTests
     [Fact]
     public void VoxReader_ReadRotatedAndGroupedModelA_GlobalRotationIsCorrect()
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile);
         IVoxFile voxFile = VoxReader.Read(file);
         IModel modelA = voxFile.Models.First(m => m.Name == "voxa");
 
@@ -164,7 +164,7 @@ public class RotationTests
     [Fact]
     public void VoxReader_ReadRotatedAndGroupedModelB_LocalRotationIsCorrect()
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile);
         IVoxFile voxFile = VoxReader.Read(file);
         IModel modelA = voxFile.Models.First(m => m.Name == "voxb");
 
@@ -174,7 +174,7 @@ public class RotationTests
     [Fact]
     public void VoxReader_ReadRotatedAndGroupedModelB_GlobalRotationIsCorrect()
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile);
         IVoxFile voxFile = VoxReader.Read(file);
         IModel modelA = voxFile.Models.First(m => m.Name == "voxb");
 
@@ -186,7 +186,7 @@ public class RotationTests
     [InlineData("voxb", 5, 0, 0)]
     public void VoxReader_ReadRotatedAndGroupedModel_LocalPositionIsCorrect(string modelName, int x, int y, int z)
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile);
         IVoxFile voxFile = VoxReader.Read(file);
         IModel modelA = voxFile.Models.First(m => m.Name == modelName);
 
@@ -198,7 +198,7 @@ public class RotationTests
     [InlineData("voxb", 4, 5, 2)]
     public void VoxReader_ReadRotatedAndGroupedModel_GlobalPositionIsCorrect(string modelName, int x, int y, int z)
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile);
         IVoxFile voxFile = VoxReader.Read(file);
         IModel modelA = voxFile.Models.First(m => m.Name == modelName);
 
@@ -210,7 +210,7 @@ public class RotationTests
     [InlineData("voxb", 4, 4, 4)]
     public void VoxReader_ReadRotatedAndGroupedModel_LocalSizeIsCorrect(string modelName, int x, int y, int z)
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile);
         IVoxFile voxFile = VoxReader.Read(file);
         IModel modelA = voxFile.Models.First(m => m.Name == modelName);
 
@@ -222,7 +222,7 @@ public class RotationTests
     [InlineData("voxb", 4, 4, 4)]
     public void VoxReader_ReadRotatedAndGroupedModel_GlobalSizeIsCorrect(string modelName, int x, int y, int z)
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile);
         IVoxFile voxFile = VoxReader.Read(file);
         IModel modelA = voxFile.Models.First(m => m.Name == modelName);
 
@@ -232,7 +232,7 @@ public class RotationTests
     [Fact]
     public void VoxReader_ReadRotatedAndGroupedModel_GlobalVoxelPositionsAreInsideTheGlobalBounds2()
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile5).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile5);
         IVoxFile voxFile = VoxReader.Read(file);
         foreach (IModel modelA in voxFile.Models)
         {
@@ -257,7 +257,7 @@ public class RotationTests
     [InlineData("voxb")]
     public void VoxReader_ReadRotatedAndGroupedModel_GlobalVoxelPositionsAreInsideTheGlobalBounds(string modelName)
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile);
         IVoxFile voxFile = VoxReader.Read(file);
         IModel modelA = voxFile.Models.First(m => m.Name == modelName);
 
@@ -281,7 +281,7 @@ public class RotationTests
     [InlineData("voxb", 5, 3, 0)]
     public void VoxReader_ReadRotatedAndGroupedModel_GlobalVoxelPositionIsCorrect(string modelName, int x, int y, int z)
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile);
         IVoxFile voxFile = VoxReader.Read(file);
         IModel modelA = voxFile.Models.First(m => m.Name == modelName);
 
@@ -293,7 +293,7 @@ public class RotationTests
     [InlineData("voxb", 0, 0, 0)]
     public void VoxReader_ReadRotatedAndGroupedModel_LocalVoxelPositionIsCorrect(string modelName, int x, int y, int z)
     {
-        string file = Zip.UnzipFilesFromZipArchive(RotationTestFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(RotationTestFile);
         IVoxFile voxFile = VoxReader.Read(file);
         IModel modelA = voxFile.Models.First(m => m.Name == modelName);
 

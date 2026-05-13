@@ -29,7 +29,7 @@ public class GeneralTests
     [Fact]
     public void VoxReader_GetColorIndicesByNote_ReturnsEmptyArrayWhenNoteTextDoesNotMatch()
     {
-        string file = Zip.UnzipFilesFromZipArchive(TestFileColorIndices2).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(TestFileColorIndices2);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -39,7 +39,7 @@ public class GeneralTests
     [Fact]
     public void VoxReader_GetColorIndicesByNote_ColorIndicesAreCorrect()
     {
-        string file = Zip.UnzipFilesFromZipArchive(TestFileColorIndices2).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(TestFileColorIndices2);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -63,7 +63,7 @@ public class GeneralTests
     [InlineData(TestFileColorIndices2ExportedAsVox, 2, 0, 0, 254)]
     public void VoxReader_Read_ColorIndicesOnVoxelAreCorrect(string testFile, int x, int y, int z, int expectedIndex)
     {
-        string file = Zip.UnzipFilesFromZipArchive(testFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -75,7 +75,7 @@ public class GeneralTests
     [InlineData(TestFileColorIndicesExportedAsVox)]
     public void VoxReader_Read_ColorIndicesAreCorrect(string testFile)
     {
-        string file = Zip.UnzipFilesFromZipArchive(testFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -92,7 +92,7 @@ public class GeneralTests
     [Fact]
     public void VoxReader_GetColorsByNote_NoteNameMatchesColorsInTheSameRow()
     {
-        string file = Zip.UnzipFilesFromZipArchive(TestFileColorIndices).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(TestFileColorIndices);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -106,7 +106,7 @@ public class GeneralTests
     [Fact]
     public void VoxReader_GetColorsByNote_NotMatchingNoteReturnsEmptyCollection()
     {
-        string file = Zip.UnzipFilesFromZipArchive(TestFileColorIndices).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(TestFileColorIndices);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -116,7 +116,7 @@ public class GeneralTests
     [Fact]
     public void VoxReader_Read_PaletteColorPositionMatchesNoteRow()
     {
-        string file = Zip.UnzipFilesFromZipArchive(TestFileNotes).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(TestFileNotes);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -128,7 +128,7 @@ public class GeneralTests
     [Fact]
     public void VoxReader_ReadFileWithNoNotes_NotesAreEmptyStrings()
     {
-        string file = Zip.UnzipFilesFromZipArchive(TestFileNoNotes).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(TestFileNoNotes);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -138,7 +138,7 @@ public class GeneralTests
     [Fact]
     public void VoxReader_Read_NotesAreParsedCorrectly()
     {
-        string file = Zip.UnzipFilesFromZipArchive(TestFileNotes).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(TestFileNotes);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -154,7 +154,7 @@ public class GeneralTests
     [InlineData(TestFileNotes, 32)]
     public void VoxReader_Read_NoteCountIsCorrect(string testFile, int expectedCount)
     {
-        string file = Zip.UnzipFilesFromZipArchive(testFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -172,7 +172,7 @@ public class GeneralTests
     [InlineData(TestFile3X3ExportedAsVox, "blue", 0, 0, 2)]
     public void VoxReader_Read_VoxelPositionIsCorrect(string testFile, string voxelColorToSearch, int desiredPositionX, int desiredPositionY, int desiredPositionZ)
     {
-        string file = Zip.UnzipFilesFromZipArchive(testFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -196,7 +196,7 @@ public class GeneralTests
     [InlineData(TestFile3X3ExportedAsVox, null, "blue", 0, 0, 2)]
     public void VoxReader_Read_GlobalVoxelPositionIsCorrect(string testFile, string modelName, string voxelColorToSearch, int desiredGlobalPositionX, int desiredGlobalPositionY, int desiredGlobalPositionZ)
     {
-        string file = Zip.UnzipFilesFromZipArchive(testFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -206,7 +206,7 @@ public class GeneralTests
     [Fact]
     public void VoxReader_Read_ModelNamesAreParsedCorrectly()
     {
-        string file = Zip.UnzipFilesFromZipArchive(TestFileGroups).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(TestFileGroups);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -220,7 +220,7 @@ public class GeneralTests
     [Fact]
     public void VoxReader_Read_ModelPositionsAreCorrectInGroups()
     {
-        string file = Zip.UnzipFilesFromZipArchive(TestFileGroups).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(TestFileGroups);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -234,7 +234,7 @@ public class GeneralTests
     [Fact]
     public void VoxReader_Read_ModelPositionsAreCorrect()
     {
-        string file = Zip.UnzipFilesFromZipArchive(TestFileMultipleModels).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(TestFileMultipleModels);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -250,7 +250,7 @@ public class GeneralTests
     [Fact]
     public void VoxReader_Read_ModelPositionIsCorrectFor3x3x3Model()
     {
-        string file = Zip.UnzipFilesFromZipArchive(TestFile3X3X3AtCenterWithCorner).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(TestFile3X3X3AtCenterWithCorner);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -262,9 +262,9 @@ public class GeneralTests
     [InlineData(TestFile3X3ExportedAsVox, 1)]
     [InlineData(TestFile3X32, 1)]
     [InlineData(TestFile3X33, 4)]
-    public void VoxReader_Read_ModelCountIsCorrect(string file, int expectedCount)
+    public void VoxReader_Read_ModelCountIsCorrect(string testFile, int expectedCount)
     {
-        file = Zip.UnzipFilesFromZipArchive(file).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -276,9 +276,9 @@ public class GeneralTests
     [InlineData(TestFile3X3ExportedAsVox, 4)]
     [InlineData(TestFile3X32, 3)]
     [InlineData(TestFile3X33, 1, 1, 1, 1)]
-    public void VoxReader_Read_VoxelCountIsCorrect(string file, params int[] expectedCount)
+    public void VoxReader_Read_VoxelCountIsCorrect(string testFile, params int[] expectedCount)
     {
-        file = Zip.UnzipFilesFromZipArchive(file).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -297,7 +297,7 @@ public class GeneralTests
     [InlineData(TestFileColorIndicesExportedAsVox)]
     public void VoxReader_ReadFileFromVersion0_99_6_4_VoxelColorIsCorrect(string testFile)
     {
-        string file = Zip.UnzipFilesFromZipArchive(testFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -313,7 +313,7 @@ public class GeneralTests
     [InlineData(TestFile3X3ExportedAsVox)]
     public void VoxReader_Read_VoxelColorIsCorrect(string testFile)
     {
-        string file = Zip.UnzipFilesFromZipArchive(testFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -330,7 +330,7 @@ public class GeneralTests
     [InlineData(TestFile1X1ExportedAsVox)]
     public void VoxReader_Read_VoxelColorIsCorrectForSmallestModel(string testFile)
     {
-        string file = Zip.UnzipFilesFromZipArchive(testFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -344,7 +344,7 @@ public class GeneralTests
     [InlineData(TestFile1X1ExportedAsVox)]
     public void VoxReader_Read_VoxelCountIsCorrectForSmallestModel(string testFile)
     {
-        string file = Zip.UnzipFilesFromZipArchive(testFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -358,7 +358,7 @@ public class GeneralTests
     [InlineData(TestFile256X256ExportedAsVox)]
     public void VoxReader_Read_VoxelColorIsCorrectForLargestModel(string testFile)
     {
-        string file = Zip.UnzipFilesFromZipArchive(testFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -375,7 +375,7 @@ public class GeneralTests
     [InlineData(TestFile256X256ExportedAsVox)]
     public void VoxReader_Read_VoxelCountIsCorrectForLargestModel(string testFile)
     {
-        string file = Zip.UnzipFilesFromZipArchive(testFile).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(testFile);
 
         IVoxFile voxFile = VoxReader.Read(file);
 
@@ -387,7 +387,7 @@ public class GeneralTests
     [Fact]
     public void VoxReader_ReadFileWithMetaChunk_DoesNotThrow()
     {
-        string file = Zip.UnzipFilesFromZipArchive(TestFileWithMetaChunk).First();
+        byte[] file = Zip.GetBytesFromFirstFileInArchive(TestFileWithMetaChunk);
 
         _ = VoxReader.Read(file);
     }
