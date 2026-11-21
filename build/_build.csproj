@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="KeepAChangelog.IO" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.11.48" />
     <PackageReference Include="Nuke.Common" Version="9.0.3" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.2" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.5" />
